@@ -1,0 +1,35 @@
+body {
+    padding-left: 10%;
+    padding-right: 10%;
+}
+
+label {
+    display: inline-block;
+    text-align: right;
+    width: 80px;
+    margin-right: 5px;
+    vertical-align: top;
+}
+
+.item {
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+
+table {
+    width: 100%;
+}
+
+tr {
+    height: 40px;
+}
+
+table, td {
+    border: 1px solid #757575;
+    border-collapse: collapse;
+    border-style: dotted;
+}
+
+td {
+    text-align: center;
+}
