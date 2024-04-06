@@ -1,3 +1,5 @@
+USE Jail_DB;
+
 -- Insert Stored Procedures
 DELIMITER $$
 CREATE PROCEDURE insert_criminal(
