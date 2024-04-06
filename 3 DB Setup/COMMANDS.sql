@@ -514,3 +514,213 @@ BEGIN
     WHERE Crime_ID = p_Crime_ID;
 END$$
 DELIMITER ;
+
+-- Update Stored Procedures
+-- Update Criminal by Criminal_ID
+DELIMITER $$
+CREATE PROCEDURE update_criminal_by_id(
+    IN p_Criminal_ID DECIMAL(6),
+    IN p_Last VARCHAR(15),
+    IN p_First VARCHAR(10),
+    IN p_Street VARCHAR(30),
+    IN p_City VARCHAR(20),
+    IN p_State CHAR(2),
+    IN p_Zip CHAR(5),
+    IN p_Phone CHAR(10),
+    IN p_V_status CHAR(1),
+    IN p_P_status CHAR(1)
+)
+BEGIN
+    UPDATE Criminals
+    SET Last = p_Last,
+        First = p_First,
+        Street = p_Street,
+        City = p_City,
+        State = p_State,
+        Zip = p_Zip,
+        Phone = p_Phone,
+        V_status = IFNULL(p_V_status, 'N'),
+        P_status = IFNULL(p_P_status, 'N')
+    WHERE Criminal_ID = p_Criminal_ID;
+END$$
+DELIMITER ;
+
+-- Update Alias by Alias_ID
+DELIMITER $$
+CREATE PROCEDURE update_alias_by_id(
+    IN p_Alias_ID DECIMAL(6),
+    IN p_Alias VARCHAR(20)
+)
+BEGIN
+    UPDATE Aliases
+    SET Alias = p_Alias
+    WHERE Alias_ID = p_Alias_ID;
+END$$
+DELIMITER ;
+
+-- Update Crime by Crime_ID
+DELIMITER $$
+CREATE PROCEDURE update_crime_by_id(
+    IN p_Crime_ID DECIMAL(9),
+    -- Included but not used for updates; does not make sense to change Criminal_ID of a Crime
+    IN p_Criminal_ID DECIMAL(6),
+    IN p_Classification CHAR(1),
+    IN p_Date_charged DATE,
+    IN p_Status CHAR(2),
+    IN p_Hearing_date DATE,
+    IN p_Appeal_cut_date DATE
+)
+BEGIN
+    IF p_Hearing_date > p_Date_charged THEN
+        UPDATE Crimes
+        SET Classification = p_Classification,
+            Date_charged = p_Date_charged,
+            Status = p_Status,
+            Hearing_date = p_Hearing_date,
+            Appeal_cut_date = p_Appeal_cut_date
+        WHERE Crime_ID = p_Crime_ID;
+    ELSE
+        SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'Hearing_date must be greater than Date_charged.';
+    END IF;
+END$$
+DELIMITER ;
+
+-- Update Probation Officer by Prob_ID
+DELIMITER $$
+CREATE PROCEDURE update_prob_officer_by_id(
+    IN p_Prob_ID DECIMAL(5),
+    IN p_Last VARCHAR(15),
+    IN p_First VARCHAR(10),
+    IN p_Street VARCHAR(30),
+    IN p_City VARCHAR(20),
+    IN p_State CHAR(2),
+    IN p_Zip CHAR(5),
+    IN p_Phone CHAR(10),
+    IN p_Email VARCHAR(30),
+    IN p_Status CHAR(1)
+)
+BEGIN
+    UPDATE Prob_officers
+    SET Last = p_Last,
+        First = p_First,
+        Street = p_Street,
+        City = p_City,
+        State = p_State,
+        Zip = p_Zip,
+        Phone = p_Phone,
+        Email = p_Email,
+        Status = p_Status
+    WHERE Prob_ID = p_Prob_ID;
+END$$
+DELIMITER ;
+
+-- Update Sentence by Sentence_ID
+DELIMITER $$
+CREATE PROCEDURE update_sentence_by_id(
+    IN p_Sentence_ID DECIMAL(6),
+    -- Faux input as it does not make sense to change, just like for Crime
+    IN p_Criminal_ID DECIMAL(6),
+    IN p_Type CHAR(1),
+    IN p_Prob_ID DECIMAL(5),
+    IN p_Start_date DATE,
+    IN p_End_date DATE,
+    IN p_Violations DECIMAL(3)
+)
+BEGIN
+    IF p_End_date > p_Start_date THEN
+        UPDATE Sentences
+        SET Type = p_Type,
+            Prob_ID = p_Prob_ID,
+            Start_date = p_Start_date,
+            End_date = p_End_date,
+            Violations = p_Violations
+        WHERE Sentence_ID = p_Sentence_ID;
+    ELSE
+        SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'End_date must be greater than Start_date.';
+    END IF;
+END$$
+DELIMITER ;
+
+-- Update Crime Code by Crime_code
+DELIMITER $$
+CREATE PROCEDURE update_crime_code_by_id(
+    IN p_Crime_code DECIMAL(3),
+    IN p_Code_description VARCHAR(30)
+)
+BEGIN
+    UPDATE Crime_codes
+    SET Code_description = p_Code_description
+    WHERE Crime_code = p_Crime_code;
+END$$
+DELIMITER ;
+
+-- Update Crime Charge by Charge_ID
+DELIMITER $$
+CREATE PROCEDURE update_crime_charge_by_id(
+    IN p_Charge_ID DECIMAL(10),
+    -- Faux input
+    IN p_Crime_ID DECIMAL(9),
+    IN p_Crime_code DECIMAL(3),
+    IN p_Charge_status CHAR(2),
+    IN p_Fine_amount DECIMAL(7,2),
+    IN p_Court_fee DECIMAL(7,2),
+    IN p_Amount_paid DECIMAL(7,2),
+    IN p_Pay_due_date DATE
+)
+BEGIN
+    UPDATE Crime_charges
+    SET Crime_code = p_Crime_code,
+        Charge_status = p_Charge_status,
+        Fine_amount = p_Fine_amount,
+        Court_fee = p_Court_fee,
+        Amount_paid = p_Amount_paid,
+        Pay_due_date = p_Pay_due_date
+    WHERE Charge_ID = p_Charge_ID;
+END$$
+DELIMITER ;
+
+-- Update Officer by Officer_ID
+DELIMITER $$
+CREATE PROCEDURE update_officer_by_id(
+    IN p_Officer_ID DECIMAL(8),
+    IN p_Last VARCHAR(15),
+    IN p_First VARCHAR(10),
+    IN p_Precinct CHAR(4),
+    IN p_Badge VARCHAR(14),
+    IN p_Phone CHAR(10),
+    IN p_Status CHAR(1)
+)
+BEGIN
+    UPDATE Officers
+    SET Last = p_Last,
+        First = p_First,
+        Precinct = p_Precinct,
+        Badge = p_Badge,
+        Phone = p_Phone,
+        Status = p_Status
+    WHERE Officer_ID = p_Officer_ID;
+END$$
+DELIMITER ;
+
+-- Skip updates for the joint table Crime_officers
+
+-- Update Appeals by Appeal_ID
+DELIMITER $$
+CREATE PROCEDURE update_appeal_by_id(
+    IN p_Appeal_ID DECIMAL(5),
+    -- Faux input
+    IN p_Crime_ID DECIMAL(9),
+    IN p_Filling_date DATE,
+    IN p_Hearing_date DATE,
+    IN p_Status CHAR(1)
+)
+BEGIN
+    UPDATE Appeals
+    SET Filling_date = p_Filling_date,
+        Hearing_date = p_Hearing_date,
+        Status = p_Status
+    WHERE Appeal_ID = p_Appeal_ID;
+END$$
+DELIMITER ;
