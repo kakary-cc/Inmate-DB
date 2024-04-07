@@ -55,3 +55,28 @@ CALL update_crime_code_by_id(001, 'Petty Theft under $500');
 
 CALL update_crime_charge_by_id(1122334455, 987654321, 002, 'PD', 1500.00, 200.00, 700.00, '2024-09-30');
 CALL update_officer_by_id(87654321, 'Doe', 'John', 'D124', 'B9876543210987', '3105550148', 'B');
+
+-- Delete Testing
+CALL delete_criminal_by_id(654321);
+CALL delete_alias_by_id(654322);
+CALL delete_crime_by_id(987654321);
+CALL delete_prob_officer_by_id(12345);
+CALL delete_sentence_by_id(123456);
+CALL delete_crime_code_by_id(001);
+CALL delete_crime_charge_by_id(1122334455);
+CALL delete_officer_by_id(87654321);
+CALL delete_crime_officer_by_id(987654321, 87654321);
+CALL delete_appeal_by_id(54321);
+
+SELECT * FROM Aliases WHERE Alias_ID = 654322;
+SELECT * FROM Crimes WHERE Crime_ID = 987654321;
+SELECT * FROM Crime_charges WHERE Crime_ID = 987654321;
+SELECT * FROM Appeals WHERE Crime_ID = 987654321;
+SELECT * FROM Crime_officers WHERE Crime_ID = 987654321;
+SELECT * FROM Prob_officers WHERE Prob_ID = 12345;
+SELECT * FROM Sentences WHERE Sentence_ID = 123456;
+SELECT * FROM Crime_codes WHERE Crime_code = 001;
+SELECT * FROM Crime_charges WHERE Charge_ID = 1122334455;
+SELECT * FROM Officers WHERE Officer_ID = 87654321;
+SELECT * FROM Crime_officers WHERE Crime_ID = 987654321 AND Officer_ID = 87654321;
+SELECT * FROM Appeals WHERE Appeal_ID = 54321;
