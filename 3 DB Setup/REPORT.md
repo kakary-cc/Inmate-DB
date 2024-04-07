@@ -56,8 +56,10 @@ We plan to host a MySQL database on DigitalOcean.
 
 ![image](https://github.com/kakary-cc/Crime-Tracking-Database-System/assets/165611994/e26b3324-5735-4792-a309-1c7d9765d777)
 
+---
+
 #### Data Sample
-Table aliases
+
 ![image](https://github.com/kakary-cc/Crime-Tracking-Database-System/assets/165611994/8f8a3181-05e2-4652-9f70-2af7d7a5e8ed)
 
 ![image](https://github.com/kakary-cc/Crime-Tracking-Database-System/assets/165611994/141c770f-d86b-42d1-8ca0-083c27d7956d)
@@ -78,7 +80,10 @@ Table aliases
 
 ![image](https://github.com/kakary-cc/Crime-Tracking-Database-System/assets/165611994/539feba9-d238-41f0-93bf-b9bcb62fe556)
 
+---
+
 #### Basic SQL Commands
+
 CREATE TABLE Criminals
 
 CREATE TABLE Aliases
