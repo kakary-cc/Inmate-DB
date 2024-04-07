@@ -80,60 +80,117 @@ Table aliases
 
 #### Basic SQL Commands
 CREATE TABLE Criminals
+
 CREATE TABLE Aliases
+
 CREATE TABLE Crimes
+
 CREATE TABLE Prob_officers
+
 CREATE TABLE Sentences
+
 CREATE TABLE Crime_codes
+
 CREATE TABLE Crime_charges
+
 CREATE TABLE Officers
+
 CREATE TABLE Crime_officers
+
 CREATE TABLE Appeals
+
 CREATE PROCEDURE insert_criminal
+
 CREATE PROCEDURE insert_alias
+
 CREATE PROCEDURE insert_crime
+
 CREATE PROCEDURE insert_prob_officer
+
 CREATE PROCEDURE insert_sentence
+
 CREATE PROCEDURE insert_crime_code
+
 CREATE PROCEDURE insert_crime_charge
+
 CREATE PROCEDURE insert_officer
+
 CREATE PROCEDURE insert_crime_officer
+
 CREATE PROCEDURE insert_appeal
+
 CREATE PROCEDURE get_aliases_by_criminal_id
+
 CREATE PROCEDURE get_appeal_by_id
+
 CREATE PROCEDURE get_appeals_by_crime_id
+
 CREATE PROCEDURE get_criminal_by_id
+
 CREATE PROCEDURE get_criminal_by_name
+
 CREATE PROCEDURE get_crime_by_id
+
 CREATE PROCEDURE get_crimes_by_criminal_id
+
 CREATE PROCEDURE get_crimes_by_officer_id
+
 CREATE PROCEDURE get_crime_code_by_charge_id
+
 CREATE PROCEDURE get_prob_officer_by_id
+
 CREATE PROCEDURE get_prob_officer_by_name
+
 CREATE PROCEDURE get_sentence_by_id
+
 CREATE PROCEDURE get_sentences_by_criminal_id
+
 CREATE PROCEDURE get_charges_by_id
+
 CREATE PROCEDURE get_charges_by_crime_id
+
 CREATE PROCEDURE get_charges_by_crime_code
+
 CREATE PROCEDURE get_officer_by_id
+
 CREATE PROCEDURE get_officer_by_name
+
 CREATE PROCEDURE get_officers_by_crime_id
+
 CREATE PROCEDURE update_criminal_by_id
+
 CREATE PROCEDURE update_alias_by_id
+
 CREATE PROCEDURE update_crime_by_id
+
 CREATE PROCEDURE update_prob_officer_by_id
+
 CREATE PROCEDURE update_sentence_by_id
+
 CREATE PROCEDURE update_crime_code_by_id
+
 CREATE PROCEDURE update_crime_charge_by_id
+
 CREATE PROCEDURE update_officer_by_id
+
 CREATE PROCEDURE update_appeal_by_id
+
 CREATE PROCEDURE delete_criminal_by_id
+
 CREATE PROCEDURE delete_alias_by_id
+
 CREATE PROCEDURE delete_crime_by_id
+
 CREATE PROCEDURE delete_prob_officer_by_id
+
 CREATE PROCEDURE delete_sentence_by_id
+
 CREATE PROCEDURE delete_crime_code_by_id
+
 CREATE PROCEDURE delete_crime_charge_by_id
+
 CREATE PROCEDURE delete_officer_by_id
+
 CREATE PROCEDURE delete_crime_officer_by_id
+
 CREATE PROCEDURE delete_appeal_by_id
