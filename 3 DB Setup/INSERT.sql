@@ -1,4 +1,4 @@
-USE Jail_DB;
+USE jail;
 
 -- Insert Testing
 CALL insert_criminal(654321, 'Smith', 'Alice', '456 Elm Street', 'Springfield', 'IL', '62704', '3125559821', 'N', 'N');

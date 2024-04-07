@@ -1,0 +1,40 @@
+<html>
+<head>
+<meta charset="utf-8">
+<title></title>
+{{!-- <link rel="stylesheet" href="/css/site.css" type="text/css" media="screen" title="no title" charset="utf-8"> --}}
+</head>
+
+<body>
+<header>
+    <h1>City Jail Database System</h1>
+<nav>
+    <div class="home-link" align="left">
+      <a>
+        <button type="button">Criminal</button>
+      </a>
+      <a>
+        <button type="button">Crime</button>
+      </a>
+    </div>
+
+    {{#if user}}
+    Logged in as: {{user.username}}
+    {{else}}
+    <div class="login-status" align="right">
+      <a>
+        <button type="button">Login</button>
+      </a>
+      <a>
+        <button type="button">Register</button>
+      </a>
+    </div>
+    <hr />
+    {{/if}}
+
+</nav>
+</header>
+
+    {{{ body }}}
+</body>
+</html>

@@ -1,4 +1,4 @@
-USE Jail_DB;
+USE jail;
 
 INSERT INTO Criminals (Criminal_ID, Last, First, Street, City, State, Zip, Phone, V_status, P_status) VALUES
 (100001, 'Smith', 'John', '123 Baker St', 'Gotham', 'NY', '12345', '5551234567', 'N', 'N'),

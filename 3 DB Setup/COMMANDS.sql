@@ -1,4 +1,4 @@
-USE Jail_DB;
+USE jail;
 
 -- Insert Stored Procedures
 DELIMITER $$
