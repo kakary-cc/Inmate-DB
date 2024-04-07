@@ -1,5 +1,5 @@
 body {
-    background-color: #E6E6E6;
+    background-color: #e6e6e6;
     /* color: aliceblue; */
     padding-left: 10%;
     padding-right: 10%;
@@ -26,7 +26,8 @@ tr {
     height: 40px;
 }
 
-table, td {
+table,
+td {
     border: 1px solid #757575;
     border-collapse: collapse;
     border-style: dotted;
@@ -37,10 +38,10 @@ td {
 }
 
 .error {
-	background-color: #eecccc;
-	padding: 0.25em;
-	margin-bottom: 1em;
-	text-align: center;	
+    background-color: #eecccc;
+    padding: 0.25em;
+    margin-bottom: 1em;
+    text-align: center;
 }
 
 .login-status button {

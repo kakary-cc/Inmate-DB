@@ -37,10 +37,9 @@ const register = async (username, email, password) => {
         sql = `INSERT INTO DB_Users VALUES (${username}, "${email}", "${hash}", "V");`;
         db.query(sql, async (err, result) => {
             if (err) throw err;
-            return { username: username, email: email};
+            return { username: username, email: email };
         });
     });
-    
 };
 
 const login = async (username, password) => {
@@ -52,10 +51,10 @@ const login = async (username, password) => {
         }
         // console.log(result);
         // console.log(result[0]);
-        if (!await argon2.verify(result[0].Password, password)) {
+        if (!(await argon2.verify(result[0].Password, password))) {
             throw { message: "PASSWORDS DO NOT MATCH" };
         }
-        return { username: username, email: 'email' };
+        return { username: username, email: "email" };
     });
 };
 

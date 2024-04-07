@@ -10,14 +10,14 @@ import * as auth from "./auth.mjs";
 const __dirname = path.dirname(url.fileURLToPath(import.meta.url));
 
 const loginMessages = {
-  "PASSWORDS DO NOT MATCH": "Incorrect password",
-  "USER NOT FOUND": "User doesn't exist",
+    "PASSWORDS DO NOT MATCH": "Incorrect password",
+    "USER NOT FOUND": "User doesn't exist",
 };
 
 const registrationMessages = {
-  "EMAIL ALREADY EXISTS": "Email already exists",
-  "USERNAME ALREADY EXISTS": "Username already exists",
-  "USERNAME PASSWORD TOO SHORT": "Username or password is too short",
+    "EMAIL ALREADY EXISTS": "Email already exists",
+    "USERNAME ALREADY EXISTS": "Username already exists",
+    "USERNAME PASSWORD TOO SHORT": "Username or password is too short",
 };
 
 const app = express();
@@ -75,55 +75,51 @@ app.use((req, res, next) => {
 // });
 
 const query = `show tables;`;
- const a = await db.execute(query);
- console.log(a[0]);
-
-
-
+const a = await db.execute(query);
+console.log(a[0]);
 
 app.get("/", (req, res) => {
-  res.render("index");
+    res.render("index");
 });
 
 app.get("/login", (req, res) => {
-  res.render("login", {message: "You must be logged in to access this page."});
+    res.render("login", {
+        message: "You must be logged in to access this page.",
+    });
 });
 
 app.post("/login", async (req, res) => {
-  try {
-    const user = await auth.login(
-      req.body.username,
-      req.body.password
-    );
-    await auth.startAuthenticatedSession(req, user);
-    res.redirect("/");
-  } catch (err) {
-    console.log(err);
-    res.render("login", {
-      message: loginMessages[err.message] ?? "Login unsuccessful",
-    });
-  }
+    try {
+        const user = await auth.login(req.body.username, req.body.password);
+        await auth.startAuthenticatedSession(req, user);
+        res.redirect("/");
+    } catch (err) {
+        console.log(err);
+        res.render("login", {
+            message: loginMessages[err.message] ?? "Login unsuccessful",
+        });
+    }
 });
 
 app.get("/register", (req, res) => {
-  res.render("register");
+    res.render("register");
 });
 
 app.post("/register", async (req, res) => {
-  try {
-    const newUser = await auth.register(
-      req.body.username,
-      req.body.email,
-      req.body.password
-    );
-    await auth.startAuthenticatedSession(req, newUser);
-    res.redirect("/");
-  } catch (err) {
-    console.log(err);
-    res.render("register", {
-      message: registrationMessages[err.message] ?? "Registration error",
-    });
-  }
+    try {
+        const newUser = await auth.register(
+            req.body.username,
+            req.body.email,
+            req.body.password
+        );
+        await auth.startAuthenticatedSession(req, newUser);
+        res.redirect("/");
+    } catch (err) {
+        console.log(err);
+        res.render("register", {
+            message: registrationMessages[err.message] ?? "Registration error",
+        });
+    }
 });
 
 // View and search within all criminals
@@ -140,6 +136,5 @@ app.get("/criminal/view/:id", (req, res) => {
 app.get("/criminal/new", (req, res) => {
     res.render("criminal/new");
 });
-
 
 app.listen(process.env.EXPRESS_PORT);
