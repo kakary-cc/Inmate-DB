@@ -55,3 +55,40 @@ We plan to host a MySQL database on DigitalOcean.
 ![image](https://github.com/kakary-cc/Crime-Tracking-Database-System/assets/165611994/b6d7ebc6-0691-4966-8cf3-d31c5d86d5f0)
 
 ![image](https://github.com/kakary-cc/Crime-Tracking-Database-System/assets/165611994/e26b3324-5735-4792-a309-1c7d9765d777)
+
+#### Data Sample
+
+![image](https://github.com/kakary-cc/Crime-Tracking-Database-System/assets/165611994/8f8a3181-05e2-4652-9f70-2af7d7a5e8ed)
+
+![image](https://github.com/kakary-cc/Crime-Tracking-Database-System/assets/165611994/141c770f-d86b-42d1-8ca0-083c27d7956d)
+
+![image](https://github.com/kakary-cc/Crime-Tracking-Database-System/assets/165611994/cb486d44-d047-48f9-90a0-4c9782081a9f)
+
+![image](https://github.com/kakary-cc/Crime-Tracking-Database-System/assets/165611994/412f3e54-8d43-4c0e-adbb-0e8fab89229b)
+
+![image](https://github.com/kakary-cc/Crime-Tracking-Database-System/assets/165611994/4175edd2-46d9-4662-9f9b-e6c3c17bc948)
+
+![image](https://github.com/kakary-cc/Crime-Tracking-Database-System/assets/165611994/b2849318-9c93-4af1-926a-bd5c66ff7a6a)
+
+![image](https://github.com/kakary-cc/Crime-Tracking-Database-System/assets/165611994/f65038bf-588e-4777-a2a9-8aa4689a2633)
+
+![image](https://github.com/kakary-cc/Crime-Tracking-Database-System/assets/165611994/33076cbc-2bfb-4509-b8a2-55f6367cc72b)
+
+![image](https://github.com/kakary-cc/Crime-Tracking-Database-System/assets/165611994/85485933-c4de-4b43-ac38-e7e0b97869b0)
+
+![image](https://github.com/kakary-cc/Crime-Tracking-Database-System/assets/165611994/539feba9-d238-41f0-93bf-b9bcb62fe556)
+
+#### Basic SQL Commands
+CREATE PROCEDURE insert_criminal(
+    IN p_Criminal_ID DECIMAL(6),
+    IN p_Last VARCHAR(15),
+    IN p_First VARCHAR(10),
+    IN p_Street VARCHAR(30),
+    IN p_City VARCHAR(20),
+    IN p_State CHAR(2),
+    IN p_Zip CHAR(5),
+    IN p_Phone CHAR(10),
+    IN p_V_status CHAR(1),
+    IN p_P_status CHAR(1)
+)
+
