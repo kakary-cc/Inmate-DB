@@ -1,6 +1,14 @@
 import * as argon2 from "argon2";
 import db from "./db.mjs";
 
+function User(email) {
+    this.email = email;
+    this.passwd = "";
+    this.search = () => `SELECT * FROM Users WHERE Email LIKE "${this.email}";`;
+    this.insert = () =>
+        `INSERT INTO Users (Email, Passwd) VALUES ("${this.email}", "${this.passwd}");`;
+}
+
 const startAuthenticatedSession = (req, user) => {
     return new Promise((fulfill, reject) => {
         req.session.regenerate((err) => {
@@ -20,42 +28,26 @@ const endAuthenticatedSession = (req) => {
     });
 };
 
-const register = async (username, email, password) => {
-    if (username.length !== 6) {
-        throw { message: "USERNAME PASSWORD TOO SHORT" };
-    }
-    if (password.length < 8) {
-        throw { message: "USERNAME PASSWORD TOO SHORT" };
-    }
-    let sql = `SELECT * FROM DB_Users WHERE Email LIKE "${email}";`;
-    db.query(sql, async (err, result) => {
-        if (err) throw err;
-        if (result.length > 0) {
-            throw { message: "EMAIL ALREADY EXISTS" };
-        }
-        const hash = await argon2.hash(password);
-        sql = `INSERT INTO DB_Users VALUES (${username}, "${email}", "${hash}", "V");`;
-        db.query(sql, async (err, result) => {
-            if (err) throw err;
-            return { username: username, email: email };
-        });
-    });
+const register = async (email, passwd) => {
+    if (passwd.length < 8) throw { message: "PASSWORD TOO SHORT" };
+    // TODO: Check for invalid email, potential SQL injection
+    const newUser = new User(email);
+    if ((await db.query(newUser.search()))[0].length !== 0)
+        throw { message: "EMAIL ALREADY EXISTS" };
+    newUser.passwd = await argon2.hash(passwd);
+    await db.query(newUser.insert());
+    return newUser;
 };
 
-const login = async (username, password) => {
-    let sql = `SELECT * FROM DB_Users WHERE U_ID LIKE "${username}";`;
-    db.query(sql, async (err, result) => {
-        if (err) throw err;
-        if (result.length === 0) {
-            throw { message: "USER NOT FOUND" };
-        }
-        // console.log(result);
-        // console.log(result[0]);
-        if (!(await argon2.verify(result[0].Password, password))) {
-            throw { message: "PASSWORDS DO NOT MATCH" };
-        }
-        return { username: username, email: "email" };
-    });
+const login = async (email, passwd) => {
+    // TODO: Check for invalid email, potential SQL injection
+    const newUser = new User(email);
+    const result = await db.query(newUser.search());
+    if (result[0].length === 0) throw { message: "USER NOT FOUND" };
+    newUser.passwd = result[0][0].Passwd;
+    if (!(await argon2.verify(newUser.passwd, passwd)))
+        throw { message: "PASSWORDS DO NOT MATCH" };
+    return newUser;
 };
 
 export { startAuthenticatedSession, endAuthenticatedSession, register, login };
