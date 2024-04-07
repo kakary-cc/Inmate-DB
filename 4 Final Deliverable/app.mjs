@@ -9,6 +9,17 @@ import * as auth from "./auth.mjs";
 
 const __dirname = path.dirname(url.fileURLToPath(import.meta.url));
 
+const loginMessages = {
+  "PASSWORDS DO NOT MATCH": "Incorrect password",
+  "USER NOT FOUND": "User doesn't exist",
+};
+
+const registrationMessages = {
+  "EMAIL ALREADY EXISTS": "Email already exists",
+  "USERNAME ALREADY EXISTS": "Username already exists",
+  "USERNAME PASSWORD TOO SHORT": "Username or password is too short",
+};
+
 const app = express();
 
 app.use(express.static(path.join(__dirname, "public")));
@@ -26,8 +37,8 @@ app.use(
 );
 
 // TODO
-// const authRequiredPaths = ["/criminals/add", "crime_charges/add"];
-const authRequiredPaths = [];
+const authRequiredPaths = ["/criminal/new"];
+// const authRequiredPaths = [];
 
 app.use((req, res, next) => {
     if (authRequiredPaths.includes(req.path)) {
@@ -50,21 +61,38 @@ app.use((req, res, next) => {
 });
 
 // Test
-db.query("show tables;", function (err, result) {
-    if (err) throw err;
-    result.forEach((row) => {
-        console.log(row);
-    });
+// db.query("show tables;", function (err, result) {
+//     if (err) throw err;
+//     result.forEach((row) => {
+//         console.log(row);
+//     });
+// });
+
+// const db_res = db.query("show tables;");
+// console.log(db_res);
+// db.query("show tables;").then( (result) => {
+//     console.log(result);
+// });
+
+const query = `show tables;`;
+ const a = await db.execute(query);
+ console.log(a[0]);
+
+
+
+
+app.get("/", (req, res) => {
+  res.render("index");
 });
 
 app.get("/login", (req, res) => {
-  res.render("login");
+  res.render("login", {message: "You must be logged in to access this page."});
 });
 
 app.post("/login", async (req, res) => {
   try {
     const user = await auth.login(
-      sanitize(req.body.username),
+      req.body.username,
       req.body.password
     );
     await auth.startAuthenticatedSession(req, user);
@@ -84,8 +112,8 @@ app.get("/register", (req, res) => {
 app.post("/register", async (req, res) => {
   try {
     const newUser = await auth.register(
-      sanitize(req.body.username),
-      sanitize(req.body.email),
+      req.body.username,
+      req.body.email,
       req.body.password
     );
     await auth.startAuthenticatedSession(req, newUser);

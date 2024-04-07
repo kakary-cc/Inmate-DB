@@ -1,4 +1,6 @@
 body {
+    background-color: #E6E6E6;
+    /* color: aliceblue; */
     padding-left: 10%;
     padding-right: 10%;
 }
@@ -32,4 +34,20 @@ table, td {
 
 td {
     text-align: center;
+}
+
+.error {
+	background-color: #eecccc;
+	padding: 0.25em;
+	margin-bottom: 1em;
+	text-align: center;	
+}
+
+.login-status button {
+    max-width: fit-content;
+    font-size: medium;
+    margin-left: 0.2em;
+    margin-right: 0.2em;
+    box-shadow: 5px 2px 2px gray;
+    border-radius: 0px;
 }
