@@ -15,21 +15,39 @@ Table aliases
 
 ![Schema_2](./images/Schemas/Schema_2.png)
 
+Table appeals
+
 ![Schema_3](./images/Schemas/Schema_3.png)
+
+Table crimes
 
 ![Schema_4](./images/Schemas/Schema_4.png)
 
+Table crime_charges
+
 ![Schema_8](./images/Schemas/Schema_8.png)
+
+Table crime_codes
 
 ![Schema_9](./images/Schemas/Schema_9.png)
 
+Table crime_officers
+
 ![Schema_1](./images/Schemas/Schema_1.png)
+
+Table criminals
 
 ![Schema_5](./images/Schemas/Schema_5.png)
 
+Table officers
+
 ![Schema_6](./images/Schemas/Schema_6.png)
 
+Table prob_officers
+
 ![Schema_7](./images/Schemas/Schema_7.png)
+
+Table Sentences 
 
 ![Schema_10](./images/Schemas/Schema_10.png)
 
