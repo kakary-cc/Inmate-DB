@@ -11,50 +11,31 @@ We plan to host a MySQL database on DigitalOcean.
 ---
 
 #### Table Schemas (a)
-Table aliases
 
 ![Schema_2](./images/Schemas/Schema_2.png)
 
-Table appeals
-
 ![Schema_3](./images/Schemas/Schema_3.png)
-
-Table crimes
 
 ![Schema_4](./images/Schemas/Schema_4.png)
 
-Table crime_charges
-
 ![Schema_8](./images/Schemas/Schema_8.png)
-
-Table crime_codes
 
 ![Schema_9](./images/Schemas/Schema_9.png)
 
-Table crime_officers
-
 ![Schema_1](./images/Schemas/Schema_1.png)
-
-Table criminals
 
 ![Schema_5](./images/Schemas/Schema_5.png)
 
-Table officers
-
 ![Schema_6](./images/Schemas/Schema_6.png)
 
-Table prob_officers
-
 ![Schema_7](./images/Schemas/Schema_7.png)
-
-Table Sentences 
 
 ![Schema_10](./images/Schemas/Schema_10.png)
 
 ---
 
 #### Table Schemas (b)
-Table aliases
+
 ![image](https://github.com/kakary-cc/Crime-Tracking-Database-System/assets/165611994/258aab57-9ee8-420c-bce6-8dd771c11775)
 
 ![image](https://github.com/kakary-cc/Crime-Tracking-Database-System/assets/165611994/7eb14f53-8d95-41a1-88f1-028530f08f95)
@@ -98,16 +79,61 @@ Table aliases
 ![image](https://github.com/kakary-cc/Crime-Tracking-Database-System/assets/165611994/539feba9-d238-41f0-93bf-b9bcb62fe556)
 
 #### Basic SQL Commands
-CREATE PROCEDURE insert_criminal(
-    IN p_Criminal_ID DECIMAL(6),
-    IN p_Last VARCHAR(15),
-    IN p_First VARCHAR(10),
-    IN p_Street VARCHAR(30),
-    IN p_City VARCHAR(20),
-    IN p_State CHAR(2),
-    IN p_Zip CHAR(5),
-    IN p_Phone CHAR(10),
-    IN p_V_status CHAR(1),
-    IN p_P_status CHAR(1)
-)
-
+CREATE TABLE Criminals
+CREATE TABLE Aliases
+CREATE TABLE Crimes
+CREATE TABLE Prob_officers
+CREATE TABLE Sentences
+CREATE TABLE Crime_codes
+CREATE TABLE Crime_charges
+CREATE TABLE Officers
+CREATE TABLE Crime_officers
+CREATE TABLE Appeals
+CREATE PROCEDURE insert_criminal
+CREATE PROCEDURE insert_alias
+CREATE PROCEDURE insert_crime
+CREATE PROCEDURE insert_prob_officer
+CREATE PROCEDURE insert_sentence
+CREATE PROCEDURE insert_crime_code
+CREATE PROCEDURE insert_crime_charge
+CREATE PROCEDURE insert_officer
+CREATE PROCEDURE insert_crime_officer
+CREATE PROCEDURE insert_appeal
+CREATE PROCEDURE get_aliases_by_criminal_id
+CREATE PROCEDURE get_appeal_by_id
+CREATE PROCEDURE get_appeals_by_crime_id
+CREATE PROCEDURE get_criminal_by_id
+CREATE PROCEDURE get_criminal_by_name
+CREATE PROCEDURE get_crime_by_id
+CREATE PROCEDURE get_crimes_by_criminal_id
+CREATE PROCEDURE get_crimes_by_officer_id
+CREATE PROCEDURE get_crime_code_by_charge_id
+CREATE PROCEDURE get_prob_officer_by_id
+CREATE PROCEDURE get_prob_officer_by_name
+CREATE PROCEDURE get_sentence_by_id
+CREATE PROCEDURE get_sentences_by_criminal_id
+CREATE PROCEDURE get_charges_by_id
+CREATE PROCEDURE get_charges_by_crime_id
+CREATE PROCEDURE get_charges_by_crime_code
+CREATE PROCEDURE get_officer_by_id
+CREATE PROCEDURE get_officer_by_name
+CREATE PROCEDURE get_officers_by_crime_id
+CREATE PROCEDURE update_criminal_by_id
+CREATE PROCEDURE update_alias_by_id
+CREATE PROCEDURE update_crime_by_id
+CREATE PROCEDURE update_prob_officer_by_id
+CREATE PROCEDURE update_sentence_by_id
+CREATE PROCEDURE update_crime_code_by_id
+CREATE PROCEDURE update_crime_charge_by_id
+CREATE PROCEDURE update_officer_by_id
+CREATE PROCEDURE update_appeal_by_id
+CREATE PROCEDURE delete_criminal_by_id
+CREATE PROCEDURE delete_alias_by_id
+CREATE PROCEDURE delete_crime_by_id
+CREATE PROCEDURE delete_prob_officer_by_id
+CREATE PROCEDURE delete_sentence_by_id
+CREATE PROCEDURE delete_crime_code_by_id
+CREATE PROCEDURE delete_crime_charge_by_id
+CREATE PROCEDURE delete_officer_by_id
+CREATE PROCEDURE delete_crime_officer_by_id
+CREATE PROCEDURE delete_appeal_by_id
