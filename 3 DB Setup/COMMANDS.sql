@@ -724,3 +724,161 @@ BEGIN
     WHERE Appeal_ID = p_Appeal_ID;
 END$$
 DELIMITER ;
+
+-- Deletion Stored Procedures
+-- Delete Criminal by Criminal_ID
+DELIMITER $$
+CREATE PROCEDURE delete_criminal_by_id(
+    IN p_Criminal_ID DECIMAL(6)
+)
+BEGIN
+    -- Temporarily remove checks
+    SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
+
+    -- Delete relevant Crime_charges file(s)
+    DELETE CC
+    FROM Crime_charges CC
+    JOIN Crimes C ON CC.Crime_ID = C.Crime_ID
+    WHERE C.Criminal_ID = p_Criminal_ID;
+
+    -- Delete relevant Appeal(s)
+    DELETE Appeal
+    FROM Appeals Appeal
+    JOIN Crimes C ON Appeal.Crime_ID = C.Crime_ID
+    WHERE C.Criminal_ID = p_Criminal_ID;
+
+    -- Delete relevant Crime(s)
+    DELETE FROM Crimes
+    WHERE Criminal_ID = p_Criminal_ID;
+
+    -- Delete relevant Aliases
+    DELETE FROM Aliases
+    WHERE Criminal_ID = p_Criminal_ID;
+
+    DELETE FROM Criminals
+    WHERE Criminal_ID = p_Criminal_ID;
+
+    -- Restore checks
+    SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
+END$$
+DELIMITER ;
+
+-- Delete Alias by Alias_ID
+DELIMITER $$
+CREATE PROCEDURE delete_alias_by_id(
+    IN p_Alias_ID DECIMAL(6)
+)
+BEGIN
+    DELETE FROM Aliases
+    WHERE Alias_ID = p_Alias_ID;
+END$$
+DELIMITER ;
+
+-- Delete Crime by Crime_ID
+DELIMITER $$
+CREATE PROCEDURE delete_crime_by_id(
+    IN p_Crime_ID DECIMAL(9)
+)
+BEGIN
+    -- Temporarily remove checks
+    SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
+
+    -- Delete relevant Crime_charge(s)
+    DELETE FROM Crime_charges
+    WHERE Crime_ID = p_Crime_ID;
+
+    -- Delete relevant Appeal(s)
+    DELETE FROM Appeals
+    WHERE Crime_ID = p_Crime_ID;
+
+    -- Delete relevant Crime_officer(s)
+    DELETE FROM Crime_officers
+    WHERE Crime_ID = p_Crime_ID;
+
+    DELETE FROM Crimes
+    WHERE Crime_ID = p_Crime_ID;
+
+    -- Restore checks
+    SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
+END$$
+DELIMITER ;
+
+-- Delete Prob_Officer by Prob_ID
+DELIMITER $$
+CREATE PROCEDURE delete_prob_officer_by_id(
+    IN p_Prob_ID DECIMAL(5)
+)
+BEGIN
+    DELETE FROM Prob_officers WHERE Prob_ID = p_Prob_ID;
+END$$
+DELIMITER ;
+
+-- Delete Sentence by Sentence_ID
+DELIMITER $$
+CREATE PROCEDURE delete_sentence_by_id(
+    IN p_Sentence_ID DECIMAL(6)
+)
+BEGIN
+    DELETE FROM Sentences WHERE Sentence_ID = p_Sentence_ID;
+END$$
+DELIMITER ;
+
+-- Delete Crime_codes by Crime_code
+DELIMITER $$
+CREATE PROCEDURE delete_crime_code_by_id(
+    IN p_Crime_code DECIMAL(3)
+)
+BEGIN
+    -- Temporarily remove checks
+    SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
+
+    -- Delete relevant Crime_charge(s)
+    DELETE FROM Crime_charges
+    WHERE Crime_code = p_Crime_code;
+
+    DELETE FROM Crime_codes
+    WHERE Crime_code = p_Crime_code;
+
+    -- Restore checks
+    SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
+END$$
+DELIMITER ;
+
+-- Delete Crime_charges by Charge_ID
+DELIMITER $$
+CREATE PROCEDURE delete_crime_charge_by_id(
+    IN p_Charge_ID DECIMAL(10)
+)
+BEGIN
+    DELETE FROM Crime_charges
+    WHERE Charge_ID = p_Charge_ID;
+END$$
+
+-- Delete Officer by Officer_ID
+CREATE PROCEDURE delete_officer_by_id(
+    IN p_Officer_ID DECIMAL(8)
+)
+BEGIN
+    DELETE FROM Officers
+    WHERE Officer_ID = p_Officer_ID;
+END$$
+
+-- Delete Crime_officers by composite PK
+CREATE PROCEDURE delete_crime_officer_by_id(
+    IN p_Crime_ID DECIMAL(9),
+    IN p_Officer_ID DECIMAL(8)
+)
+BEGIN
+    DELETE FROM Crime_officers
+    WHERE Crime_ID = p_Crime_ID
+    AND Officer_ID = p_Officer_ID;
+END$$
+
+-- Delete Appeals by Appeal_ID
+CREATE PROCEDURE delete_appeal_by_id(
+    IN p_Appeal_ID DECIMAL(5)
+)
+BEGIN
+    DELETE FROM Appeals WHERE Appeal_ID = p_Appeal_ID;
+END$$
+DELIMITER ;
