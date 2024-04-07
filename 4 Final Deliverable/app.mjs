@@ -45,7 +45,7 @@ app.use((req, res, next) => {
 });
 
 app.use((req, res, next) => {
-    console.log(req.path.toUpperCase(), req.body);
+    console.log(req.path, req.body);
     next();
 });
 
@@ -57,19 +57,60 @@ db.query("show tables;", function (err, result) {
     });
 });
 
+app.get("/login", (req, res) => {
+  res.render("login");
+});
+
+app.post("/login", async (req, res) => {
+  try {
+    const user = await auth.login(
+      sanitize(req.body.username),
+      req.body.password
+    );
+    await auth.startAuthenticatedSession(req, user);
+    res.redirect("/");
+  } catch (err) {
+    console.log(err);
+    res.render("login", {
+      message: loginMessages[err.message] ?? "Login unsuccessful",
+    });
+  }
+});
+
+app.get("/register", (req, res) => {
+  res.render("register");
+});
+
+app.post("/register", async (req, res) => {
+  try {
+    const newUser = await auth.register(
+      sanitize(req.body.username),
+      sanitize(req.body.email),
+      req.body.password
+    );
+    await auth.startAuthenticatedSession(req, newUser);
+    res.redirect("/");
+  } catch (err) {
+    console.log(err);
+    res.render("register", {
+      message: registrationMessages[err.message] ?? "Registration error",
+    });
+  }
+});
+
 // View and search within all criminals
 app.get("/criminal", (req, res) => {
-    res.render("criminal");
+    res.render("criminal/");
 });
 
 // View details of a criminal
 app.get("/criminal/view/:id", (req, res) => {
-    res.render("criminal_view");
+    res.render("criminal/view");
 });
 
 // Add a criminal
 app.get("/criminal/new", (req, res) => {
-    res.render("criminal_new");
+    res.render("criminal/new");
 });
 
 

@@ -1,4 +1,4 @@
-import mysql from "mysql2"; // https://sidorares.github.io/node-mysql2/docs
+import mysql from "mysql2";
 
 let db = mysql.createConnection({
     host: process.env.DB_HOST,
