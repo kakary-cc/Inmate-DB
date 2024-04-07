@@ -12,6 +12,7 @@ We plan to host a MySQL database on DigitalOcean.
 
 #### Table Schemas (a)
 Table aliases
+
 ![Schema_2](./images/Schemas/Schema_2.png)
 
 ![Schema_3](./images/Schemas/Schema_3.png)
