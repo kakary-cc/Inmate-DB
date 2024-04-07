@@ -35,3 +35,6 @@ We plan to host a MySQL database on DigitalOcean.
 ---
 
 #### Table Schemas
+
+![image](https://github.com/kakary-cc/Crime-Tracking-Database-System/assets/165611994/258aab57-9ee8-420c-bce6-8dd771c11775)
+
