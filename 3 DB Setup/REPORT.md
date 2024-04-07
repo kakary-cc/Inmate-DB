@@ -199,3 +199,11 @@ CREATE PROCEDURE delete_officer_by_id
 CREATE PROCEDURE delete_crime_officer_by_id
 
 CREATE PROCEDURE delete_appeal_by_id
+
+---
+
+#### Advanced SQL Commands
+
+CREATE OR REPLACE FUNCTION get_Total_fines(criminalID DECIMAL(6)) RETURNS DECIMAL(10,2)
+
+CREATE OR REPLACE TRIGGER update_Crime_after_Appeal
