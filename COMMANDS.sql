@@ -2,8 +2,10 @@ CREATE DATABASE IF NOT EXISTS jail;
 
 USE jail;
 
+SELECT "Creating tables..." AS message;
+
 CREATE TABLE Criminals (
-    Criminal_ID DECIMAL(6) AUTO_INCREMENT=1001,
+    Criminal_ID INT AUTO_INCREMENT,
     Last VARCHAR(15),
     First VARCHAR(10),
     Street VARCHAR(30),
@@ -15,18 +17,20 @@ CREATE TABLE Criminals (
     P_status CHAR(1) DEFAULT 'N',
     PRIMARY KEY(Criminal_ID)
 );
+ALTER TABLE Criminals AUTO_INCREMENT = 100000;
 
 CREATE TABLE Aliases (
-    Alias_ID DECIMAL(6),
-    Criminal_ID DECIMAL(6),
+    Alias_ID INT AUTO_INCREMENT,
+    Criminal_ID INT,
     Alias VARCHAR(20),
     PRIMARY KEY(Alias_ID),
     FOREIGN KEY(Criminal_ID) REFERENCES Criminals(Criminal_ID)
 );
+ALTER TABLE Aliases AUTO_INCREMENT = 100000;
 
 CREATE TABLE Crimes (
-    Crime_ID DECIMAL(9),
-    Criminal_ID DECIMAL(6),
+    Crime_ID INT AUTO_INCREMENT,
+    Criminal_ID INT,
     Classification CHAR(1) DEFAULT 'U',
     Date_charged DATE,
     Status CHAR(2) NOT NULL,
@@ -36,9 +40,10 @@ CREATE TABLE Crimes (
     FOREIGN KEY(Criminal_ID) REFERENCES Criminals(Criminal_ID),
     CHECK (Hearing_date > Date_charged)
 );
+ALTER TABLE Crimes AUTO_INCREMENT = 100000000;
 
 CREATE TABLE Prob_officers (
-    Prob_ID DECIMAL(5),
+    Prob_ID INT AUTO_INCREMENT,
     Last VARCHAR(15),
     First VARCHAR(10),
     Street VARCHAR(30),
@@ -50,12 +55,13 @@ CREATE TABLE Prob_officers (
     Status CHAR(1) NOT NULL,
     PRIMARY KEY(Prob_ID)
 );
+ALTER TABLE Prob_officers AUTO_INCREMENT = 10000;
 
 CREATE TABLE Sentences (
-    Sentence_ID DECIMAL(6),
-    Criminal_ID DECIMAL(6),
+    Sentence_ID INT AUTO_INCREMENT,
+    Criminal_ID INT,
     Type CHAR(1),
-    Prob_ID DECIMAL(5),
+    Prob_ID INT,
     Start_date DATE,
     End_date DATE,
     Violations DECIMAL(3) NOT NULL,
@@ -64,6 +70,7 @@ CREATE TABLE Sentences (
     FOREIGN KEY(Prob_ID) REFERENCES Prob_officers(Prob_ID),
     CHECK (End_date > Start_date)
 );
+ALTER TABLE Sentences AUTO_INCREMENT = 100000;
 
 CREATE TABLE Crime_codes (
     Crime_code DECIMAL(3) NOT NULL,
@@ -72,8 +79,8 @@ CREATE TABLE Crime_codes (
 );
 
 CREATE TABLE Crime_charges (
-    Charge_ID DECIMAL(10),
-    Crime_ID DECIMAL(9),
+    Charge_ID BIGINT AUTO_INCREMENT,
+    Crime_ID INT,
     Crime_code DECIMAL(3),
     Charge_status CHAR(2),
     Fine_amount DECIMAL(7,2),
@@ -84,9 +91,10 @@ CREATE TABLE Crime_charges (
     FOREIGN KEY(Crime_ID) REFERENCES Crimes(Crime_ID),
     FOREIGN KEY(Crime_code) REFERENCES Crime_codes(Crime_code)
 );
+ALTER TABLE Crime_charges AUTO_INCREMENT = 1000000000;
 
 CREATE TABLE Officers (
-    Officer_ID DECIMAL(8),
+    Officer_ID INT AUTO_INCREMENT,
     Last VARCHAR(15),
     First VARCHAR(10),
     Precinct CHAR(4) NOT NULL,
@@ -95,24 +103,37 @@ CREATE TABLE Officers (
     Status CHAR(1) DEFAULT 'A',
     PRIMARY KEY(Officer_ID)
 );
+ALTER TABLE Officers AUTO_INCREMENT = 10000000;
 
 CREATE TABLE Crime_officers (
-    Crime_ID DECIMAL(9),
-    Officer_ID DECIMAL(8),
+    Crime_ID INT,
+    Officer_ID INT,
     PRIMARY KEY(Crime_ID, Officer_ID),
     FOREIGN KEY(Crime_ID) REFERENCES Crimes(Crime_ID),
     FOREIGN KEY(Officer_ID) REFERENCES Officers(Officer_ID)
 );
 
 CREATE TABLE Appeals (
-    Appeal_ID DECIMAL(5),
-    Crime_ID DECIMAL(9),
+    Appeal_ID INT AUTO_INCREMENT,
+    Crime_ID INT,
     Filling_date DATE,
     Hearing_date DATE,
     Status CHAR(1) DEFAULT 'P',
     PRIMARY KEY(Appeal_ID),
     FOREIGN KEY(Crime_ID) REFERENCES Crimes(Crime_ID)
 );
+ALTER TABLE Appeals AUTO_INCREMENT = 10000;
+
+CREATE TABLE Users (
+    User_ID INT AUTO_INCREMENT,
+    Email VARCHAR(30) NOT NULL UNIQUE,
+    Passwd VARCHAR(100) NOT NULL,
+    Status CHAR(1) DEFAULT 'V',
+    PRIMARY KEY(User_ID)
+);
+ALTER TABLE Users AUTO_INCREMENT = 100000;
+
+SELECT "Inserting data with INSERT..." AS message;
 
 INSERT INTO Criminals (Criminal_ID, Last, First, Street, City, State, Zip, Phone, V_status, P_status) VALUES
 (100001, 'Smith', 'John', '123 Elm St', 'Springfield', 'IL', '62704', '2175550123', 'Y', 'N'),
@@ -234,7 +255,8 @@ INSERT INTO Appeals (Appeal_ID, Crime_ID, Filling_date, Hearing_date, Status) VA
 (90009, 300000009, '2023-04-07', '2023-05-07', 'D'),
 (90010, 300000010, '2023-04-09', '2023-05-09', 'P');
 
--- Insert Stored Procedures
+SELECT "Creating procedures (insertion)..." AS message;
+
 DELIMITER $$
 CREATE PROCEDURE insert_criminal(
     IN p_Criminal_ID DECIMAL(6),
@@ -526,7 +548,8 @@ BEGIN
 END$$
 DELIMITER ;
 
--- Retrieval Stored Procedures
+SELECT "Creating procedures (retrieval)..." AS message;
+
 -- Retrieve: Criminals
 -- Retrieve by Criminal_ID
 DELIMITER $$
@@ -749,6 +772,8 @@ BEGIN
 END$$
 DELIMITER ;
 
+SELECT "Creating procedures (update)..." AS message;
+
 -- Update Stored Procedures
 -- Update Criminal by Criminal_ID
 DELIMITER $$
@@ -959,6 +984,8 @@ BEGIN
 END$$
 DELIMITER ;
 
+SELECT "Creating procedures (deletion)..." AS message;
+
 -- Deletion Stored Procedures
 -- Delete Criminal by Criminal_ID
 DELIMITER $$
@@ -1117,6 +1144,8 @@ BEGIN
 END$$
 DELIMITER ;
 
+SELECT "Testing procedures (insertion)..." AS message;
+
 -- Insert Testing
 CALL insert_criminal(654321, 'Smith', 'Alice', '456 Elm Street', 'Springfield', 'IL', '62704', '3125559821', 'N', 'N');
 CALL insert_alias(654322, 654321, 'A. Smith');
@@ -1130,6 +1159,8 @@ CALL insert_crime_charge(1122334455, 987654321, 321, 'OP', 1200.00, 100.00, 600.
 CALL insert_officer(87654321, 'Brown', 'Charlie', 'P123', 'B987654321', '3125550147', 'A');
 CALL insert_crime_officer(987654321, 87654321);
 CALL insert_appeal(54321, 987654321, '2023-04-01', '2023-04-22', 'P');
+
+SELECT "Testing procedures (retrieval)..." AS message;
 
 -- Retrieval Testing
 CALL get_criminal_by_id(654321);
@@ -1161,6 +1192,8 @@ CALL get_crimes_by_officer_id(87654321);
 CALL get_appeal_by_id(54321);
 CALL get_appeals_by_crime_id(987654321);
 
+SELECT "Testing procedures (update)..." AS message;
+
 -- Update Testing
 CALL update_criminal_by_id(654321, 'Smith', 'Alice', '455 Helm Lane', 'Springfield', 'IL', '62704', '3125559821', 'N', 'N');
 CALL update_alias_by_id(123456, 'Harker');
@@ -1172,6 +1205,8 @@ CALL update_crime_code_by_id(001, 'Petty Theft under $500');
 
 CALL update_crime_charge_by_id(1122334455, 987654321, 002, 'PD', 1500.00, 200.00, 700.00, '2024-09-30');
 CALL update_officer_by_id(87654321, 'Doe', 'John', 'D124', 'B9876543210987', '3105550148', 'B');
+
+SELECT "Testing procedures (deletion)..." AS message;
 
 -- Delete Testing
 CALL delete_criminal_by_id(654321);
@@ -1198,6 +1233,8 @@ SELECT * FROM Officers WHERE Officer_ID = 87654321;
 SELECT * FROM Crime_officers WHERE Crime_ID = 987654321 AND Officer_ID = 87654321;
 SELECT * FROM Appeals WHERE Appeal_ID = 54321;
 
+SELECT "Creating functions..." AS message;
+
 -- Count total fine for a crime
 DELIMITER //
 CREATE OR REPLACE FUNCTION get_Total_fines(criminalID DECIMAL(6)) RETURNS DECIMAL(10,2)
@@ -1211,6 +1248,8 @@ BEGIN
     RETURN totalFines;
 END//
 DELIMITER ;
+
+SELECT "Creating triggers..." AS message;
 
 -- Update Crime charges
 DELIMITER @@
