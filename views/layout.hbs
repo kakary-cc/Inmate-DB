@@ -10,16 +10,29 @@
     <header>
         <h1>City Jail Database</h1>
         <nav class="nav-bar">
-            <div class="nav-buttons">
-                <a href="/login"><button type="button">View Criminals</button></a>
-                <a href="/login"><button type="button">View Crime</button></a>
+            <div class="dropdown">
+            <button class="dropbtn">View</button>
+                <div class="dropdown-content">
+                    <a href="/criminal">View Criminals</a>
+                    <a href="/crime">View Crimes</a>
+                </div>
             </div>
+
+            <div class="dropdown">
+            <button class="dropbtn">Edit</button>
+                <div class="dropdown-content">
+                    <a href="/criminal/view/:id">Edit Criminals</a>
+                    <a href="/criminal/new">Insert New Criminal</a>
+                    <a href="/crime">Edit Crimes</a>
+                </div>
+            </div>
+            
             <div class="user-auth">
                 {{#if user}}
-                Logged in as: {{user.email}}
-                <form action="/logout" method="POST">
+                    <form action="/logout" method="POST" class="form-logout">
                     <button type="submit">LOG OUT</button>
-                </form>
+                    </form>            
+                Logged in as: {{user.email}}
                 {{else}}
                 <a href="/login"><button type="button">LOGIN</button></a>
                 <a href="/register"><button type="button">REGISTER</button></a>

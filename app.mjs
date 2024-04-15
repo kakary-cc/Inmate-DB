@@ -117,7 +117,56 @@ app.get("/criminal/new", (req, res) => {
     res.render("criminal/new");
 });
 
+
+// View and search within all crimes
+app.get("/crime", (req, res) => {
+    res.render("crime/", {});
+});
+
+
 const port =  process.env.EXPRESS_PORT || 3000;
 app.listen(port, () => {
     console.log(`Server running on port ${port}`);
 });
+
+// new criminal
+app.post("/criminal/new_criminal", async (req, res) => {
+    try {
+        const { firstName, lastName, street, city, state, zipCode, phoneNumber, violent, probation } = req.body;
+
+        const criminalDetails = {
+            first: firstName,
+            last: lastName,
+            street: street,
+            city: city,
+            state: state,
+            zip: zipCode,
+            phone: phoneNumber,
+            violent: violent === 'yes' ? 'Y' : 'N',
+            probation: probation === 'yes' ? 'Y' : 'N'
+        };
+
+        await insertCriminal(criminalDetails);
+        
+        res.render("some_success_page", { message: "Criminal successfully added!" });
+    } catch (err) {
+        console.log(err);
+        res.render("register", {
+            message: err.message || "Create Criminal Unsuccessful",
+        });
+    }
+});
+
+async function insertCriminal(criminalDetails) {
+    const { first, last, street, city, state, zip, phone, violent, probation } = criminalDetails;
+    const query = `
+        INSERT INTO Criminals (First, Last, Street, City, State, Zip, Phone, V_status, P_status)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);
+    `;
+    try {
+        const result = await db.query(query, [first, last, street, city, state, zip, phone, violent, probation]);
+        return result;
+    } catch (err) {
+        throw new Error('Failed to insert new criminal: ' + err.message);
+    }
+}
