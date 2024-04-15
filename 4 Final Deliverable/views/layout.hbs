@@ -9,27 +9,24 @@
 <body>
     <header>
         <h1>City Jail Database</h1>
-        <nav>
-            <div class="home-link" align="left">
-                <a>
-                    <button type="button">Criminal</button>
-                </a>
-                <a>
-                    <button type="button">Crime</button>
-                </a>
+        <nav class="nav-bar">
+            <div class="nav-buttons">
+                <a href="/login"><button type="button">View Criminals</button></a>
+                <a href="/login"><button type="button">View Crime</button></a>
             </div>
-            <div class="login-status" align="right">
+            <div class="user-auth">
                 {{#if user}}
                 Logged in as: {{user.email}}
+                <form action="/logout" method="POST">
+                    <button type="submit">LOG OUT</button>
+                </form>
                 {{else}}
                 <a href="/login"><button type="button">LOGIN</button></a>
                 <a href="/register"><button type="button">REGISTER</button></a>
                 {{/if}}
             </div>
-            <hr>
         </nav>
     </header>
     {{{ body }}}
 </body>
-
 </html>

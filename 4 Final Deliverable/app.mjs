@@ -3,7 +3,7 @@ import session from "express-session";
 import path from "path";
 import url from "url";
 import "./config.mjs";
-// import db from "./db.mjs";
+import db from "./db.mjs";
 import * as auth from "./auth.mjs";
 
 const __dirname = path.dirname(url.fileURLToPath(import.meta.url));
@@ -59,6 +59,19 @@ app.get("/login", (req, res) => {
     res.render("login");
 });
 
+
+app.post("/logout", async (req, res) => {
+    try {
+        if (req.session.user) {
+            await auth.endAuthenticatedSession(req);
+        }
+    } catch (err) {
+        console.log('Error ending session:', err);
+        res.status(500).send("Failed to log out");
+    }
+    res.redirect("/")
+});
+
 app.post("/login", async (req, res) => {
     try {
         const user = await auth.login(req.body.email, req.body.passwd);
@@ -66,7 +79,7 @@ app.post("/login", async (req, res) => {
         res.redirect("/");
     } catch (err) {
         console.log(err);
-        res.render("login", {
+        res.render("register", {
             message: err.message ?? "Login unsuccessful",
         });
     }
@@ -104,4 +117,7 @@ app.get("/criminal/new", (req, res) => {
     res.render("criminal/new");
 });
 
-app.listen(process.env.EXPRESS_PORT);
+const port =  process.env.EXPRESS_PORT || 3000;
+app.listen(port, () => {
+    console.log(`Server running on port ${port}`);
+});
