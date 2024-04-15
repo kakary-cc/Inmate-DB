@@ -113,7 +113,7 @@ app.get("/criminal/view/:id", (req, res) => {
 });
 
 // Add a criminal
-app.get("/criminal/new", (req, res) => {
+app.get("/criminal/newcrim", (req, res) => {
     res.render("criminal/new");
 });
 
