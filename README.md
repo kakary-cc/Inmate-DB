@@ -1,5 +1,8 @@
-### Crime-Tracking Database System
+#### Useful Information:
 
 ---
 
-CS-UY 3083 Project
+> [MySQL Injection](https://planetscale.com/blog/how-to-prevent-sql-injection-attacks-in-node-js)
+
+
+> [MySQL JS Documentation](https://sidorares.github.io/node-mysql2/docs)
