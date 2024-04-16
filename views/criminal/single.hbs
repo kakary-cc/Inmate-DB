@@ -1,0 +1,44 @@
+<h3>
+    Displaying details of #{{criminal.Criminal_ID}}: {{criminal.First}}, {{criminal.Last}}
+</h3>
+<br>
+
+<table>
+    <tr style="background: rgb(200, 200, 200)">
+        <th>Street</th>
+        <th>City, State</th>
+        <th>Zipcode</th>
+        <th>Phone</th>
+        <th>Violent</th>
+        <th>Probation</th>
+    </tr>
+    <tr>
+        <td>{{criminal.Street}}</td>
+        <td>{{criminal.City}}, {{criminal.State}}</td>
+        <td>{{criminal.Zip}}</td>
+        <td>{{criminal.Phone}}</td>
+        <td>{{this.Violent}}</td>
+        <td>{{this.Probation}}</td>
+    </tr>
+</table><br>
+
+<table>
+    <tr style="background: rgb(200, 200, 200)">
+        <th>Sentence ID</th>
+        <th>Type</th>
+        <th>Probation Officer</th>
+        <th>Start</th>
+        <th>End</th>
+        <th>Violation</th>
+    </tr>
+    {{#each sentences}}
+    <tr>
+        <td>{{this.ID}}</td>
+        <td>{{this.Type}}</td>
+        <td>{{#if this.ProbationOfficerID}}<a href="/probation-officer/{{this.ProbationOfficerID}}">Probation, Officer (#{{this.ProbationOfficerID}})</a>{{else}}N/A{{/if}}</td>
+        <td>{{this.StartDate}}</td>
+        <td>{{this.EndDate}}</td>
+        <td>{{this.Violations}}</td>
+    </tr>
+    {{/each}}
+</table>

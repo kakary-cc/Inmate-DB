@@ -173,6 +173,29 @@ app.get("/criminal/all", async (req, res) => {
     }
 });
 
+// display a single criminal in detail
+app.get("/criminal/details/:Criminal_ID", async (req, res) => {
+    try {
+        const criminalID = req.params.Criminal_ID;
+        const criminalDetails = await interactive.getCriminalDetails(criminalID);
+        const sentences = await interactive.getCriminalSentences(criminalID);
+
+        if (!criminalDetails) {
+            res.status(404).send('Criminal not found');
+        } else {
+            const transformedCriminal = {
+                ...criminalDetails,
+                Violent: criminalDetails.V_status === 'Y' ? 'Yes' : 'No',
+                Probation: criminalDetails.P_status === 'Y' ? 'Yes' : 'No'
+            };
+
+            res.render("criminal/single", { criminal: transformedCriminal, sentences: sentences });
+        }
+    } catch (err) {
+        console.error(err);
+        res.status(500).send("Error retrieving criminal details.");
+    }
+});
 
 
 const port = process.env.EXPRESS_PORT || 3000;

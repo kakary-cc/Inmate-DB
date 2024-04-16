@@ -38,4 +38,25 @@ export async function getAllCriminals() {
     }
 }
 
+export async function getCriminalDetails(criminalID) {
+    const query = 'SELECT * FROM Criminals WHERE Criminal_ID = ?;';
+    try {
+        const [results] = await db.query(query, [criminalID]);
+        return results[0]; 
+    } catch (err) {
+        throw err;
+    }
+}
+
+export async function getCriminalSentences(criminalID) {
+    const query = 'SELECT * FROM Sentences WHERE Criminal_ID = ?;';
+    try {
+        const [results] = await db.query(query, [criminalID]);
+        return results
+    } catch (err) {
+        throw err;
+    }
+}
+
+
 
