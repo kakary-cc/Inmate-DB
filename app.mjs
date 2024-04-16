@@ -5,6 +5,7 @@ import url from "url";
 import "./config.mjs";
 import db from "./db.mjs";
 import * as auth from "./auth.mjs";
+import * as interactive from "./db-interactive.mjs";
 
 const __dirname = path.dirname(url.fileURLToPath(import.meta.url));
 
@@ -101,10 +102,6 @@ app.post("/register", async (req, res) => {
     }
 });
 
-// View and search within all criminals
-app.get("/criminal", (req, res) => {
-    res.render("criminal/", {});
-});
 
 // View details of a criminal
 app.get("/criminal/view/:id", (req, res) => {
@@ -112,7 +109,7 @@ app.get("/criminal/view/:id", (req, res) => {
 });
 
 // Add a criminal
-app.get("/criminal/new", (req, res) => {
+app.get("/criminal/newin", (req, res) => {
     res.render("criminal/new");
 });
 
@@ -148,49 +145,35 @@ app.post("/criminal/new", async (req, res) => {
             probation: probation === "yes" ? "Y" : "N",
         };
 
-        await insertCriminal(criminalDetails);
+        const result = await interactive.insertCriminal(criminalDetails);
         res.send(
-            `<script>alert("Criminal sucessfully added!"); window.location.href = "/criminal"; </script>`
+            `<script>alert("Criminal successfully added!"); window.location.href = "/criminal/all"; </script>`
         );
     } catch (err) {
         console.log(err);
-        // TODO:
-        // res.send(err.message || "Create Criminal Unsuccessful");
         res.send(
             `<script>alert("Create Criminal Unsuccessful"); window.location.href = "/criminal/new"; </script>`
         );
-        // res.render("register", {
-        //     message: err.message || "Create Criminal Unsuccessful",
-        // });
     }
 });
 
-async function insertCriminal(criminalDetails) {
-    const { first, last, street, city, state, zip, phone, violent, probation } =
-        criminalDetails;
-    const query = `
-        INSERT INTO Criminals (First, Last, Street, City, State, Zip, Phone, V_status, P_status)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);
-    `;
-    // CONSOLE
-    console.log(query);
+// get all criminals
+app.get("/criminal/all", async (req, res) => {
     try {
-        const result = await db.query(query, [
-            first,
-            last,
-            street,
-            city,
-            state,
-            zip,
-            phone,
-            violent,
-            probation,
-        ]);
-        return result;
+        let criminals = await interactive.getAllCriminals();
+        criminals = criminals.map(criminal => ({
+            ...criminal,
+            Violent: criminal.V_status === 'Y' ? 'Yes' : 'No',
+            Probation: criminal.P_status === 'Y' ? 'Yes' : 'No'
+        }));
+        res.render("criminal/all", { criminals: criminals });
     } catch (err) {
-        throw new Error("Failed to insert new criminal: " + err.message);
+        console.error(err);
+        res.status(500).send("Error retrieving criminals.");
     }
-}
+});
+
+
 
 const port = process.env.EXPRESS_PORT || 3000;
 app.listen(port, () => {
