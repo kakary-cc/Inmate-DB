@@ -77,3 +77,40 @@ export async function deleteCriminalById(criminalId) {
         return { success: false };
     }
 }
+
+export async function insertSentence(criminalId, type, probID, startDate, endDate, violations) {
+    try {
+        await db.query('CALL insert_sentence(?, ?, ?, ?, ?, ?)', [
+            criminalId, type, probID, startDate, endDate, violations
+        ]);
+        return { success: true };
+    } catch (err) {
+        console.error("Failed to insert sentence:", err);
+        return { success: false, message: err.message };
+    }
+}
+
+export async function insertProbationOfficer(firstName, lastName, street, city, state, zipCode, phoneNumber, email, status) {
+    try {
+        await db.query('CALL insert_prob_officer(?, ?, ?, ?, ?, ?, ?, ?, ?)', [
+            lastName, firstName, street, city, state, zipCode, phoneNumber, email, status
+        ]);
+        return { success: true, message: "Probation officer successfully added." };
+    } catch (err) {
+        console.error("Failed to insert probation officer:", err);
+        return { success: false, message: err.sqlMessage || "An error occurred while adding the probation officer." };
+    }
+}
+
+export async function getAllProbOfficers() {
+    console.log("Attempting to fetch all probation officers from the database.");
+    const query = 'SELECT * FROM Prob_officers;';
+    try {
+        const [probOfficers, fields] = await db.query(query);
+        console.log("Fetched probation officers:", probOfficers);
+        return probOfficers;
+    } catch (err) {
+        console.error("Error fetching probation officers:", err);
+        throw err;
+    }
+}

@@ -1,0 +1,55 @@
+/* Center the title */
+h3 {
+    text-align: center;
+    margin-bottom: 30px; 
+}
+
+form {
+    max-width: 600px;
+    margin: auto; 
+    display: flex;
+    flex-direction: column;
+    gap: 20px; 
+}
+
+.form-item {
+    display: flex;
+    flex-direction: column;
+}
+
+.form-item label {
+    white-space: nowrap;
+    text-overflow: ellipsis; 
+    margin-bottom: 10px; 
+    display: flex;
+    flex-direction: row;
+}
+
+.form-item input,
+.form-item select {
+    width: 100%; /* Make the inputs take up 100% of their form-item container */
+    padding: 10px;
+    box-sizing: border-box; /* Include padding and border in the element's total width and height */
+}
+
+.form-item input[type="submit"] {
+    cursor: pointer;
+    padding: 15px 20px;
+    font-size: 1rem;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    transition: background-color 0.3s;
+}
+
+.form-item input[type="submit"]:hover {
+    background-color: #0056b3;
+}
+
+/* Style specific to inputs that aren't submit buttons */
+.form-item input:not([type="submit"]),
+.form-item select {
+    height: 45px; /* Gives a taller height to the inputs for better clickability */
+    font-size: 1rem; /* Increase font size for better readability */
+}

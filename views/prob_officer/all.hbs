@@ -1,0 +1,31 @@
+<h2>All Probation Officers</h2>
+<table>
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Street</th>
+            <th>City</th>
+            <th>State</th>
+            <th>Zip</th>
+            <th>Phone</th>
+            <th>Email</th>
+            <th>Status</th>
+        </tr>
+    </thead>
+    <tbody>
+        {{#each probOfficers}}
+        <tr>
+            <td>{{this.Prob_ID}}</td>
+            <td>{{this.First}} {{this.Last}}</td>
+            <td>{{this.Street}}</td>
+            <td>{{this.City}}</td>
+            <td>{{this.State}}</td>
+            <td>{{this.Zip}}</td>
+            <td>{{this.Phone}}</td>
+            <td>{{this.Email}}</td>
+            <td>{{this.Status}}</td>
+        </tr>
+        {{/each}}
+    </tbody>
+</table>

@@ -58,6 +58,10 @@
     </tr>
     {{/each}}
 </table>
+<div class="button-container">
+    <a href="/criminal/addSentence/{{criminal.Criminal_ID}}" class="normal-button">Add Sentence</a>
+</div>
+
 
 <script>
 function confirmDelete() {
@@ -138,39 +142,32 @@ function makeEditable(element) {
 }
 
 document.addEventListener('DOMContentLoaded', function() {
-    document.querySelectorAll('.editable-select, span').forEach(element => {
-        element.setAttribute('data-original', element.textContent.trim());
-        
-        if (element.tagName === 'SELECT') {
-            element.onchange = function() {
-                saveData(this);
-            };
-        } else {
-            element.ondblclick = function() {
-                this.contentEditable = true;
-                this.focus();
-            };
-            element.onblur = function() {
-                saveData(this);
-                this.contentEditable = false;
-            };
-            element.onkeypress = function(e) {
-                if (e.key === 'Enter') {
-                    e.preventDefault();
-                    this.blur();
-                }
-            };
-        }
+    document.querySelectorAll('span').forEach(span => {
+        span.ondblclick = function() {
+            this.contentEditable = true;
+            this.focus();
+        };
+        span.onblur = function() {
+            let cleanText = this.textContent.replace(/\s/g, '');
+            this.textContent = cleanText;
+            saveData(this);
+            this.contentEditable = false;
+        };
+        span.onkeypress = function(e) {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                this.blur();
+            }
+        };
     });
 });
 
 function saveData(element) {
     const criminalId = document.querySelector('#criminal-details').getAttribute('data-criminal-id');
     const field = element.id;
-    const value = (element.tagName === 'SELECT' ? element.value : element.textContent).trim();
-    const originalValue = element.getAttribute('data-original');
+    const value = element.tagName === 'SELECT' ? element.value : element.textContent.trim();
 
-    if (value !== originalValue) {
+    if (value !== element.getAttribute('data-original')) {
         fetch(`/criminal/update/${field}`, {
             method: 'POST',
             headers: {
@@ -182,7 +179,7 @@ function saveData(element) {
         .then(data => {
             if (data.success) {
                 console.log('Update successful');
-                element.setAttribute('data-original', value); 
+                element.setAttribute('data-original', value);
             } else {
                 console.log('Update failed');
                 alert('Failed to update. Please try again.');

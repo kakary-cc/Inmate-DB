@@ -353,7 +353,6 @@ DELIMITER ;
 
 DELIMITER $$
 CREATE PROCEDURE insert_prob_officer(
-    IN p_Prob_ID DECIMAL(5),
     IN p_Last VARCHAR(15),
     IN p_First VARCHAR(10),
     IN p_Street VARCHAR(30),
@@ -366,7 +365,6 @@ CREATE PROCEDURE insert_prob_officer(
 )
 BEGIN
     INSERT INTO Prob_officers (
-        Prob_ID,
         Last,
         First,
         Street,
@@ -377,7 +375,6 @@ BEGIN
         Email,
         Status
     ) VALUES (
-        p_Prob_ID,
         p_Last,
         p_First,
         p_Street,
@@ -393,7 +390,6 @@ DELIMITER ;
 
 DELIMITER $$
 CREATE PROCEDURE insert_sentence(
-    IN p_Sentence_ID DECIMAL(6),
     IN p_Criminal_ID DECIMAL(6),
     IN p_Type CHAR(1),
     IN p_Prob_ID DECIMAL(5),
@@ -402,29 +398,29 @@ CREATE PROCEDURE insert_sentence(
     IN p_Violations DECIMAL(3)
 )
 BEGIN
-    INSERT INTO Sentences (
-        Sentence_ID,
-        Criminal_ID,
-        Type,
-        Prob_ID,
-        Start_date,
-        End_date,
-        Violations
-    ) VALUES (
-        p_Sentence_ID,
-        p_Criminal_ID,
-        p_Type,
-        p_Prob_ID,
-        p_Start_date,
-        p_End_date,
-        p_Violations
-    );
     IF p_End_date <= p_Start_date THEN
         SIGNAL SQLSTATE '45000'
         SET MESSAGE_TEXT = 'End_date must be greater than Start_date';
+    ELSE
+        INSERT INTO Sentences (
+            Criminal_ID,
+            Type,
+            Prob_ID,
+            Start_date,
+            End_date,
+            Violations
+        ) VALUES (
+            p_Criminal_ID,
+            p_Type,
+            p_Prob_ID,
+            p_Start_date,
+            p_End_date,
+            p_Violations
+        );
     END IF;
 END$$
 DELIMITER ;
+
 
 DELIMITER $$
 CREATE PROCEDURE insert_crime_code(
@@ -1291,3 +1287,6 @@ BEGIN
 END @@
 
 DELIMITER ;
+
+ALTER TABLE Sentences
+MODIFY Prob_ID INT NULL;

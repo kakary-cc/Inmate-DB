@@ -1,0 +1,51 @@
+<link rel="stylesheet" href="/css/formInputPagesStyles.css">
+
+<h3>
+    Add Probation Officer Information
+</h3>
+<form method="POST" action="/prob_officer/new"> 
+    <div class="form-item">
+        <label>Name*</label>
+        <input name="firstName" placeholder="First" required>
+        <input name="lastName" placeholder="Last" required> 
+    </div>
+
+    <div class="form-item">
+        <label>Address*</label>
+        <input name="street" size="42" placeholder="Street" required>
+    </div>
+    <div class="form-item">
+        <label>City*</label>
+        <input name="city" placeholder="City" required> 
+    </div>
+    <div class="form-item">
+        <label>State*</label>
+        <input name="state" size="15" placeholder="State" required> 
+    </div>
+    <div class="form-item">
+        <label>Zipcode*</label>
+        <input name="zipCode" size="10" placeholder="Zipcode" required> 
+    </div>
+
+    <div class="form-item">
+        <label>Phone*</label>
+        <input name="phoneNumber" placeholder="No hyphen" required> 
+    </div>
+
+    <div class="form-item">
+        <label>Email</label>
+        <input name="email" type="email" placeholder="Email Address"> 
+    </div>
+
+    <div class="form-item">
+        <label>Status*</label>
+        <select name="status" required> 
+            <option value="A">Active</option>
+            <option value="I">Inactive</option>
+        </select>
+    </div>
+
+    <div class="form-item">
+        <input type="submit" value="Add Probation Officer">
+    </div>
+</form>

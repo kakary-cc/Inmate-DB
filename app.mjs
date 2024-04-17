@@ -197,7 +197,7 @@ app.get("/criminal/details/:Criminal_ID", async (req, res) => {
     }
 });
 
-
+// update a single field for a single criminal
 app.post('/criminal/update/:field', async (req, res) => {
     console.log(req.body);
     const { id, value } = req.body;
@@ -212,6 +212,8 @@ app.post('/criminal/update/:field', async (req, res) => {
     }
 });
 
+// delete a single criminal
+// TODO: convert post to delete
 app.post('/criminal/delete/:criminalId', async (req, res) => {
     const criminalId = req.params.criminalId;
 
@@ -228,8 +230,70 @@ app.post('/criminal/delete/:criminalId', async (req, res) => {
     }
 });
 
+// add a sentence for a criminal: the page
+app.get("/criminal/addSentence/:Criminal_ID", async (req, res) => {
+    try {
+        const { Criminal_ID } = req.params;
+        res.render("criminal/addSentencePage", { criminal_ID: Criminal_ID });
+    } catch (err) {
+        console.error(err);
+        res.status(500).send("Error loading the add sentence page.");
+    }
+});
+
+// add a sentence for a criminal: the backend 
+app.post('/criminal/addSentence/:Criminal_ID', async (req, res) => {
+    const { Criminal_ID } = req.params;
+    const { type, probID, startDate, endDate, violations } = req.body;
+
+    try {
+        const result = await interactive.insertSentence(Criminal_ID, type, probID, startDate, endDate, violations);
+        if (result.success) {
+            res.redirect(`/criminal/details/${Criminal_ID}`); 
+        } else {
+            res.status(500).send("Inner Error inserting new sentence for criminal") 
+        }
+    } catch (error) {
+        console.error("Error inserting sentence:", error);
+        res.status(500).render('errorPage', { error: "Outer Error inserting sentence." });
+    }
+});
+
+// add a probation officer: the page
+app.get("/prob_officer/newin", (req, res) => {
+    res.render("prob_officer/new");
+});
+
+// add a probation officer: the backend
+app.post('/prob_officer/new', async (req, res) => {
+    const { firstName, lastName, street, city, state, zipCode, phoneNumber, email, status } = req.body;
+
+    try {
+        const result = await interactive.insertProbationOfficer(firstName, lastName, street, city, state, zipCode, phoneNumber, email, status);
+        if (result.success) {
+            res.redirect('/prob_officer/all'); 
+        } else {
+            res.status(500).send('Failed to create probation officer.');
+        }
+    } catch (error) {
+        console.error("Error creating new probation officer:", error);
+        res.status(500).send("Error creating probation officer.");
+    }
+});
+
+// get all probation officers
+app.get("/prob_officer/all", async (req, res) => {
+    try {
+        let probOfficers = await interactive.getAllProbOfficers();
+        res.render("prob_officer/all", { probOfficers: probOfficers });
+    } catch (err) {
+        console.error(err);
+        res.status(500).send("Error retrieving probation officers.");
+    }
+});
 
 const port = process.env.EXPRESS_PORT || 3000;
 app.listen(port, () => {
     console.log(`Server running on port ${port}`);
 });
+
