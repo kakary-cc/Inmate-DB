@@ -1,15 +1,12 @@
-<div class="header-container">
+<div class="header-container" id="criminal-details" data-criminal-id="{{criminal.Criminal_ID}}">
     <h3>
-        Displaying details of #{{criminal.Criminal_ID}}: <span id="firstName" data-editable="false" ondblclick="makeEditable(this)">{{criminal.First}}</span>, <span id="lastName" data-editable="false" ondblclick="makeEditable(this)">{{criminal.Last}}</span>
+        Displaying details of #{{criminal.Criminal_ID}}: <span id="First" ondblclick="makeEditable(this)">{{criminal.First}}</span>, <span id="Last" ondblclick="makeEditable(this)">{{criminal.Last}}</span>
     </h3>
     <div class="button-container">
-        <button onclick="toggleEdit()" class="normal-button">Edit</button>
         <button onclick="confirmDelete('{{criminal.Criminal_ID}}')" class="normal-button">Delete</button>
     </div>
 </div>
-
 <br>
-
 <table>
     <tr style="background: rgb(200, 200, 200)">
         <th>Street</th>
@@ -20,15 +17,27 @@
         <th>Probation</th>
     </tr>
     <tr>
-        <td><span id="street" data-editable="false" ondblclick="makeEditable(this)">{{criminal.Street}}</span></td>
-        <td><span id="city" data-editable="false" ondblclick="makeEditable(this)">{{criminal.City}}</span>, <span id="state" data-editable="false" ondblclick="makeEditable(this)">{{criminal.State}}</span></td>
-        <td><span id="zip" data-editable="false" ondblclick="makeEditable(this)">{{criminal.Zip}}</span></td>
-        <td><span id="phone" data-editable="false" ondblclick="makeEditable(this)">{{criminal.Phone}}</span></td>
-        <td><span id="violent" data-editable="false" ondblclick="makeEditable(this)">{{this.Violent}}</span></td>
-        <td><span id="probation" data-editable="false" ondblclick="makeEditable(this)">{{this.Probation}}</span></td>
-    </tr>
-</table><br>
+        <td><span id="street" ondblclick="makeEditable(this)">{{criminal.Street}}</span></td>
+        <td><span id="city" ondblclick="makeEditable(this)">{{criminal.City}}</span>, <span id="state" ondblclick="makeEditable(this)">{{criminal.State}}</span></td>
+        <td><span id="zip" ondblclick="makeEditable(this)">{{criminal.Zip}}</span></td>
+        <td><span id="phone" ondblclick="makeEditable(this)">{{criminal.Phone}}</span></td>
+        <td>
+            <select id="v_status" class="editable-select">
+                <option value="Y" {{#if criminal.selectedYesViolent}}selected{{/if}}>Yes</option>
+                <option value="N" {{#if criminal.selectedNoViolent}}selected{{/if}}>No</option>
+            </select>
+        </td>
+        <td>
+            <select id="p_status" class="editable-select">
+                <option value="Y" {{#if criminal.selectedYesProbation}}selected{{/if}}>Yes</option>
+                <option value="N" {{#if criminal.selectedNoProbation}}selected{{/if}}>No</option>
+            </select>
+        </td>
 
+
+    </tr>
+</table>
+<br>
 <table>
     <tr style="background: rgb(200, 200, 200)">
         <th>Sentence ID</th>
@@ -51,7 +60,8 @@
 </table>
 
 <script>
-function confirmDelete(criminalId) {
+function confirmDelete() {
+    const criminalId = document.querySelector('#criminal-details').getAttribute('data-criminal-id');
     if (confirm("Are you sure you want to delete this criminal?")) {
         fetch(`/criminal/delete/${criminalId}`, {
             method: 'POST',
@@ -77,41 +87,72 @@ function confirmDelete(criminalId) {
 }
 
 function toggleEdit() {
-    document.querySelectorAll('#criminal-details span').forEach(span => {
-        makeEditable(span);
+    const detailsContainer = document.getElementById('criminal-details');
+    const editableElements = detailsContainer.querySelectorAll('span, select');
+
+    editableElements.forEach(element => {
+        if (element.tagName === 'SPAN') {
+            if (element.getAttribute('data-editable') === 'true') {
+                element.setAttribute('data-editable', 'false');
+                element.contentEditable = false;
+            } else {
+                element.setAttribute('data-editable', 'true');
+                element.contentEditable = true;
+            }
+        } else if (element.tagName === 'SELECT') {
+            element.disabled = !element.disabled;
+        }
     });
 }
 
+
 function makeEditable(element) {
-    if (element.getAttribute('data-editable') === 'false') {
-        element.setAttribute('data-editable', 'true');
-        element.contentEditable = true;
+    const criminalId = document.querySelector('#criminal-details').getAttribute('data-criminal-id');
+    const isEditable = element.tagName === 'SELECT' ? element.disabled : element.getAttribute('data-editable') === 'true';
+
+    if (!isEditable) {
+        if (element.tagName === 'SPAN') {
+            element.setAttribute('data-editable', 'true');
+            element.contentEditable = true;
+        } else if (element.tagName === 'SELECT') {
+            element.disabled = false;
+        }
         element.focus();
-        element.onblur = () => saveData(element);
-        element.onkeypress = function(e) {
-            if (e.key === 'Enter') {
-                e.preventDefault(); 
-                element.blur();  
-            }
-        };
+        element.onblur = () => saveData(criminalId, element);
+        if (element.tagName === 'SPAN') {
+            element.onkeypress = function(e) {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    element.blur();
+                }
+            };
+        }
     } else {
-        element.setAttribute('data-editable', 'false');
-        element.contentEditable = false;
+        if (element.tagName === 'SPAN') {
+            element.setAttribute('data-editable', 'false');
+            element.contentEditable = false;
+        } else if (element.tagName === 'SELECT') {
+            element.disabled = true;
+        }
     }
 }
 
-function saveData(element) {
+function saveData(criminalId, element) {
     const field = element.id;
-    const value = element.innerText;
+    const value = element.tagName === 'SELECT' ? element.value : element.innerText;
     element.setAttribute('data-editable', 'false');
-    element.contentEditable = false;
+    if (element.tagName === 'SPAN') {
+        element.contentEditable = false;
+    } else if (element.tagName === 'SELECT') {
+        element.disabled = true;
+    }
 
     fetch(`/criminal/update/${field}`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ id: '{{criminal.Criminal_ID}}', value: value })
+        body: JSON.stringify({ id: criminalId, value: value })
     })
     .then(response => response.json())
     .then(data => {
@@ -127,4 +168,54 @@ function saveData(element) {
     });
 }
 
+document.addEventListener('DOMContentLoaded', function() {
+    document.querySelectorAll('.editable-select').forEach(select => {
+        select.onchange = function() {
+            saveData(this); 
+        };
+    });
+
+    document.querySelectorAll('span[data-editable]').forEach(span => {
+        span.ondblclick = function() {
+            this.contentEditable = true;
+            this.focus();
+        };
+        span.onblur = function() {
+            this.contentEditable = false;
+            saveData(this);
+        };
+        span.onkeypress = function(e) {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                this.blur();
+            }
+        };
+    });
+});
+
+function saveData(element) {
+    const criminalId = document.querySelector('#criminal-details').getAttribute('data-criminal-id');
+    const field = element.id;
+    const value = element.tagName === 'SELECT' ? element.value : element.innerText;
+
+    fetch(`/criminal/update/${field}`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ id: criminalId, value: value })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            console.log('Update successful');
+        } else {
+            console.log('Update failed');
+            alert('Failed to update. Please try again.');
+        }
+    })
+    .catch(error => {
+        console.error('Error updating:', error);
+    });
+}
 </script>

@@ -59,6 +59,7 @@ export async function getCriminalSentences(criminalID) {
 }
 
 export async function updateCriminalField(id, field, value) {
+    console.log(id, field, value);
     try {
         const query = `UPDATE Criminals SET ${field} = ? WHERE Criminal_ID = ?`;
         await db.query(query, [value, id]);

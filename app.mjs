@@ -11,6 +11,8 @@ const __dirname = path.dirname(url.fileURLToPath(import.meta.url));
 
 const app = express();
 
+app.use(express.json());
+
 app.use(express.static(path.join(__dirname, "public")));
 
 app.set("view engine", "hbs");
@@ -178,18 +180,16 @@ app.get("/criminal/details/:Criminal_ID", async (req, res) => {
     try {
         const criminalID = req.params.Criminal_ID;
         const criminalDetails = await interactive.getCriminalDetails(criminalID);
-        const sentences = await interactive.getCriminalSentences(criminalID);
 
         if (!criminalDetails) {
             res.status(404).send('Criminal not found');
         } else {
-            const transformedCriminal = {
-                ...criminalDetails,
-                Violent: criminalDetails.V_status === 'Y' ? 'Yes' : 'No',
-                Probation: criminalDetails.P_status === 'Y' ? 'Yes' : 'No'
-            };
+            criminalDetails.selectedYesViolent = criminalDetails.V_status === 'Y';
+            criminalDetails.selectedNoViolent = criminalDetails.V_status === 'N';
+            criminalDetails.selectedYesProbation = criminalDetails.P_status === 'Y';
+            criminalDetails.selectedNoProbation = criminalDetails.P_status === 'N';
 
-            res.render("criminal/single", { criminal: transformedCriminal, sentences: sentences });
+            res.render("criminal/single", { criminal: criminalDetails });
         }
     } catch (err) {
         console.error(err);
@@ -197,8 +197,11 @@ app.get("/criminal/details/:Criminal_ID", async (req, res) => {
     }
 });
 
+
 app.post('/criminal/update/:field', async (req, res) => {
+    console.log(req.body);
     const { id, value } = req.body;
+    console.log(id, value);
     const field = req.params.field;
     try {
         await interactive.updateCriminalField(id, field, value);
