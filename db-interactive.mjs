@@ -49,7 +49,6 @@ export async function getCriminalDetails(criminalID) {
 }
 
 export async function updateCriminalField(id, field, value) {
-    console.log(id, field, value);
     try {
         const query = `UPDATE Criminals SET ${field} = ? WHERE Criminal_ID = ?`;
         await db.query(query, [value, id]);
@@ -114,5 +113,31 @@ export async function getCriminalSentences(criminalId) {
     } catch (err) {
         console.error(`Error fetching sentences for criminal ID ${criminalId}:`, err);
         throw err;
+    }
+}
+
+export async function getProbationOfficerById(probID) {
+    const query = 'CALL get_prob_officer_by_id(?);';
+    try {
+        const [results] = await db.query(query, [probID]);
+        return results[0][0];
+    } catch (err) {
+        console.error('Failed to retrieve probation officer:', err);
+        throw err;
+    }
+}
+
+export async function deleteProbOfficerByID(probID) {
+    const query = 'CALL delete_prob_officer_by_id(?);';
+    try {
+        const [results] = await db.query(query, [probID]);
+        if (results.affectedRows > 0) {  
+            return { success: true };
+        } else {
+            return { success: false, message: "No rows affected." };
+        }
+    } catch (err) {
+        console.error('Failed to delete probation officer:', err);
+        throw err; 
     }
 }

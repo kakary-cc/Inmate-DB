@@ -104,12 +104,6 @@ app.post("/register", async (req, res) => {
     }
 });
 
-
-// View details of a criminal
-app.get("/criminal/view/:id", (req, res) => {
-    res.render("criminal/view");
-});
-
 // Add a criminal
 app.get("/criminal/newin", (req, res) => {
     res.render("criminal/new");
@@ -217,9 +211,7 @@ function formatDate(dateValue) {
 
 // update a single field for a single criminal
 app.post('/criminal/update/:field', async (req, res) => {
-    console.log(req.body);
     const { id, value } = req.body;
-    console.log(id, value);
     const field = req.params.field;
     try {
         await interactive.updateCriminalField(id, field, value);
@@ -307,6 +299,42 @@ app.get("/prob_officer/all", async (req, res) => {
     } catch (err) {
         console.error(err);
         res.status(500).send("Error retrieving probation officers.");
+    }
+});
+
+// get a single probation officer
+app.get("/prob_officer/details/:Prob_ID", async (req, res) => {
+    try {
+        const probID = req.params.Prob_ID;
+        const probOfficerDetails = await interactive.getProbationOfficerById(probID);
+
+        if (!probOfficerDetails) {
+            res.status(404).send('Probation officer not found');
+        } else {
+            res.render("prob_officer/single", {
+                probOfficer: probOfficerDetails
+            });
+        }
+    } catch (err) {
+        console.error('Error retrieving probation officer details:', err);
+        res.status(500).send("Error retrieving probation officer details.");
+    }
+});
+
+// delete a probation officer
+app.post('/prob_officer/delete/:probOfficerId', async (req, res) => {
+    const probOfficerId = req.params.probOfficerId;
+
+    try {
+        const result = await interactive.deleteProbOfficerByID(probOfficerId);
+        if (result.success) {
+            res.json({ success: true, message: "Probation officer successfully deleted." });
+        } else {
+            res.status(500).json({ success: false, message: "Failed to delete probation officer." });
+        }
+    } catch (error) {
+        console.error("Error deleting probation officer:", error);
+        res.status(500).json({ success: false, message: "Error deleting probation officer." });
     }
 });
 

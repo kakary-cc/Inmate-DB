@@ -24,13 +24,13 @@
         <td><span id="zip" ondblclick="makeEditable(this)">{{#if criminal.Zip}}{{criminal.Zip}}{{else}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{/if}}</span></td>
         <td><span id="phone" ondblclick="makeEditable(this)">{{#if criminal.Phone}}{{criminal.Phone}}{{else}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{/if}}</span></td>
         <td>
-            <select id="v_status" class="editable-select">
+            <select id="v_status" class="editable-select" onchange="saveData(this)">
                 <option value="Y" {{#if criminal.selectedYesViolent}}selected{{/if}}>Yes</option>
                 <option value="N" {{#if criminal.selectedNoViolent}}selected{{/if}}>No</option>
             </select>
         </td>
         <td>
-            <select id="p_status" class="editable-select">
+            <select id="p_status" class="editable-select" onchange="saveData(this)">
                 <option value="Y" {{#if criminal.selectedYesProbation}}selected{{/if}}>Yes</option>
                 <option value="N" {{#if criminal.selectedNoProbation}}selected{{/if}}>No</option>
             </select>
@@ -51,7 +51,7 @@
     <tr>
         <td>{{this.Sentence_ID}}</td>
         <td>{{this.Type}}</td>
-        <td>{{#if this.Prob_ID}}<a href="/probation-officer/{{this.Prob_ID}}">Probation Officer (#{{this.Prob_ID}})</a>{{else}}N/A{{/if}}</td>
+        <td>{{#if this.Prob_ID}}<a href="/probation-officer/{{this.Prob_ID}}">{{this.First}}, {{this.Last}} (#{{this.Prob_ID}})</a>{{else}}N/A{{/if}}</td>
         <td>{{this.Start_date}}</td>
         <td>{{this.End_date}}</td>
         <td>{{this.Violations}}</td>
@@ -142,6 +142,9 @@ function makeEditable(element) {
 }
 
 document.addEventListener('DOMContentLoaded', function() {
+    document.querySelectorAll('select.editable-select').forEach(select => {
+        select.setAttribute('data-original', select.value);
+    });
     document.querySelectorAll('span').forEach(span => {
         span.ondblclick = function() {
             this.contentEditable = true;
