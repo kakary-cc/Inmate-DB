@@ -1,6 +1,8 @@
 <div class="header-container" id="criminal-details" data-criminal-id="{{criminal.Criminal_ID}}">
     <h3>
-        Displaying details of #{{criminal.Criminal_ID}}: <span id="First" ondblclick="makeEditable(this)">{{criminal.First}}</span>, <span id="Last" ondblclick="makeEditable(this)">{{criminal.Last}}</span>
+        Displaying details of #{{criminal.Criminal_ID}}:
+        <span id="First" ondblclick="makeEditable(this)">{{#if criminal.First}}{{criminal.First}}{{else}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{/if}}</span>,
+        <span id="Last" ondblclick="makeEditable(this)">{{#if criminal.Last}}{{criminal.Last}}{{else}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{/if}}</span>
     </h3>
     <div class="button-container">
         <button onclick="confirmDelete('{{criminal.Criminal_ID}}')" class="normal-button">Delete</button>
@@ -17,10 +19,10 @@
         <th>Probation</th>
     </tr>
     <tr>
-        <td><span id="street" ondblclick="makeEditable(this)">{{criminal.Street}}</span></td>
-        <td><span id="city" ondblclick="makeEditable(this)">{{criminal.City}}</span>, <span id="state" ondblclick="makeEditable(this)">{{criminal.State}}</span></td>
-        <td><span id="zip" ondblclick="makeEditable(this)">{{criminal.Zip}}</span></td>
-        <td><span id="phone" ondblclick="makeEditable(this)">{{criminal.Phone}}</span></td>
+        <td><span id="street" ondblclick="makeEditable(this)">{{#if criminal.Street}}{{criminal.Street}}{{else}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{/if}}</span></td>
+        <td><span id="city" ondblclick="makeEditable(this)">{{#if criminal.City}}{{criminal.City}}{{else}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{/if}}</span>, <span id="state" ondblclick="makeEditable(this)">{{#if criminal.State}}{{criminal.State}}{{else}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{/if}}</span></td>
+        <td><span id="zip" ondblclick="makeEditable(this)">{{#if criminal.Zip}}{{criminal.Zip}}{{else}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{/if}}</span></td>
+        <td><span id="phone" ondblclick="makeEditable(this)">{{#if criminal.Phone}}{{criminal.Phone}}{{else}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{/if}}</span></td>
         <td>
             <select id="v_status" class="editable-select">
                 <option value="Y" {{#if criminal.selectedYesViolent}}selected{{/if}}>Yes</option>
@@ -33,8 +35,6 @@
                 <option value="N" {{#if criminal.selectedNoProbation}}selected{{/if}}>No</option>
             </select>
         </td>
-
-
     </tr>
 </table>
 <br>
@@ -138,56 +138,62 @@ function makeEditable(element) {
 }
 
 document.addEventListener('DOMContentLoaded', function() {
-    const criminalId = document.querySelector('#criminal-details').getAttribute('data-criminal-id');
-
-    // Setup change event for SELECT elements
-    document.querySelectorAll('.editable-select').forEach(select => {
-        select.onchange = function() {
-            saveData(criminalId, this); 
-        };
-    });
-
-    // Setup double-click and blur events for SPAN elements
-    document.querySelectorAll('span').forEach(span => {
-        span.ondblclick = function() {
-            this.contentEditable = true;
-            this.focus();
-        };
-        span.onblur = function() {
-            saveData(criminalId, this);
-            this.contentEditable = false;
-        };
-        span.onkeypress = function(e) {
-            if (e.key === 'Enter') {
-                e.preventDefault();
-                this.blur();
-            }
-        };
+    document.querySelectorAll('.editable-select, span').forEach(element => {
+        element.setAttribute('data-original', element.textContent.trim());
+        
+        if (element.tagName === 'SELECT') {
+            element.onchange = function() {
+                saveData(this);
+            };
+        } else {
+            element.ondblclick = function() {
+                this.contentEditable = true;
+                this.focus();
+            };
+            element.onblur = function() {
+                saveData(this);
+                this.contentEditable = false;
+            };
+            element.onkeypress = function(e) {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    this.blur();
+                }
+            };
+        }
     });
 });
 
-function saveData(criminalId, element) {
+function saveData(element) {
+    const criminalId = document.querySelector('#criminal-details').getAttribute('data-criminal-id');
     const field = element.id;
-    const value = element.tagName === 'SELECT' ? element.value : element.textContent; // Use textContent for better compatibility
+    const value = (element.tagName === 'SELECT' ? element.value : element.textContent).trim();
+    const originalValue = element.getAttribute('data-original');
 
-    fetch(`/criminal/update/${field}`, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ id: criminalId, value: value })
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.success) {
-            console.log('Update successful:', field, value);
-        } else {
-            console.log('Update failed:', field, value);
-            alert('Failed to update. Please try again.');
-        }
-    })
-    .catch(error => {
-        console.error('Error updating:', error);
-    });
+    if (value !== originalValue) {
+        fetch(`/criminal/update/${field}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ id: criminalId, value: value })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                console.log('Update successful');
+                element.setAttribute('data-original', value); 
+            } else {
+                console.log('Update failed');
+                alert('Failed to update. Please try again.');
+            }
+        })
+        .catch(error => {
+            console.error('Error updating:', error);
+        });
+    } else {
+        console.log('No changes detected, update skipped.');
+    }
 }
+
 </script>
