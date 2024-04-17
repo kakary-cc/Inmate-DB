@@ -137,52 +137,25 @@ function makeEditable(element) {
     }
 }
 
-function saveData(criminalId, element) {
-    const field = element.id;
-    const value = element.tagName === 'SELECT' ? element.value : element.innerText;
-    element.setAttribute('data-editable', 'false');
-    if (element.tagName === 'SPAN') {
-        element.contentEditable = false;
-    } else if (element.tagName === 'SELECT') {
-        element.disabled = true;
-    }
-
-    fetch(`/criminal/update/${field}`, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ id: criminalId, value: value })
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.success) {
-            console.log('Update successful');
-        } else {
-            console.log('Update failed');
-            alert('Failed to update. Please try again.');
-        }
-    })
-    .catch(error => {
-        console.error('Error updating:', error);
-    });
-}
-
 document.addEventListener('DOMContentLoaded', function() {
+    const criminalId = document.querySelector('#criminal-details').getAttribute('data-criminal-id');
+
+    // Setup change event for SELECT elements
     document.querySelectorAll('.editable-select').forEach(select => {
         select.onchange = function() {
-            saveData(this); 
+            saveData(criminalId, this); 
         };
     });
 
-    document.querySelectorAll('span[data-editable]').forEach(span => {
+    // Setup double-click and blur events for SPAN elements
+    document.querySelectorAll('span').forEach(span => {
         span.ondblclick = function() {
             this.contentEditable = true;
             this.focus();
         };
         span.onblur = function() {
+            saveData(criminalId, this);
             this.contentEditable = false;
-            saveData(this);
         };
         span.onkeypress = function(e) {
             if (e.key === 'Enter') {
@@ -193,10 +166,9 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 
-function saveData(element) {
-    const criminalId = document.querySelector('#criminal-details').getAttribute('data-criminal-id');
+function saveData(criminalId, element) {
     const field = element.id;
-    const value = element.tagName === 'SELECT' ? element.value : element.innerText;
+    const value = element.tagName === 'SELECT' ? element.value : element.textContent; // Use textContent for better compatibility
 
     fetch(`/criminal/update/${field}`, {
         method: 'POST',
@@ -208,9 +180,9 @@ function saveData(element) {
     .then(response => response.json())
     .then(data => {
         if (data.success) {
-            console.log('Update successful');
+            console.log('Update successful:', field, value);
         } else {
-            console.log('Update failed');
+            console.log('Update failed:', field, value);
             alert('Failed to update. Please try again.');
         }
     })
