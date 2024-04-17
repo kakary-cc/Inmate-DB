@@ -49,11 +49,11 @@
     </tr>
     {{#each sentences}}
     <tr>
-        <td>{{this.ID}}</td>
+        <td>{{this.Sentence_ID}}</td>
         <td>{{this.Type}}</td>
-        <td>{{#if this.ProbationOfficerID}}<a href="/probation-officer/{{this.ProbationOfficerID}}">Probation, Officer (#{{this.ProbationOfficerID}})</a>{{else}}N/A{{/if}}</td>
-        <td>{{this.StartDate}}</td>
-        <td>{{this.EndDate}}</td>
+        <td>{{#if this.Prob_ID}}<a href="/probation-officer/{{this.Prob_ID}}">Probation Officer (#{{this.Prob_ID}})</a>{{else}}N/A{{/if}}</td>
+        <td>{{this.Start_date}}</td>
+        <td>{{this.End_date}}</td>
         <td>{{this.Violations}}</td>
     </tr>
     {{/each}}

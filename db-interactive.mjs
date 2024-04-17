@@ -48,16 +48,6 @@ export async function getCriminalDetails(criminalID) {
     }
 }
 
-export async function getCriminalSentences(criminalID) {
-    const query = 'SELECT * FROM Sentences WHERE Criminal_ID = ?;';
-    try {
-        const [results] = await db.query(query, [criminalID]);
-        return results
-    } catch (err) {
-        throw err;
-    }
-}
-
 export async function updateCriminalField(id, field, value) {
     console.log(id, field, value);
     try {
@@ -111,6 +101,18 @@ export async function getAllProbOfficers() {
         return probOfficers;
     } catch (err) {
         console.error("Error fetching probation officers:", err);
+        throw err;
+    }
+}
+
+export async function getCriminalSentences(criminalId) {
+    console.log(`Fetching sentences for criminal ID: ${criminalId}`);
+    try {
+        const [sentences, fields] = await db.query('CALL get_sentences_by_criminal_id(?)', [criminalId]);
+        console.log(`Fetched sentences for criminal ID ${criminalId}:`, sentences);
+        return sentences[0];
+    } catch (err) {
+        console.error(`Error fetching sentences for criminal ID ${criminalId}:`, err);
         throw err;
     }
 }

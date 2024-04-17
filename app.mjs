@@ -180,6 +180,7 @@ app.get("/criminal/details/:Criminal_ID", async (req, res) => {
     try {
         const criminalID = req.params.Criminal_ID;
         const criminalDetails = await interactive.getCriminalDetails(criminalID);
+        const criminalSentences = await interactive.getCriminalSentences(criminalID);
 
         if (!criminalDetails) {
             res.status(404).send('Criminal not found');
@@ -189,13 +190,30 @@ app.get("/criminal/details/:Criminal_ID", async (req, res) => {
             criminalDetails.selectedYesProbation = criminalDetails.P_status === 'Y';
             criminalDetails.selectedNoProbation = criminalDetails.P_status === 'N';
 
-            res.render("criminal/single", { criminal: criminalDetails });
+            const formattedSentences = criminalSentences.map(sentence => {
+                return {
+                    ...sentence,
+                    Start_date: formatDate(sentence.Start_date),
+                    End_date: formatDate(sentence.End_date)
+                };
+            });
+
+            res.render("criminal/single", {
+                criminal: criminalDetails,
+                sentences: formattedSentences
+            });
         }
     } catch (err) {
         console.error(err);
         res.status(500).send("Error retrieving criminal details.");
     }
 });
+
+function formatDate(dateValue) {
+    if (!dateValue) return '';
+    return new Date(dateValue).toISOString().split('T')[0]; // Converts date to YYYY-MM-DD format
+}
+
 
 // update a single field for a single criminal
 app.post('/criminal/update/:field', async (req, res) => {
