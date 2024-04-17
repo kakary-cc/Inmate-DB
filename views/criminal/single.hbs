@@ -1,6 +1,13 @@
-<h3>
-    Displaying details of #{{criminal.Criminal_ID}}: {{criminal.First}}, {{criminal.Last}}
-</h3>
+<div class="header-container">
+    <h3>
+        Displaying details of #{{criminal.Criminal_ID}}: <span id="firstName" data-editable="false" ondblclick="makeEditable(this)">{{criminal.First}}</span>, <span id="lastName" data-editable="false" ondblclick="makeEditable(this)">{{criminal.Last}}</span>
+    </h3>
+    <div class="button-container">
+        <button onclick="toggleEdit()" class="normal-button">Edit</button>
+        <button onclick="confirmDelete('{{criminal.Criminal_ID}}')" class="normal-button">Delete</button>
+    </div>
+</div>
+
 <br>
 
 <table>
@@ -13,12 +20,12 @@
         <th>Probation</th>
     </tr>
     <tr>
-        <td>{{criminal.Street}}</td>
-        <td>{{criminal.City}}, {{criminal.State}}</td>
-        <td>{{criminal.Zip}}</td>
-        <td>{{criminal.Phone}}</td>
-        <td>{{this.Violent}}</td>
-        <td>{{this.Probation}}</td>
+        <td><span id="street" data-editable="false" ondblclick="makeEditable(this)">{{criminal.Street}}</span></td>
+        <td><span id="city" data-editable="false" ondblclick="makeEditable(this)">{{criminal.City}}</span>, <span id="state" data-editable="false" ondblclick="makeEditable(this)">{{criminal.State}}</span></td>
+        <td><span id="zip" data-editable="false" ondblclick="makeEditable(this)">{{criminal.Zip}}</span></td>
+        <td><span id="phone" data-editable="false" ondblclick="makeEditable(this)">{{criminal.Phone}}</span></td>
+        <td><span id="violent" data-editable="false" ondblclick="makeEditable(this)">{{this.Violent}}</span></td>
+        <td><span id="probation" data-editable="false" ondblclick="makeEditable(this)">{{this.Probation}}</span></td>
     </tr>
 </table><br>
 
@@ -42,3 +49,82 @@
     </tr>
     {{/each}}
 </table>
+
+<script>
+function confirmDelete(criminalId) {
+    if (confirm("Are you sure you want to delete this criminal?")) {
+        fetch(`/criminal/delete/${criminalId}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ id: criminalId })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                alert('Criminal successfully deleted');
+                window.location.href = '/criminal/all'; 
+            } else {
+                alert('Failed to delete. Please try again.');
+            }
+        })
+        .catch(error => {
+            console.error('Error deleting criminal:', error);
+            alert('Failed to delete. Please try again.');
+        });
+    }
+}
+
+function toggleEdit() {
+    document.querySelectorAll('#criminal-details span').forEach(span => {
+        makeEditable(span);
+    });
+}
+
+function makeEditable(element) {
+    if (element.getAttribute('data-editable') === 'false') {
+        element.setAttribute('data-editable', 'true');
+        element.contentEditable = true;
+        element.focus();
+        element.onblur = () => saveData(element);
+        element.onkeypress = function(e) {
+            if (e.key === 'Enter') {
+                e.preventDefault(); 
+                element.blur();  
+            }
+        };
+    } else {
+        element.setAttribute('data-editable', 'false');
+        element.contentEditable = false;
+    }
+}
+
+function saveData(element) {
+    const field = element.id;
+    const value = element.innerText;
+    element.setAttribute('data-editable', 'false');
+    element.contentEditable = false;
+
+    fetch(`/criminal/update/${field}`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ id: '{{criminal.Criminal_ID}}', value: value })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            console.log('Update successful');
+        } else {
+            console.log('Update failed');
+            alert('Failed to update. Please try again.');
+        }
+    })
+    .catch(error => {
+        console.error('Error updating:', error);
+    });
+}
+
+</script>

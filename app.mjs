@@ -197,6 +197,34 @@ app.get("/criminal/details/:Criminal_ID", async (req, res) => {
     }
 });
 
+app.post('/criminal/update/:field', async (req, res) => {
+    const { id, value } = req.body;
+    const field = req.params.field;
+    try {
+        await interactive.updateCriminalField(id, field, value);
+        res.json({ success: true });
+    } catch (err) {
+        console.error('Failed to update:', err);
+        res.json({ success: false });
+    }
+});
+
+app.post('/criminal/delete/:criminalId', async (req, res) => {
+    const criminalId = req.params.criminalId;
+
+    try {
+        const result = await interactive.deleteCriminalById(criminalId);
+        if (result.success) {
+            res.json({ success: true, message: "Criminal successfully deleted." });
+        } else {
+            res.status(500).json({ success: false, message: "Failed to delete criminal." });
+        }
+    } catch (error) {
+        console.error("Error deleting criminal:", error);
+        res.status(500).json({ success: false, message: "Error deleting criminal." });
+    }
+});
+
 
 const port = process.env.EXPRESS_PORT || 3000;
 app.listen(port, () => {

@@ -13,10 +13,9 @@ label {
     vertical-align: top;
 }
 
-.form-item {
+.normal-interactable {
     margin-top: 5px;
     margin-bottom: 5px;
-    padding: 7px 9px;
     margin: 0 5px; 
     color: black;
     border-radius: 4px;
@@ -143,3 +142,35 @@ nav button, .dropbtn {
   
   .dropdown:hover .dropbtn {background-color: gray;}
 
+  .header-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 5px 0;
+}
+
+.h3, .button-container {
+    margin: 0;
+    padding: 0;
+    display: flex;
+    align-items: center; 
+}
+
+.normal-button {
+    padding: 8px 16px;
+    background-color: white;
+    color: black;
+    border: 1px solid gray;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: bold;
+    margin-left: 5px; 
+}
+
+.normal-button:hover {
+    background-color: lightgray;
+}
+
+.action-button {
+    margin: 0 5px; 
+}

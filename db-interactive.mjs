@@ -58,5 +58,21 @@ export async function getCriminalSentences(criminalID) {
     }
 }
 
+export async function updateCriminalField(id, field, value) {
+    try {
+        const query = `UPDATE Criminals SET ${field} = ? WHERE Criminal_ID = ?`;
+        await db.query(query, [value, id]);
+    } catch (err) {
+        throw err;
+    }
+}
 
-
+export async function deleteCriminalById(criminalId) {
+    try {
+        await db.query('CALL delete_criminal_by_id(?)', [criminalId]);
+        return { success: true };
+    } catch (err) {
+        console.error("Failed deleteCriminalById procedure:", err);
+        return { success: false };
+    }
+}

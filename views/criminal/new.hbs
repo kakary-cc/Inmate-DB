@@ -1,33 +1,32 @@
 <h3>
     Add Criminal Information
 </h3>
-<form method="POST" action="new">
+<form method="POST" action="/criminal/new"> 
     <div class="form-item">
         <label>Name*</label>
-        <input placeholder="First">
-        <input placeholder="Last">
+        <input name="firstName" placeholder="First">
+        <input name="lastName" placeholder="Last"> 
     </div>
 
     <div class="form-item">
         <label>Address*</label>
-        <input size="42" placeholder="Street">
+        <input name="street" size="42" placeholder="Street">
     </div>
     <div class="form-item">
         <label></label>
-        <input placeholder="City">
-        <input size="15" placeholder="State">
-        <input size="10" placeholder="Zipcode">
+        <input name="city" placeholder="City"> 
+        <input name="state" size="15" placeholder="State"> 
+        <input name="zipCode" size="10" placeholder="Zipcode"> 
     </div>
-
 
     <div class="form-item">
         <label>Phone*</label>
-        <input placeholder="No hyphen">
+        <input name="phoneNumber" placeholder="No hyphen"> 
     </div>
 
     <div class="form-item">
         <label>Violent</label>
-        <select>
+        <select name="violent"> 
             <option value="no">No</option>
             <option value="yes">Yes</option>
         </select>
@@ -35,15 +34,15 @@
 
     <div class="form-item">
         <label>Probation</label>
-        <select>
+        <select name="probation"> 
             <option value="no">No</option>
             <option value="yes">Yes</option>
         </select>
     </div>
-
+    
     <div class="form-item">
         <label>Aliases</label>
-        <textarea cols="40" rows="3" placeholder="Enter in seperate lines"></textarea>
+        <textarea name="aliases" cols="40" rows="3" placeholder="Enter in separate lines"></textarea> 
     </div>
 
     <div class="form-item">
