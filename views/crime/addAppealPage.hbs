@@ -1,0 +1,29 @@
+<link rel="stylesheet" href="/css/formInputPagesStyles.css">
+
+<h3>
+    Add Appeal for Crime #{{crime_ID}}
+</h3>
+<form method="POST" action="/crime/addAppeal/{{crime_ID}}">
+    <div class="form-item">
+        <label>Filing Date*</label>
+        <input type="date" name="fillingDate" required>
+    </div>
+
+    <div class="form-item">
+        <label>Hearing Date*</label>
+        <input type="date" name="hearingDate" required>
+    </div>
+
+    <div class="form-item">
+        <label>Status*</label>
+        <select name="status">
+            <option value="P">Pending</option>
+            <option value="A">Approved</option>
+            <option value="D">Denied</option>
+        </select>
+    </div>
+
+    <div class="form-item">
+        <input type="submit" value="Add Appeal">
+    </div>
+</form>

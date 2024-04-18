@@ -131,6 +131,17 @@ export async function getAppealsByCrimeID(Crime_ID) {
     }
 }
 
+export async function addAppealByCrimeID(crimeID, fillingDate, hearingDate, status) {
+    try {
+        await db.query('CALL insert_appeal(?, ?, ?, ?)', [crimeID, fillingDate, hearingDate, status]);
+        return { success: true, message: "Appeal successfully added." };
+    } catch (err) {
+        console.error("Failed to add appeal:", err);
+        return { success: false, message: err.sqlMessage || "An error occurred while adding the appeal." };
+    }
+}
+
+
 
 export async function insertProbationOfficer(firstName, lastName, street, city, state, zipCode, phoneNumber, email, status) {
     try {

@@ -464,6 +464,37 @@ app.get('/crime/details/:Crime_ID', async (req, res) => {
     }
 });
 
+// add appeal by crime_ID: the frontend
+app.get('/crime/addAppeal/:Crime_ID', async (req, res) => {
+    try {
+        const { Crime_ID } = req.params;
+        res.render("crime/addAppealPage", { crime_ID: Crime_ID });
+    } catch (err) {
+        console.error(err);
+        res.status(500).send("Error loading the add appeal page.");
+    }
+});
+
+// add appeal by crime_ID: the backend
+app.post('/crime/addAppeal/:Crime_ID', async (req, res) => {
+    const { Crime_ID } = req.params;
+    const { fillingDate, hearingDate, status } = req.body;
+
+    try {
+        const result = await interactive.addAppealByCrimeID(Crime_ID, fillingDate, hearingDate, status);
+        if (result.success) {
+            res.redirect('/crime/details/' + Crime_ID); 
+        } else {
+            res.status(400).send(result.message);
+        }
+    } catch (error) {
+        console.error('Error in submitting appeal:', error);
+        res.status(500).send("Server error in processing your request.");
+    }
+});
+
+
+
 const port = process.env.EXPRESS_PORT || 3000;
 app.listen(port, () => {
     console.log(`Server running on port ${port}`);

@@ -517,8 +517,7 @@ END$$
 DELIMITER ;
 
 DELIMITER $$
-CREATE PROCEDURE insert_appeal(
-    IN p_Appeal_ID DECIMAL(5),
+CREATE PROCEDURE insert_appeal_by_crime_id(
     IN p_Crime_ID DECIMAL(9),
     IN p_Filling_date DATE,
     IN p_Hearing_date DATE,
@@ -526,13 +525,11 @@ CREATE PROCEDURE insert_appeal(
 )
 BEGIN
     INSERT INTO Appeals (
-        Appeal_ID,
         Crime_ID,
         Filling_date,
         Hearing_date,
         Status
     ) VALUES (
-        p_Appeal_ID,
         p_Crime_ID,
         p_Filling_date,
         p_Hearing_date,
