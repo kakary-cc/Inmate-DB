@@ -1,0 +1,43 @@
+<link rel="stylesheet" href="/css/formInputPagesStyles.css">
+
+<h3>
+    Add Crime for Criminal #{{criminal_ID}}
+</h3>
+<form method="POST" action="/criminal/addCrime/{{criminal_ID}}">
+    <div class="form-item">
+        <label>Classification*</label>
+        <select name="classification">
+            <option value="F">Felony</option>
+            <option value="M">Misdemeanor</option>
+            <option value="I">Infraction</option>
+        </select>
+    </div>
+
+    <div class="form-item">
+        <label>Date Charged*</label>
+        <input type="date" name="dateCharged" required>
+    </div>
+
+    <div class="form-item">
+        <label>Status*</label>
+        <select name="status">
+            <option value="CA">Case Active</option>
+            <option value="CC">Case Closed</option>
+            <option value="CO">Case Ongoing</option>
+        </select>
+    </div>
+
+    <div class="form-item">
+        <label>Hearing Date</label>
+        <input type="date" name="hearingDate">
+    </div>
+
+    <div class="form-item">
+        <label>Appeal Cut-off Date</label>
+        <input type="date" name="appealCutDate">
+    </div>
+
+    <div class="form-item">
+        <input type="submit" value="Add Crime">
+    </div>
+</form>

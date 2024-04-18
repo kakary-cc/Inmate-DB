@@ -79,6 +79,23 @@ export async function insertSentence(criminalId, type, probID, startDate, endDat
     }
 }
 
+export async function insertCrime(criminalID, classification, dateCharged, status, hearingDate, appealCutDate) {
+    try {
+        await db.query('CALL insert_crime(?, ?, ?, ?, ?, ?)', [
+            criminalID,
+            classification,
+            dateCharged,
+            status,
+            hearingDate,
+            appealCutDate
+        ]);
+        return { success: true, message: "Crime successfully added." };
+    } catch (err) {
+        console.error("Failed to insert crime:", err);
+        return { success: false, message: err.sqlMessage || "An error occurred while adding the crime." };
+    }
+}
+
 export async function insertProbationOfficer(firstName, lastName, street, city, state, zipCode, phoneNumber, email, status) {
     try {
         await db.query('CALL insert_prob_officer(?, ?, ?, ?, ?, ?, ?, ?, ?)', [
@@ -116,6 +133,18 @@ export async function getCriminalSentences(criminalId) {
     }
 }
 
+export async function getCriminalCrimes(criminalId) {
+    console.log(`Fetching crimes for criminal ID: ${criminalId}`);
+    try {
+        const [crimes, fields] = await db.query('CALL get_crimes_by_criminal_id(?)', [criminalId]);
+        console.log(`Fetched crimes for criminal ID ${criminalId}:`, crimes);
+        return crimes[0];
+    } catch (err) {
+        console.error(`Error fetching crimes for criminal ID ${criminalId}:`, err);
+        throw err;
+    }
+}
+
 export async function getProbationOfficerById(probID) {
     const query = 'CALL get_prob_officer_by_id(?);';
     try {
@@ -148,6 +177,18 @@ export async function updateProbOfficerField(id, field, value) {
         await db.query(query, [value, id]);
     } catch (err) {
         console.error('Failed to update probation officer:', err);
+        throw err;
+    }
+}
+
+export async function getProbationOfficerSentences(probID) {
+    console.log(`Fetching sentences for probID: ${probID}`);
+    try {
+        const [sentences] = await db.query('CALL get_sentences_by_prob_officer_id(?)', [probID]);
+        console.log(`Fetched sentences for probID ${probID}:`, sentences);
+        return sentences;
+    } catch (err) {
+        console.error(`Error fetching sentences for probID ${probID}:`, err);
         throw err;
     }
 }

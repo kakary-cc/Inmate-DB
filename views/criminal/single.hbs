@@ -42,7 +42,7 @@
     <tr style="background: rgb(200, 200, 200)">
         <th>Sentence ID</th>
         <th>Type</th>
-        <th>Probation Officer</th>
+        <th>Probation Officer(s)</th>
         <th>Start</th>
         <th>End</th>
         <th>Violation</th>
@@ -51,7 +51,7 @@
     <tr>
         <td>{{this.Sentence_ID}}</td>
         <td>{{this.Type}}</td>
-        <td>{{#if this.Prob_ID}}<a href="/probation-officer/{{this.Prob_ID}}">{{this.First}}, {{this.Last}} (#{{this.Prob_ID}})</a>{{else}}N/A{{/if}}</td>
+        <td>{{#if this.Prob_ID}}<a href="/prob_officer/details/{{this.Prob_ID}}">#{{this.Prob_ID}}</a>{{else}}N/A{{/if}}</td>
         <td>{{this.Start_date}}</td>
         <td>{{this.End_date}}</td>
         <td>{{this.Violations}}</td>
@@ -60,6 +60,30 @@
 </table>
 <div class="button-container">
     <a href="/criminal/addSentence/{{criminal.Criminal_ID}}" class="normal-button">Add Sentence</a>
+</div>
+<br>
+<table>
+    <tr style="background: rgb(200, 200, 200)">
+        <th>Crime ID</th>
+        <th>Type</th>
+        <th>Date Charged</th>
+        <th>Status</th>
+        <th>Hearing Date</th>
+        <th>Appeal Cut Date</th>
+    </tr>
+    {{#each crimes}}
+    <tr>
+        <td>{{this.Crime_ID}}</td>
+        <td>{{this.Classification}}</td>
+        <td>{{this.Date_charged}}</td>
+        <td>{{this.Status}}</td>
+        <td>{{this.Hearing_date}}</td>
+        <td>{{this.Appeal_cut_date}}</td>
+    </tr>
+    {{/each}}
+</table>
+<div class="button-container">
+    <a href="/criminal/addCrime/{{criminal.Criminal_ID}}" class="normal-button">Add Crime</a>
 </div>
 
 

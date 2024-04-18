@@ -318,7 +318,6 @@ DELIMITER ;
 
 DELIMITER $$
 CREATE PROCEDURE insert_crime(
-    IN p_Crime_ID DECIMAL(9),
     IN p_Criminal_ID DECIMAL(6),
     IN p_Classification CHAR(1),
     IN p_Date_charged DATE,
@@ -328,7 +327,6 @@ CREATE PROCEDURE insert_crime(
 )
 BEGIN
     INSERT INTO Crimes (
-        Crime_ID,
         Criminal_ID,
         Classification,
         Date_charged,
@@ -336,7 +334,6 @@ BEGIN
         Hearing_date,
         Appeal_cut_date
     ) VALUES (
-        p_Crime_ID,
         p_Criminal_ID,
         IFNULL(p_Classification, 'U'),
         p_Date_charged,
@@ -769,6 +766,17 @@ END$$
 DELIMITER ;
 
 SELECT "Creating procedures (update)..." AS message;
+
+-- retrieve sentences by prob_officer_id
+DELIMITER $$
+CREATE PROCEDURE get_sentences_by_prob_officer_id(IN p_Prob_ID INT)
+BEGIN
+    SELECT s.Sentence_ID, s.Type, s.Start_date, s.End_date, s.Violations, c.Criminal_ID, c.First AS CriminalFirst, c.Last AS CriminalLast
+    FROM Sentences s
+    JOIN Criminals c ON s.Criminal_ID = c.Criminal_ID
+    WHERE s.Prob_ID = p_Prob_ID;
+END$$
+
 
 -- Update Stored Procedures
 -- Update Criminal by Criminal_ID

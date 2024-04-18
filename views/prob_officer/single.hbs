@@ -4,6 +4,10 @@
         <span id="First" ondblclick="makeEditable(this)">{{#if probOfficer.First}}{{probOfficer.First}}{{else}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{/if}}</span>,
         <span id="Last" ondblclick="makeEditable(this)">{{#if probOfficer.Last}}{{probOfficer.Last}}{{else}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{/if}}</span>
     </h3>
+
+    <div class="button-container">
+    <button onclick="window.location.href='/prob_officer/all';" class="normal-button">Back to All Probation Officers</button>
+    </div>
     <div class="button-container">
         <button onclick="confirmDelete('{{probOfficer.Prob_ID}}')" class="normal-button">Delete</button>
     </div>
@@ -32,8 +36,29 @@
         </td>
     </tr>
 </table>
+<br>
+<table>
+    <tr style="background: rgb(200, 200, 200)">
+        <th>Sentence ID</th>
+        <th>Type</th>
+        <th>Probation Officer(s)</th>
+        <th>Start</th>
+        <th>End</th>
+        <th>Violation</th>
+    </tr>
+    {{#each sentences}}
+    <tr>
+        <td>{{Sentence_ID}}</td>
+        <td>{{Type}}</td>
+        <td>{{#if Prob_ID}}<a href="/prob_officer/details/{{Prob_ID}}">#{{Prob_ID}}</a>{{else}}N/A{{/if}}</td>
+        <td>{{Start_date}}</td>
+        <td>{{End_date}}</td>
+        <td>{{Violations}}</td>
+    </tr>
+    {{/each}}
+</table>
 <div class="button-container">
-    <a href="/prob_officer/all" class="normal-button">Back to All Probation Officers</a>
+    <a href="/criminal/addSentence/{{criminal.Criminal_ID}}" class="normal-button">Add Sentence</a>
 </div>
 
 <script>

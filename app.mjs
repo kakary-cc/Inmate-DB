@@ -175,6 +175,7 @@ app.get("/criminal/details/:Criminal_ID", async (req, res) => {
         const criminalID = req.params.Criminal_ID;
         const criminalDetails = await interactive.getCriminalDetails(criminalID);
         const criminalSentences = await interactive.getCriminalSentences(criminalID);
+        const criminalCrimes = await interactive.getCriminalCrimes(criminalID);
 
         if (!criminalDetails) {
             res.status(404).send('Criminal not found');
@@ -192,9 +193,19 @@ app.get("/criminal/details/:Criminal_ID", async (req, res) => {
                 };
             });
 
+            const formattedCrimes = criminalCrimes.map(crime => {
+                return {
+                    ...crime,
+                    Date_charged: formatDate(crime.Date_charged),
+                    Hearing_date: formatDate(crime.Hearing_date),
+                    Appeal_cut_date: formatDate(crime.Appeal_cut_date)
+                };
+            });
+
             res.render("criminal/single", {
                 criminal: criminalDetails,
-                sentences: formattedSentences
+                sentences: formattedSentences,
+                crimes: formattedCrimes
             });
         }
     } catch (err) {
@@ -269,6 +280,38 @@ app.post('/criminal/addSentence/:Criminal_ID', async (req, res) => {
     }
 });
 
+// add a sentence for a criminal: the page
+app.get("/criminal/addCrime/:Criminal_ID", async (req, res) => {
+    try {
+        const { Criminal_ID } = req.params;
+        res.render("criminal/addCrimePage", { criminal_ID: Criminal_ID });
+    } catch (err) {
+        console.error(err);
+        res.status(500).send("Error loading the add sentence page.");
+    }
+});
+
+// add a crime for a criminal: the backend 
+// INCOMPLETE
+// Ensure your server is set up to parse POST request bodies (e.g., using express.json() or express.urlencoded())
+app.post('/criminal/addCrime/:Criminal_ID', async (req, res) => {
+    const { Criminal_ID } = req.params;
+    const { classification, dateCharged, status, hearingDate, appealCutDate } = req.body;
+
+    try {
+        const result = await interactive.insertCrime(Criminal_ID, classification, dateCharged, status, hearingDate, appealCutDate);
+        if (result.success) {
+            res.redirect('/criminal/details/' + Criminal_ID); // Redirect to the criminal's detail page or any other appropriate page
+        } else {
+            res.status(400).send(result.message); // Handle error, maybe redirect back to form with an error message
+        }
+    } catch (error) {
+        console.error('Error in submitting crime:', error);
+        res.status(500).send("Server error in processing your request.");
+    }
+});
+
+
 // add a probation officer: the page
 app.get("/prob_officer/newin", (req, res) => {
     res.render("prob_officer/new");
@@ -307,15 +350,23 @@ app.get("/prob_officer/details/:Prob_ID", async (req, res) => {
     try {
         const probID = req.params.Prob_ID;
         const probOfficerDetails = await interactive.getProbationOfficerById(probID);
+        const probOfficerSentences = await interactive.getProbationOfficerSentences(probID);   
 
         if (!probOfficerDetails) {
             res.status(404).send('Probation officer not found');
         } else {
+            const formattedSentences = probOfficerSentences.map(sentence => {
+                return {
+                    ...sentence,
+                    Start_date: formatDate(sentence.Start_date),
+                    End_date: formatDate(sentence.End_date)
+                };
+            });
             probOfficerDetails.StatusActive = probOfficerDetails.Status === 'A';
             probOfficerDetails.StatusInactive = probOfficerDetails.Status === 'I';
-
             res.render("prob_officer/single", {
-                probOfficer: probOfficerDetails
+                probOfficer: probOfficerDetails, 
+                sentences: formattedSentences
             });
         }
     } catch (err) {
