@@ -292,8 +292,6 @@ app.get("/criminal/addCrime/:Criminal_ID", async (req, res) => {
 });
 
 // add a crime for a criminal: the backend 
-// INCOMPLETE
-// Ensure your server is set up to parse POST request bodies (e.g., using express.json() or express.urlencoded())
 app.post('/criminal/addCrime/:Criminal_ID', async (req, res) => {
     const { Criminal_ID } = req.params;
     const { classification, dateCharged, status, hearingDate, appealCutDate } = req.body;
@@ -301,16 +299,15 @@ app.post('/criminal/addCrime/:Criminal_ID', async (req, res) => {
     try {
         const result = await interactive.insertCrime(Criminal_ID, classification, dateCharged, status, hearingDate, appealCutDate);
         if (result.success) {
-            res.redirect('/criminal/details/' + Criminal_ID); // Redirect to the criminal's detail page or any other appropriate page
+            res.redirect('/criminal/details/' + Criminal_ID); 
         } else {
-            res.status(400).send(result.message); // Handle error, maybe redirect back to form with an error message
+            res.status(400).send(result.message); 
         }
     } catch (error) {
         console.error('Error in submitting crime:', error);
         res.status(500).send("Server error in processing your request.");
     }
 });
-
 
 // add a probation officer: the page
 app.get("/prob_officer/newin", (req, res) => {
@@ -409,6 +406,27 @@ app.post('/prob_officer/update/:field', async (req, res) => {
     } catch (error) {
         console.error(`Error updating probation officer field ${field}:`, error);
         res.status(500).json({ success: false, message: "Failed to update probation officer." });
+    }
+});
+
+app.get('/crime/all', async (req, res) => {
+    try {
+        const Crimes = await interactive.getAllCrimes();
+
+        const formattedCrimes = Crimes.map(crime => {
+            return {
+                ...crime,
+                Date_charged: formatDate(crime.Date_charged),
+                Hearing_date: formatDate(crime.Hearing_date),
+                Appeal_cut_date: formatDate(crime.appealCutDate)
+
+            };
+        });
+
+        res.render("crime/all", {Crimes: formattedCrimes})
+    } catch (err) {
+        console.error(err);
+        res.status(500).send("Error retrieving crimes.");
     }
 });
 

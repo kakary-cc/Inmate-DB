@@ -1,0 +1,29 @@
+<h2>All Crimes</h2>
+<table>
+    <thead>
+        <tr>
+            <th>Crime ID</th>
+            <th>Criminal ID</th>
+            <th>Classification</th>
+            <th>Date Charged</th>
+            <th>Status</th>
+            <th>Hearing Date</th>
+            <th>Appeal Cut Date</th>
+            <th>Details</th>
+        </tr>
+    </thead>
+    <tbody>
+        {{#each Crimes}}
+        <tr>
+            <td>{{this.Crime_ID}}</td>
+            <td>{{this.Criminal_ID}}</td>
+            <td>{{this.Classification}}</td>
+            <td>{{this.Date_charged}}</td>
+            <td>{{this.Status}}</td>
+            <td>{{this.Hearing_date}}</td>
+            <td>{{this.Appeal_cut_date}}</td>
+            <td><a href="/crime/details/{{this.Crime_ID}}">View Details</a></td>
+        </tr>
+        {{/each}}
+    </tbody>
+</table>

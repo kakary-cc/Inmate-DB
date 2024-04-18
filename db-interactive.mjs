@@ -79,6 +79,19 @@ export async function insertSentence(criminalId, type, probID, startDate, endDat
     }
 }
 
+export async function getAllCrimes() {
+    console.log("Attempting to fetch all criminals from the database.");
+    const query = 'SELECT * FROM Crimes;';
+    try {
+        const [crimes, fields] = await db.query(query);
+        console.log("Fetched crimes:", crimes);
+        return crimes;
+    } catch (err) {
+        console.error("Error fetching crimes:", err);
+        throw err;  
+    }
+}
+
 export async function insertCrime(criminalID, classification, dateCharged, status, hearingDate, appealCutDate) {
     try {
         await db.query('CALL insert_crime(?, ?, ?, ?, ?, ?)', [
