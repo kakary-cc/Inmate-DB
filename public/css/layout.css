@@ -165,6 +165,7 @@ nav button, .dropbtn {
     cursor: pointer;
     font-weight: bold;
     margin-left: 5px; 
+    text-decoration: none;
 }
 
 .normal-button:hover {

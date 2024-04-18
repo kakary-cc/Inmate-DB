@@ -92,6 +92,18 @@ export async function getAllCrimes() {
     }
 }
 
+export async function getCrimeById(Crime_ID) {
+    const query = 'SELECT * FROM Crimes WHERE Crime_ID = ?';
+    try {
+        const [results] = await db.query(query, [Crime_ID]);
+        return results[0];
+    } catch (err) {
+        console.error('Failed to retrieve crime:', err);
+        throw err;
+    }
+}
+
+
 export async function insertCrime(criminalID, classification, dateCharged, status, hearingDate, appealCutDate) {
     try {
         await db.query('CALL insert_crime(?, ?, ?, ?, ?, ?)', [
@@ -108,6 +120,17 @@ export async function insertCrime(criminalID, classification, dateCharged, statu
         return { success: false, message: err.sqlMessage || "An error occurred while adding the crime." };
     }
 }
+
+export async function getAppealsByCrimeID(Crime_ID) {
+    try {
+        const [appeals, _] = await db.query('CALL get_appeals_by_crime_id(?)', [Crime_ID]);
+        return appeals;
+    } catch (err) {
+        console.error('Failed to retrieve appeals:', err);
+        throw err;
+    }
+}
+
 
 export async function insertProbationOfficer(firstName, lastName, street, city, state, zipCode, phoneNumber, email, status) {
     try {

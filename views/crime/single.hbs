@@ -1,0 +1,67 @@
+<link rel="stylesheet" href="/css/single.css" style='text-decoration:none;'>
+
+<div class="header-container">
+    <h2>Crime Details</h2>
+    <div class="button-container">
+        <a href="/crime/all" class="normal-button">Back to All Crimes</a>
+    </div>
+</div>
+
+
+<table>
+    <tr>
+        <th>Crime ID</th>
+        <td>{{crime.Crime_ID}}</td>
+    </tr>
+    <tr>
+        <th>Criminal ID</th>
+        <td>{{crime.Criminal_ID}}</td>
+    </tr>
+    <tr>
+        <th>Classification</th>
+        <td>{{crime.Classification}}</td>
+    </tr>
+    <tr>
+        <th>Date Charged</th>
+        <td>{{crime.Date_charged}}</td>
+    </tr>
+    <tr>
+        <th>Status</th>
+        <td>{{crime.Status}}</td>
+    </tr>
+    <tr>
+        <th>Hearing Date</th>
+        <td>{{crime.Hearing_date}}</td>
+    </tr>
+    <tr>
+        <th>Appeal Cut Date</th>
+        <td>{{crime.Appeal_cut_date}}</td>
+    </tr>
+</table>
+
+
+<h3>Related Appeals</h3>
+<table>
+    <thead>
+        <tr>
+            <th>Appeal ID</th>
+            <th>Filing Date</th>
+            <th>Hearing Date</th>
+            <th>Status</th>
+        </tr>
+    </thead>
+    <tbody>
+        {{#each formattedAppeals}}
+        <tr>
+            <td>{{this.Appeal_ID}}</td>
+            <td>{{this.Filling_date}}</td>
+            <td>{{this.Hearing_date}}</td>
+            <td>{{this.Status}}</td>
+        </tr>
+        {{/each}}
+    </tbody>
+</table>
+
+<div class="button-container">
+    <a href="/crime/addAppeal/{{crime.Crime_ID}}" class="normal-button">Add Appeal</a>
+</div>

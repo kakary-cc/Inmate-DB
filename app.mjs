@@ -409,6 +409,7 @@ app.post('/prob_officer/update/:field', async (req, res) => {
     }
 });
 
+// get all crimes 
 app.get('/crime/all', async (req, res) => {
     try {
         const Crimes = await interactive.getAllCrimes();
@@ -418,7 +419,7 @@ app.get('/crime/all', async (req, res) => {
                 ...crime,
                 Date_charged: formatDate(crime.Date_charged),
                 Hearing_date: formatDate(crime.Hearing_date),
-                Appeal_cut_date: formatDate(crime.appealCutDate)
+                Appeal_cut_date: formatDate(crime.Appeal_cut_date)
 
             };
         });
@@ -427,6 +428,39 @@ app.get('/crime/all', async (req, res) => {
     } catch (err) {
         console.error(err);
         res.status(500).send("Error retrieving crimes.");
+    }
+});
+
+// get crime by id 
+app.get('/crime/details/:Crime_ID', async (req, res) => {
+    try {
+        const { Crime_ID } = req.params;
+        const Crime = await interactive.getCrimeById(Crime_ID);
+        const [appeals] = await interactive.getAppealsByCrimeID(Crime_ID);
+        console.log(appeals);
+
+        Crime.Date_charged = formatDate(Crime.Date_charged);
+        Crime.Hearing_date = formatDate(Crime.Hearing_date);
+        Crime.Appeal_cut_date = formatDate(Crime.Appeal_cut_date);
+
+        const formattedAppeals = appeals.map(appeal => {
+            return {
+                ...appeal,
+                Filling_date: formatDate(appeal.Filling_date),
+                Hearing_date: formatDate(appeal.Hearing_date),
+                Appeal_cut_date: formatDate(appeal.Appeal_cut_date)
+
+            };
+        });
+
+        if (!Crime) {
+            res.status(404).send('Crime not found');
+        } else {
+            res.render("crime/single", { crime: Crime, formattedAppeals });
+        }
+    } catch (err) {
+        console.error(err);
+        res.status(500).send("Error retrieving crime details.");
     }
 });
 
