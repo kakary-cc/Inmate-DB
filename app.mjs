@@ -311,6 +311,9 @@ app.get("/prob_officer/details/:Prob_ID", async (req, res) => {
         if (!probOfficerDetails) {
             res.status(404).send('Probation officer not found');
         } else {
+            probOfficerDetails.StatusActive = probOfficerDetails.Status === 'A';
+            probOfficerDetails.StatusInactive = probOfficerDetails.Status === 'I';
+
             res.render("prob_officer/single", {
                 probOfficer: probOfficerDetails
             });
@@ -335,6 +338,26 @@ app.post('/prob_officer/delete/:probOfficerId', async (req, res) => {
     } catch (error) {
         console.error("Error deleting probation officer:", error);
         res.status(500).json({ success: false, message: "Error deleting probation officer." });
+    }
+});
+
+app.post('/prob_officer/update/:field', async (req, res) => {
+    const { id, value } = req.body;
+    const field = req.params.field;
+
+    try {
+        const validFields = ['First', 'Last', 'Street', 'City', 'State', 'Zip', 'Phone', 'Email', 'Status'];
+
+        // bare of handling potential SQL injections (future reference)
+        if (!validFields.includes(field)) {
+            return res.status(400).json({ success: false, message: "Invalid field name for update." });
+        }
+
+        await interactive.updateProbOfficerField(id, field, value);
+        res.json({ success: true, message: "Probation officer updated successfully." });
+    } catch (error) {
+        console.error(`Error updating probation officer field ${field}:`, error);
+        res.status(500).json({ success: false, message: "Failed to update probation officer." });
     }
 });
 

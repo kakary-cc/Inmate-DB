@@ -141,3 +141,13 @@ export async function deleteProbOfficerByID(probID) {
         throw err; 
     }
 }
+
+export async function updateProbOfficerField(id, field, value) {
+    try {
+        const query = `UPDATE Prob_officers SET ${field} = ? WHERE Prob_ID = ?`;
+        await db.query(query, [value, id]);
+    } catch (err) {
+        console.error('Failed to update probation officer:', err);
+        throw err;
+    }
+}
