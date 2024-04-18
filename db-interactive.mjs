@@ -133,7 +133,7 @@ export async function getAppealsByCrimeID(Crime_ID) {
 
 export async function addAppealByCrimeID(crimeID, fillingDate, hearingDate, status) {
     try {
-        await db.query('CALL insert_appeal(?, ?, ?, ?)', [crimeID, fillingDate, hearingDate, status]);
+        await db.query('CALL insert_appeal_by_crime_id(?, ?, ?, ?)', [crimeID, fillingDate, hearingDate, status]);
         return { success: true, message: "Appeal successfully added." };
     } catch (err) {
         console.error("Failed to add appeal:", err);
@@ -236,6 +236,36 @@ export async function getProbationOfficerSentences(probID) {
         return sentences;
     } catch (err) {
         console.error(`Error fetching sentences for probID ${probID}:`, err);
+        throw err;
+    }
+}
+
+// insert crime charge by crime_ID
+export async function insertCrimeChargeByCrimeID(crimeID, crimeCode, chargeStatus, fineAmount, courtFee, amountPaid, payDueDate) {
+    try {
+        await db.query('CALL insert_crime_charge(?, ?, ?, ?, ?, ?, ?)', [
+            crimeID,
+            crimeCode,
+            chargeStatus,
+            fineAmount,
+            courtFee,
+            amountPaid,
+            payDueDate
+        ]);
+        return { success: true, message: "Crime charge successfully added." };
+    } catch (err) {
+        console.error("Failed to add crime charge:", err);
+        return { success: false, message: err.sqlMessage || "An error occurred while adding the crime charge." };
+    }
+}
+
+// get crime charges by crime_ID
+export async function getCrimeChargesByCrimeID(crimeID) {
+    try {
+        const [charges] = await db.query('CALL get_charges_by_crime_id(?)', [crimeID]);
+        return charges;
+    } catch (err) {
+        console.error("Failed to retrieve crime charges:", err);
         throw err;
     }
 }

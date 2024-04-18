@@ -437,6 +437,7 @@ app.get('/crime/details/:Crime_ID', async (req, res) => {
         const { Crime_ID } = req.params;
         const Crime = await interactive.getCrimeById(Crime_ID);
         const [appeals] = await interactive.getAppealsByCrimeID(Crime_ID);
+        const [charges] = await interactive.getCrimeChargesByCrimeID(Crime_ID);
         console.log(appeals);
 
         Crime.Date_charged = formatDate(Crime.Date_charged);
@@ -453,10 +454,15 @@ app.get('/crime/details/:Crime_ID', async (req, res) => {
             };
         });
 
+        const formattedCharges = charges.map(charge => ({
+            ...charge,
+            Pay_due_date: formatDate(charge.Pay_due_date)
+        }));
+
         if (!Crime) {
             res.status(404).send('Crime not found');
         } else {
-            res.render("crime/single", { crime: Crime, formattedAppeals });
+            res.render("crime/single", { crime: Crime, formattedAppeals, formattedCharges});
         }
     } catch (err) {
         console.error(err);
@@ -492,6 +498,37 @@ app.post('/crime/addAppeal/:Crime_ID', async (req, res) => {
         res.status(500).send("Server error in processing your request.");
     }
 });
+
+// add charge by crime_ID: the frontend
+app.get('/crime/addCharge/:Crime_ID', async (req, res) => {
+    try {
+        const { Crime_ID } = req.params;
+        res.render("crime/addChargePage", { crime_ID: Crime_ID });
+    } catch (err) {
+        console.error(err);
+        res.status(500).send("Error loading the add charge page.");
+    }
+});
+
+// add charge by crime_ID: the backend
+app.post('/crime/addCharge/:Crime_ID', async (req, res) => {
+    const { Crime_ID } = req.params;
+    const { crimeCode, chargeStatus, fineAmount, courtFee, amountPaid, payDueDate } = req.body;
+
+    try {
+        const result = await interactive.insertCrimeChargeByCrimeID(Crime_ID, crimeCode, chargeStatus, fineAmount, courtFee, amountPaid, payDueDate);
+        if (result.success) {
+            res.redirect('/crime/details/' + Crime_ID);
+        } else {
+            res.status(400).send(result.message);
+        }
+    } catch (error) {
+        console.error('Error in submitting crime charge:', error);
+        res.status(500).send("Server error in processing your request.");
+    }
+});
+
+
 
 
 

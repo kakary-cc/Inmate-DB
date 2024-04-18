@@ -40,7 +40,7 @@
 </table>
 
 
-<h3>Related Appeals</h3>
+<h3>Appeals</h3>
 <table>
     <thead>
         <tr>
@@ -65,3 +65,34 @@
 <div class="button-container">
     <a href="/crime/addAppeal/{{crime.Crime_ID}}" class="normal-button">Add Appeal</a>
 </div>
+
+<h3>Charges</h3>
+<table>
+    <thead>
+        <tr>
+            <th>Charge Code</th>
+            <th>Status</th>
+            <th>Fine Amount</th>
+            <th>Court Fee</th>
+            <th>Amount Paid</th>
+            <th>Payment Due Date</th>
+        </tr>
+    </thead>
+    <tbody>
+        {{#each formattedCharges}}
+        <tr>
+            <td>{{this.Crime_code}}</td>
+            <td>{{this.Charge_status}}</td>
+            <td>{{this.Fine_amount}}</td>
+            <td>{{this.Court_fee}}</td>
+            <td>{{this.Amount_paid}}</td>
+            <td>{{this.Pay_due_date}}</td>
+        </tr>
+        {{/each}}
+    </tbody>
+</table>
+
+<div class="button-container">
+    <a href="/crime/addCharge/{{crime.Crime_ID}}" class="normal-button">Add Charge</a>
+</div>
+

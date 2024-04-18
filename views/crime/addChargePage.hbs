@@ -1,0 +1,44 @@
+<link rel="stylesheet" href="/css/formInputPagesStyles.css">
+
+<h3>
+    Add Charge for Crime #{{crime_ID}}
+</h3>
+<form method="POST" action="/crime/addCharge/{{crime_ID}}">
+    <div class="form-item">
+        <label>Crime Code*</label>
+        <input type="number" name="crimeCode" required>
+    </div>
+
+    <div class="form-item">
+        <label>Charge Status*</label>
+        <select name="chargeStatus">
+            <option value="AC">Active</option>
+            <option value="RS">Resolved</option>
+            <option value="PD">Pending</option>
+        </select>
+    </div>
+
+    <div class="form-item">
+        <label>Fine Amount ($)*</label>
+        <input type="number" name="fineAmount" min="0" step="0.01" required>
+    </div>
+
+    <div class="form-item">
+        <label>Court Fee ($)*</label>
+        <input type="number" name="courtFee" min="0" step="0.01" required>
+    </div>
+
+    <div class="form-item">
+        <label>Amount Paid ($)*</label>
+        <input type="number" name="amountPaid" min="0" step="0.01" required>
+    </div>
+
+    <div class="form-item">
+        <label>Payment Due Date*</label>
+        <input type="date" name="payDueDate" required>
+    </div>
+
+    <div class="form-item">
+        <input type="submit" value="Add Charge">
+    </div>
+</form>

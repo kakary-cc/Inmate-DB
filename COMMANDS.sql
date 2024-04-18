@@ -437,7 +437,6 @@ DELIMITER ;
 
 DELIMITER $$
 CREATE PROCEDURE insert_crime_charge(
-    IN p_Charge_ID DECIMAL(10),
     IN p_Crime_ID DECIMAL(9),
     IN p_Crime_code DECIMAL(3),
     IN p_Charge_status CHAR(2),
@@ -448,7 +447,6 @@ CREATE PROCEDURE insert_crime_charge(
 )
 BEGIN
     INSERT INTO Crime_charges (
-        Charge_ID,
         Crime_ID,
         Crime_code,
         Charge_status,
@@ -457,7 +455,6 @@ BEGIN
         Amount_paid,
         Pay_due_date
     ) VALUES (
-        p_Charge_ID,
         p_Crime_ID,
         p_Crime_code,
         p_Charge_status,
