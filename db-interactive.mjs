@@ -269,3 +269,4 @@ export async function getCrimeChargesByCrimeID(crimeID) {
         throw err;
     }
 }
+

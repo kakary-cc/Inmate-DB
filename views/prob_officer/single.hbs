@@ -41,24 +41,24 @@
     <tr style="background: rgb(200, 200, 200)">
         <th>Sentence ID</th>
         <th>Type</th>
-        <th>Probation Officer(s)</th>
+        <th>Associated Criminal(s)</th>
         <th>Start</th>
         <th>End</th>
         <th>Violation</th>
     </tr>
     {{#each sentences}}
     <tr>
-        <td>{{Sentence_ID}}</td>
-        <td>{{Type}}</td>
-        <td>{{#if Prob_ID}}<a href="/prob_officer/details/{{Prob_ID}}">#{{Prob_ID}}</a>{{else}}N/A{{/if}}</td>
-        <td>{{Start_date}}</td>
-        <td>{{End_date}}</td>
-        <td>{{Violations}}</td>
+        <td>{{this.Sentence_ID}}</td>
+        <td>{{this.Type}}</td>
+        <td>{{#if this.Criminal_ID}}<a href="/criminal/details/{{this.Criminal_ID}}">#{{this.Criminal_ID}}</a>{{else}}N/A{{/if}}</td>
+        <td>{{this.Start_date}}</td>
+        <td>{{this.End_date}}</td>
+        <td>{{this.Violations}}</td>
     </tr>
     {{/each}}
 </table>
 <div class="button-container">
-    <a href="/criminal/addSentence/{{criminal.Criminal_ID}}" class="normal-button">Add Sentence</a>
+    <a href="/prob_officer/addSentence/{{probOfficer.Prob_ID}}" class="normal-button">Add Sentence</a>
 </div>
 
 <script>

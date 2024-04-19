@@ -76,7 +76,7 @@
     </tr>
     {{#each crimes}}
     <tr>
-        <td>{{this.Crime_ID}}</td>
+        <td><a href="/crime/details/{{this.Crime_ID}}">{{this.Crime_ID}}</a></td>
         <td>{{this.Classification}}</td>
         <td>{{this.Date_charged}}</td>
         <td>{{this.Status}}</td>

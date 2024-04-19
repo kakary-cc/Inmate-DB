@@ -347,7 +347,7 @@ app.get("/prob_officer/details/:Prob_ID", async (req, res) => {
     try {
         const probID = req.params.Prob_ID;
         const probOfficerDetails = await interactive.getProbationOfficerById(probID);
-        const probOfficerSentences = await interactive.getProbationOfficerSentences(probID);   
+        const [probOfficerSentences] = await interactive.getProbationOfficerSentences(probID);   
 
         if (!probOfficerDetails) {
             res.status(404).send('Probation officer not found');
@@ -528,7 +528,33 @@ app.post('/crime/addCharge/:Crime_ID', async (req, res) => {
     }
 });
 
+app.get('/prob_officer/addSentence/:ProbOfficer_ID', async (req, res) => {
+    try {
+        const { ProbOfficer_ID } = req.params;
+        console.log(ProbOfficer_ID);
+        res.render("prob_officer/addSentencePage", { ProbOfficer_ID });
+    } catch (err) {
+        console.error(err);
+        res.status(500).send("Error loading the add sentence page.");
+    }
+});
 
+app.post('/prob_officer/addSentence/:ProbOfficer_ID', async (req, res) => {
+    const { ProbOfficer_ID } = req.params; 
+    const { criminalID, type, startDate, endDate, violations } = req.body;
+
+    try {
+        const result = await interactive.insertSentence(criminalID, type, ProbOfficer_ID, startDate, endDate, violations);
+        if (result.success) {
+            res.redirect('/prob_officer/details/' + ProbOfficer_ID); 
+        } else {
+            res.status(400).send(result.message); 
+        }
+    } catch (error) {
+        console.error('Error in submitting sentence:', error);
+        res.status(500).send("Server error in processing your request.");
+    }
+});
 
 
 

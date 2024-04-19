@@ -1,0 +1,40 @@
+<link rel="stylesheet" href="/css/formInputPagesStyles.css">
+
+<h3>
+    Add Sentence For Probation Officer #{{ProbOfficer_ID}}
+</h3>
+<form method="POST" action="/prob_officer/addSentence/{{ProbOfficer_ID}}">
+    <div class="form-item">
+        <label>Criminal ID*</label>
+        <input type="number" name="criminalID" required>
+    </div>
+
+    <div class="form-item">
+        <label>Sentence Type*</label>
+        <select name="type">
+            <option value="J">Jail</option>
+            <option value="P">Probation</option>
+            <option value="H">House Arrest</option>
+            <option value="O">Other</option>
+        </select>
+    </div>
+
+    <div class="form-item">
+        <label>Start Date*</label>
+        <input type="date" name="startDate" required>
+    </div>
+
+    <div class="form-item">
+        <label>End Date*</label>
+        <input type="date" name="endDate" required>
+    </div>
+
+    <div class="form-item">
+        <label>Number of Violations</label>
+        <input type="number" name="violations" placeholder="0" min="0" step="1">
+    </div>
+
+    <div class="form-item">
+        <input type="submit" value="Add Sentence">
+    </div>
+</form>
