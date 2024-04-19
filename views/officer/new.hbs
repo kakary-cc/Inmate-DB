@@ -1,0 +1,37 @@
+<link rel="stylesheet" href="/css/formInputPagesStyles.css">
+
+<h3>
+    Add New Officer
+</h3>
+<form method="POST" action="/officer/new">
+    <div class="form-item">
+        <label>First Name*</label>
+        <input type="text" name="firstName" required>
+    </div>
+    <div class="form-item">
+        <label>Last Name*</label>
+        <input type="text" name="lastName" required>
+    </div>
+    <div class="form-item">
+        <label>Precinct*</label>
+        <input type="text" name="precinct" required>
+    </div>
+    <div class="form-item">
+        <label>Badge Number*</label>
+        <input type="text" name="badge" required>
+    </div>
+    <div class="form-item">
+        <label>Phone Number*</label>
+        <input type="tel" name="phone" required>
+    </div>
+    <div class="form-item">
+        <label>Status (Active A/Inactive I)*</label>
+        <select name="status" required>
+            <option value="A">Active</option>
+            <option value="I">Inactive</option>
+        </select>
+    </div>
+    <div class="form-item">
+        <input type="submit" value="Add Officer">
+    </div>
+</form>

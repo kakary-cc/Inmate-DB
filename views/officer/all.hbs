@@ -1,0 +1,50 @@
+<h3>Displaying Details of Registered Officers</h3>
+<input type="text" id="searchInput" onkeyup="searchOfficers()" placeholder="Search by Badge Number..." style="margin-bottom: 20px; width: 300px; padding: 10px;">
+<table id="myTable">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Precinct</th>
+            <th>Badge</th>
+            <th>Phone</th>
+            <th>Status</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {{#each officers}}
+        <tr>
+            <td>{{this.Officer_ID}}</td>
+            <td>{{this.First}} {{this.Last}}</td>
+            <td>{{this.Precinct}}</td>
+            <td>{{this.Badge}}</td>
+            <td>{{this.Phone}}</td>
+            <td>{{this.Status}}</td>
+            <td><a href="/officer/details/{{this.Officer_ID}}">View Details</a></td>
+        </tr>
+        {{/each}}
+    </tbody>
+</table>
+
+<script>
+    function searchOfficers() {
+        var input, filter, table, tr, td, i, txtValue;
+        input = document.getElementById("searchInput");
+        filter = input.value.toUpperCase();
+        table = document.getElementById("myTable");
+        tr = table.getElementsByTagName("tr");
+
+        for (i = 0; i < tr.length; i++) {
+            td = tr[i].getElementsByTagName("td")[0];
+            if (td) {
+                txtValue = td.textContent || td.innerText;
+                if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                    tr[i].style.display = "";
+                } else {
+                    tr[i].style.display = "none";
+                }
+            }               
+        }
+    }
+</script>

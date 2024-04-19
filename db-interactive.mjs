@@ -270,3 +270,81 @@ export async function getCrimeChargesByCrimeID(crimeID) {
     }
 }
 
+export async function getAliasesByCriminalID(criminalID) {
+    try {
+        const [aliases] = await db.query('CALL get_aliases_by_criminal_id(?)', [criminalID]);
+        return aliases;
+    } catch (err) {
+        console.error("Failed to retrieve aliases:", err);
+        throw err;
+    }
+}
+
+export async function insertAlias(aliasID, criminalID, alias) {
+    try {
+        await db.query('CALL insert_alias(?, ?)', [criminalID, alias]);
+        return { success: true, message: "Alias successfully added." };
+    } catch (err) {
+        console.error("Failed to add alias:", err);
+        return { success: false, message: err.sqlMessage || "An error occurred while adding the alias." };
+    }
+}
+
+export async function insertOfficer(lastName, firstName, precinct, badge, phone, status) {
+    try {
+        await db.query('CALL insert_officer(?, ?, ?, ?, ?, ?)', [
+            lastName,
+            firstName,
+            precinct,
+            badge,
+            phone,
+            status
+        ]);
+        return { success: true, message: "Officer successfully added." };
+    } catch (err) {
+        console.error("Failed to insert officer:", err);
+        return { success: false, message: err.sqlMessage || "An error occurred while adding the officer." };
+    }
+}
+
+export async function getAllOfficers() {
+    try {
+        const [officers] = await db.query('SELECT * FROM Officers');
+        return officers;
+    } catch (err) {
+        console.error("Failed to retrieve officers:", err);
+        throw err;
+    }
+}
+
+export async function getOfficerById(officerID) {
+    try {
+        const [results] = await db.query('CALL get_officer_by_id(?)', [officerID]);
+        return results[0]; 
+    } catch (err) {
+        console.error("Failed to retrieve officer:", err);
+        throw err;
+    }
+}
+
+export async function deleteOfficerByID(officerID) {
+    try {
+        await db.query('CALL delete_officer_by_id(?)', [officerID]);
+        return { success: true, message: "Officer successfully deleted." };
+    } catch (err) {
+        console.error('Failed to delete officer:', err);
+        return { success: false, message: err.sqlMessage || "An error occurred while deleting the officer." };
+    }
+}
+
+export async function getCrimesByOfficerID(officerID) {
+    try {
+        const [crimes] = await db.query('CALL get_crimes_by_officer_id(?)', [officerID]);
+        return crimes;
+    } catch (err) {
+        console.error("Failed to retrieve crimes for officer:", err);
+        throw err;
+    }
+}
+
+

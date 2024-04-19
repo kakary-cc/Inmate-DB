@@ -299,17 +299,14 @@ DELIMITER ;
 
 DELIMITER $$
 CREATE PROCEDURE insert_alias(
-    IN p_Alias_ID DECIMAL(6),
     IN p_Criminal_ID DECIMAL(6),
     IN p_Alias VARCHAR(20)
 )
 BEGIN
     INSERT INTO Aliases (
-        Alias_ID,
         Criminal_ID,
         Alias
     ) VALUES (
-        p_Alias_ID,
         p_Criminal_ID,
         p_Alias
     );
@@ -468,7 +465,6 @@ DELIMITER ;
 
 DELIMITER $$
 CREATE PROCEDURE insert_officer(
-    IN p_Officer_ID DECIMAL(8),
     IN p_Last VARCHAR(15),
     IN p_First VARCHAR(10),
     IN p_Precinct CHAR(4),
@@ -478,7 +474,6 @@ CREATE PROCEDURE insert_officer(
 )
 BEGIN
     INSERT INTO Officers (
-        Officer_ID,
         Last,
         First,
         Precinct,
@@ -486,7 +481,6 @@ BEGIN
         Phone,
         Status
     ) VALUES (
-        p_Officer_ID,
         p_Last,
         p_First,
         p_Precinct,

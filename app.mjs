@@ -434,11 +434,11 @@ app.get('/crime/all', async (req, res) => {
 // get crime by id 
 app.get('/crime/details/:Crime_ID', async (req, res) => {
     try {
-        const { Crime_ID } = req.params;
+        const { Criminal_ID, Crime_ID } = req.params;
         const Crime = await interactive.getCrimeById(Crime_ID);
         const [appeals] = await interactive.getAppealsByCrimeID(Crime_ID);
         const [charges] = await interactive.getCrimeChargesByCrimeID(Crime_ID);
-        console.log(appeals);
+        const [aliases] = await interactive.getAliasesByCriminalID(Criminal_ID);
 
         Crime.Date_charged = formatDate(Crime.Date_charged);
         Crime.Hearing_date = formatDate(Crime.Hearing_date);
@@ -462,7 +462,7 @@ app.get('/crime/details/:Crime_ID', async (req, res) => {
         if (!Crime) {
             res.status(404).send('Crime not found');
         } else {
-            res.render("crime/single", { crime: Crime, formattedAppeals, formattedCharges});
+            res.render("crime/single", { crime: Crime, formattedAppeals, formattedCharges, aliases});
         }
     } catch (err) {
         console.error(err);
@@ -555,6 +555,101 @@ app.post('/prob_officer/addSentence/:ProbOfficer_ID', async (req, res) => {
         res.status(500).send("Server error in processing your request.");
     }
 });
+
+// todo: add Alias
+app.get('/criminal/addAlias/:Criminal_ID', async (req, res) => {
+    try {
+        const { Criminal_ID } = req.params;
+        res.render("criminal/addAliasPage", { Criminal_ID });
+    } catch (err) {
+        console.error(err);
+        res.status(500).send("Error loading the add sentence page.");
+    }
+});
+
+app.post('/criminal/addAlias/:Criminal_ID', async (req, res) => {
+    const { Criminal_ID } = req.params;
+    const { alias } = req.body; 
+
+    try {
+        const result = await interactive.insertAlias(Criminal_ID, alias);
+        if (result.success) {
+            res.redirect('/criminal/details/' + Criminal_ID);
+        } else {
+            res.status(400).send(result.message);
+        }
+    } catch (error) {
+        console.error('Error in submitting alias:', error);
+        res.status(500).send("Server error in processing your request.");
+    }
+});
+
+// create an officer: the frontend
+app.get("/officer/newin", (req, res) => {
+    res.render("officer/new");
+});
+
+// create an officer: the backend
+app.post('/officer/new', async (req, res) => {
+    const { firstName, lastName, precinct, badge, phone, status } = req.body;
+
+    try {
+        const result = await interactive.insertOfficer(lastName, firstName, precinct, badge, phone, status);
+        if (result.success) {
+            res.redirect('/officer/all'); 
+        } else {
+            res.status(500).send('Failed to create officer.');
+        }
+    } catch (error) {
+        console.error("Error creating new officer:", error);
+        res.status(500).send("Error creating officer.");
+    }
+});
+
+app.get("/officer/all", async (req, res) => {
+    try {
+        let officers = await interactive.getAllOfficers();
+
+        res.render("officer/all", { officers: officers });
+    } catch (err) {
+        console.error(err);
+        res.status(500).send("Error retrieving officers.");
+    }
+});
+
+app.get("/officer/details/:Officer_ID", async (req, res) => {
+    try {
+        const officerID = req.params.Officer_ID;
+        const [officerDetails] = await interactive.getOfficerById(officerID);
+        const [crimes] = await interactive.getCrimesByOfficerID(officerID);
+
+        if (!officerDetails) {
+            res.status(404).send('Officer not found');
+        } else {
+            res.render("officer/single", { officer: officerDetails, crimes });
+        }
+    } catch (err) {
+        console.error(err);
+        res.status(500).send("Error retrieving officer details.");
+    }
+});
+
+app.post('/officer/delete/:Officer_ID', async (req, res) => {
+    const officerID = req.params.Officer_ID;
+
+    try {
+        const result = await interactive.deleteOfficerByID(officerID);
+        if (result.success) {
+            res.json({ success: true, message: "Officer successfully deleted." });
+        } else {
+            res.status(500).json({ success: false, message: "Failed to delete officer." });
+        }
+    } catch (error) {
+        console.error("Error deleting officer:", error);
+        res.status(500).json({ success: false, message: "Error deleting officer." });
+    }
+});
+
 
 
 

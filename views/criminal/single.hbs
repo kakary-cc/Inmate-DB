@@ -89,6 +89,25 @@
     <a href="/criminal/addCrime/{{criminal.Criminal_ID}}" class="normal-button">Add Crime</a>
 </div>
 
+<h3>Aliases</h3>
+<table>
+    <thead>
+        <tr>
+            <th>Alias</th>
+        </tr>
+    </thead>
+    <tbody>
+        {{#each aliases}}
+        <tr>
+            <td>{{this.Alias}}</td>
+        </tr>
+        {{/each}}
+    </tbody>
+</table>
+<div class="button-container">
+    <a href="/criminal/addAlias/{{criminal.Criminal_ID}}" class="normal-button">Add Alias</a>
+</div>
+
 
 <script>
 function confirmDelete() {
