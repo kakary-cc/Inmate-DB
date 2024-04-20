@@ -10,13 +10,9 @@ import * as interactive from "./db-interactive.mjs";
 const __dirname = path.dirname(url.fileURLToPath(import.meta.url));
 
 const app = express();
-
 app.use(express.json());
-
 app.use(express.static(path.join(__dirname, "public")));
-
 app.set("view engine", "hbs");
-
 app.use(express.urlencoded({ extended: false }));
 
 app.use(
@@ -54,24 +50,16 @@ app.use((req, res, next) => {
     next();
 });
 
+// -*-*- INDEX -*-*-
+
 app.get("/", (req, res) => {
     res.render("./");
 });
 
+// -*-*- LOGIN -*-*-
+
 app.get("/login", (req, res) => {
     res.render("./login");
-});
-
-app.post("/logout", async (req, res) => {
-    try {
-        if (req.session.user) {
-            await auth.endAuthenticatedSession(req);
-        }
-    } catch (err) {
-        console.log("Error ending session:", err);
-        res.status(500).send("Failed to log out");
-    }
-    res.redirect("/");
 });
 
 app.post("/login", async (req, res) => {
@@ -86,6 +74,22 @@ app.post("/login", async (req, res) => {
         });
     }
 });
+
+// -*-*- LOGOUT -*-*-
+
+app.get("/logout", async (req, res) => {
+    try {
+        if (req.session.user) {
+            await auth.endAuthenticatedSession(req);
+        }
+    } catch (err) {
+        console.log("Error ending session:", err);
+        res.status(500).send("Failed to log out");
+    }
+    res.redirect("/");
+});
+
+// -*-*- REGISTER -*-*-
 
 app.get("/register", (req, res) => {
     res.render("./register");

@@ -37,7 +37,7 @@
             <div class="user-auth">
                 {{#if user}}
                 Logged in as: {{user.email}}
-                <form action="/logout" method="POST" class="normal-interactable">
+                <form action="/logout" method="GET" class="normal-interactable">
                     <button type="submit">LOG OUT</button>
                 </form>
                 {{else}}
