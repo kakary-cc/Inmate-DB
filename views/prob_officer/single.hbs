@@ -1,12 +1,15 @@
 <div class="header-container" id="prob-officer-details" data-prob-officer-id="{{probOfficer.Prob_ID}}">
     <h3>
         Displaying details of #{{probOfficer.Prob_ID}}:
-        <span id="First" ondblclick="makeEditable(this)">{{#if probOfficer.First}}{{probOfficer.First}}{{else}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{/if}}</span>,
-        <span id="Last" ondblclick="makeEditable(this)">{{#if probOfficer.Last}}{{probOfficer.Last}}{{else}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{/if}}</span>
+        <span id="First" ondblclick="makeEditable(this)">{{#if
+            probOfficer.First}}{{probOfficer.First}}{{else}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{/if}}</span>,
+        <span id="Last" ondblclick="makeEditable(this)">{{#if
+            probOfficer.Last}}{{probOfficer.Last}}{{else}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{/if}}</span>
     </h3>
 
     <div class="button-container">
-    <button onclick="window.location.href='/prob_officer/all';" class="normal-button">Back to All Probation Officers</button>
+        <button onclick="window.location.href='/prob_officer/all';" class="normal-button">Back to All Probation
+            Officers</button>
     </div>
     <div class="button-container">
         <button onclick="confirmDelete('{{probOfficer.Prob_ID}}')" class="normal-button">Delete</button>
@@ -23,11 +26,18 @@
         <th>Status</th>
     </tr>
     <tr>
-        <td><span id="Street" ondblclick="makeEditable(this)">{{#if probOfficer.Street}}{{probOfficer.Street}}{{else}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{/if}}</span></td>
-        <td><span id="City" ondblclick="makeEditable(this)">{{#if probOfficer.City}}{{probOfficer.City}}{{else}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{/if}}</span>, <span id="State" ondblclick="makeEditable(this)">{{#if probOfficer.State}}{{probOfficer.State}}{{else}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{/if}}</span></td>
-        <td><span id="Zip" ondblclick="makeEditable(this)">{{#if probOfficer.Zip}}{{probOfficer.Zip}}{{else}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{/if}}</span></td>
-        <td><span id="Phone" ondblclick="makeEditable(this)">{{#if probOfficer.Phone}}{{probOfficer.Phone}}{{else}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{/if}}</span></td>
-        <td><span id="Email" ondblclick="makeEditable(this)">{{#if probOfficer.Email}}{{probOfficer.Email}}{{else}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{/if}}</span></td>
+        <td><span id="Street" ondblclick="makeEditable(this)">{{#if
+                probOfficer.Street}}{{probOfficer.Street}}{{else}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{/if}}</span></td>
+        <td><span id="City" ondblclick="makeEditable(this)">{{#if
+                probOfficer.City}}{{probOfficer.City}}{{else}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{/if}}</span>, <span
+                id="State" ondblclick="makeEditable(this)">{{#if
+                probOfficer.State}}{{probOfficer.State}}{{else}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{/if}}</span></td>
+        <td><span id="Zip" ondblclick="makeEditable(this)">{{#if
+                probOfficer.Zip}}{{probOfficer.Zip}}{{else}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{/if}}</span></td>
+        <td><span id="Phone" ondblclick="makeEditable(this)">{{#if
+                probOfficer.Phone}}{{probOfficer.Phone}}{{else}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{/if}}</span></td>
+        <td><span id="Email" ondblclick="makeEditable(this)">{{#if
+                probOfficer.Email}}{{probOfficer.Email}}{{else}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{/if}}</span></td>
         <td>
             <select id="Status" class="editable-select" onchange="saveData(this)">
                 <option value="A" {{#if probOfficer.StatusActive}}selected{{/if}}>Active</option>
@@ -50,7 +60,8 @@
     <tr>
         <td>{{this.Sentence_ID}}</td>
         <td>{{this.Type}}</td>
-        <td>{{#if this.Criminal_ID}}<a href="/criminal/details/{{this.Criminal_ID}}">#{{this.Criminal_ID}}</a>{{else}}N/A{{/if}}</td>
+        <td>{{#if this.Criminal_ID}}<a
+                href="/criminal/details/{{this.Criminal_ID}}">#{{this.Criminal_ID}}</a>{{else}}N/A{{/if}}</td>
         <td>{{this.Start_date}}</td>
         <td>{{this.End_date}}</td>
         <td>{{this.Violations}}</td>
@@ -62,80 +73,80 @@
 </div>
 
 <script>
-document.addEventListener('DOMContentLoaded', function() {
-    const detailsContainer = document.getElementById('prob-officer-details');
-    const probOfficerId = detailsContainer.getAttribute('data-prob-officer-id');
+    document.addEventListener('DOMContentLoaded', function () {
+        const detailsContainer = document.getElementById('prob-officer-details');
+        const probOfficerId = detailsContainer.getAttribute('data-prob-officer-id');
 
-    document.querySelectorAll('span, select').forEach(element => {
-        element.ondblclick = function() {
-            if (this.tagName === 'SPAN') {
-                this.contentEditable = true;
-                this.focus();
-                this.onkeypress = function(e) {
-                    if (e.key === 'Enter') {
-                        e.preventDefault();
-                        this.blur(); // Directly blur out after pressing Enter
-                    }
-                };
-            } else {
-                this.disabled = false; // Enable editing for select elements
-            }
-        };
+        document.querySelectorAll('span, select').forEach(element => {
+            element.ondblclick = function () {
+                if (this.tagName === 'SPAN') {
+                    this.contentEditable = true;
+                    this.focus();
+                    this.onkeypress = function (e) {
+                        if (e.key === 'Enter') {
+                            e.preventDefault();
+                            this.blur(); // Directly blur out after pressing Enter
+                        }
+                    };
+                } else {
+                    this.disabled = false; // Enable editing for select elements
+                }
+            };
 
-        element.onblur = function() {
-            saveData(probOfficerId, this); // Save the data when the element loses focus
-        };
+            element.onblur = function () {
+                saveData(probOfficerId, this); // Save the data when the element loses focus
+            };
+        });
     });
-});
 
-function saveData(probOfficerId, element) {
-    const field = element.id;
-    const value = element.tagName === 'SELECT' ? element.value : element.innerText.trim();
+    function saveData(probOfficerId, element) {
+        const field = element.id;
+        const value = element.tagName === 'SELECT' ? element.value : element.innerText.trim();
 
-    fetch(`/prob_officer/update/${field}`, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ id: probOfficerId, value: value })
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.success) {
-            console.log('Update successful');
-        } else {
-            console.error('Update failed');
-            alert('Failed to update. Please try again.');
-        }
-    })
-    .catch(error => {
-        console.error('Error updating:', error);
-    });
-}
-
-function confirmDelete() {
-    const probOfficerId = document.querySelector('#prob-officer-details').getAttribute('data-prob-officer-id');
-    if (confirm("Are you sure you want to delete this probation officer?")) {
-        fetch(`/prob_officer/delete/${probOfficerId}`, {
+        fetch(`/prob_officer/update/${field}`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({ id: probOfficerId })
+            body: JSON.stringify({ id: probOfficerId, value: value })
         })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                alert('Probation officer successfully deleted');
-                window.location.href = '/prob_officer/all'; 
-            } else {
-                alert('Failed to delete. Please try again.');
-            }
-        })
-        .catch(error => {
-            console.error('Error deleting probation officer:', error);
-            alert('Failed to delete. Please try again.');
-        });
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    console.log('Update successful');
+                } else {
+                    console.error('Update failed');
+                    alert('Failed to update. Please try again.');
+                }
+            })
+            .catch(error => {
+                console.error('Error updating:', error);
+            });
     }
-}
+
+    function confirmDelete() {
+        const probOfficerId = document.querySelector('#prob-officer-details').getAttribute('data-prob-officer-id');
+        if (confirm("Are you sure you want to delete this probation officer?")) {
+            fetch(`/prob_officer/delete/${probOfficerId}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ id: probOfficerId })
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        alert('Probation officer successfully deleted');
+                        window.location.href = '/prob_officer/all';
+                    } else {
+                        alert('Failed to delete. Please try again.');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error deleting probation officer:', error);
+                    alert('Failed to delete. Please try again.');
+                });
+        }
+    }
 </script>

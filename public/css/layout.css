@@ -16,7 +16,7 @@ label {
 .normal-interactable {
     margin-top: 5px;
     margin-bottom: 5px;
-    margin: 0 5px; 
+    margin: 0 5px;
     color: black;
     border-radius: 4px;
     font-weight: bold;
@@ -48,7 +48,6 @@ td {
     text-align: center;
 }
 
-
 .nav-bar {
     display: flex;
     justify-content: flex-start;
@@ -57,27 +56,20 @@ td {
     padding: 10px 0;
 }
 
-.nav-buttons, .user-auth {
+.nav-buttons,
+.user-auth {
     display: flex;
     align-items: center;
 }
 
-nav form {
-    margin: 0; 
-    padding: 0; 
-    display: inline; 
+.user-auth {
+    margin-left: auto;
 }
 
-nav form button {
-    padding: 7px 9px;
-    margin: 0 5px; 
-    background-color: white;
-    color: black;
-    border: 1px solid gray;
-    border-radius: 4px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-    cursor: pointer;
-    font-weight: bold;
+nav form {
+    margin: 0;
+    padding: 0;
+    display: inline;
 }
 
 nav form button:hover {
@@ -86,25 +78,26 @@ nav form button:hover {
 }
 
 nav button {
-    padding: 7px 9px; 
+    padding: 7px 9px;
     margin-right: 5px;
     margin-left: 5px;
     border: 1px solid gray;
-    background-color: white; 
-    color: black; 
-    font-weight: bold; 
-    border-radius: 4px; 
+    background-color: white;
+    color: black;
+    font-weight: bold;
+    border-radius: 4px;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-    cursor: pointer; 
+    cursor: pointer;
 }
 
 nav button:hover {
-    background-color: lightblue; 
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3); 
+    background-color: lightblue;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
 }
 
 /* Dropdown Button */
-nav button, .dropbtn {
+nav button,
+.dropbtn {
     background-color: white;
     border: 1px solid gray;
     color: black;
@@ -113,47 +106,54 @@ nav button, .dropbtn {
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
     border: none;
     position: flex;
-  }
-  
-  .dropdown {
+}
+
+.dropdown {
     position: relative;
     display: inline-block;
-  }
-  
-  .dropdown-content {
+}
+
+.dropdown-content {
     display: none;
     position: absolute;
     background-color: #f1f1f1;
     min-width: 160px;
-    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
     z-index: 1;
-  }
-  
-  .dropdown-content a {
+}
+
+.dropdown-content a {
     color: black;
     padding: 12px 16px;
     text-decoration: none;
     display: block;
-  }
-  
-  .dropdown-content a:hover {background-color: #ddd;}
-  
-  .dropdown:hover .dropdown-content {display: block;}
-  
-  .dropdown:hover .dropbtn {background-color: gray;}
+}
 
-  .header-container {
+.dropdown-content a:hover {
+    background-color: #ddd;
+}
+
+.dropdown:hover .dropdown-content {
+    display: block;
+}
+
+.dropdown:hover .dropbtn {
+    background-color: gray;
+}
+
+.header-container {
     display: flex;
     justify-content: space-between;
     align-items: center;
     padding: 5px 0;
 }
 
-.h3, .button-container {
+.h3,
+.button-container {
     margin: 0;
     padding: 0;
     display: flex;
-    align-items: center; 
+    align-items: center;
 }
 
 .normal-button {
@@ -164,7 +164,7 @@ nav button, .dropbtn {
     border-radius: 4px;
     cursor: pointer;
     font-weight: bold;
-    margin-left: 5px; 
+    margin-left: 5px;
     text-decoration: none;
 }
 
@@ -173,5 +173,5 @@ nav button, .dropbtn {
 }
 
 .action-button {
-    margin: 0 5px; 
+    margin: 0 5px;
 }

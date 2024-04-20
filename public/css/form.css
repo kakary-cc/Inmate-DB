@@ -1,15 +1,15 @@
 /* Center the title */
 h3 {
     text-align: center;
-    margin-bottom: 30px; 
+    margin-bottom: 30px;
 }
 
 form {
     max-width: 600px;
-    margin: auto; 
+    margin: auto;
     display: flex;
     flex-direction: column;
-    gap: 20px; 
+    gap: 20px;
 }
 
 .form-item {
@@ -19,8 +19,8 @@ form {
 
 .form-item label {
     white-space: nowrap;
-    text-overflow: ellipsis; 
-    margin-bottom: 10px; 
+    text-overflow: ellipsis;
+    margin-bottom: 10px;
     display: flex;
     flex-direction: row;
 }
