@@ -1,58 +1,51 @@
-<h3>
-    Displaying details of #012345: Bad, Criminal
-</h3>
-<br>
-
+<h3>Displaying Details of Registered Criminals</h3>
+<input type="text" id="searchInput" onkeyup="searchCriminal()" placeholder="Search by Criminal ID..."
+    style="margin-bottom: 20px; width: 300px; padding: 10px;">
 <table>
-    <tr style="background: rgb(200, 200, 200)">
-        <th>Street</th>
-        <th>City, State</th>
-        <th>Zipcode</th>
-        <th>Phone</th>
-        <th>Violent</th>
-        <th>Probation</th>
-    </tr>
-    <tr>
-        <td>6 MetroTech Ctree</td>
-        <td>Brooklyn, NY</td>
-        <td>11201</td>
-        <td>718-123-4567</td>
-        <td>No</td>
-        <td>No</td>
-    </tr>
-</table><br>
-
-<table>
-    <tr style="background: rgb(200, 200, 200)">
-        <th>Sentence ID</th>
-        <th>Type</th>
-        <th>Probation Officer</th>
-        <th>Start</th>
-        <th>End</th>
-        <th>Violation</th>
-    </tr>
-    <tr>
-        <td>000001</td>
-        <td>J - Jail Period</td>
-        <td></td>
-        <td>2020-01-01</td>
-        <td>2020-01-01</td>
-        <td>0</td>
-    </tr>
-    <tr>
-        <td>000002</td>
-        <td>H - House Arrest</td>
-        <td></td>
-        <td>2020-01-01</td>
-        <td>2020-01-01</td>
-        <td>0</td>
-    </tr>
-    <tr>
-        <td>000003</td>
-        <td>P - Probation</td>
-        <td><a href="">Probation, Officer (#219201)</a></td>
-        <td>2020-01-01</td>
-        <td>2020-01-01</td>
-        <td>2</td>
-    </tr>
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>City, State</th>
+            <th>Phone</th>
+            <th>Violent</th>
+            <th>Probation</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {{#each criminals}}
+        <tr>
+            <td>{{this.Criminal_ID}}</td>
+            <td>{{this.First}} {{this.Last}}</td>
+            <td>{{this.City}}, {{this.State}}</td>
+            <td>{{this.Phone}}</td>
+            <td>{{this.Violent}}</td>
+            <td>{{this.Probation}}</td>
+            <td><a href="/criminal/details/{{this.Criminal_ID}}">View Details</a></td>
+        </tr>
+        {{/each}}
+    </tbody>
 </table>
+
+<script>
+    function searchCriminal() {
+        var input, filter, table, tr, td, i, txtValue;
+        input = document.getElementById("searchInput");
+        filter = input.value.toUpperCase();
+        table = document.getElementById("myTable");
+        tr = table.getElementsByTagName("tr");
+
+        for (i = 0; i < tr.length; i++) {
+            td = tr[i].getElementsByTagName("td")[0];
+            if (td) {
+                txtValue = td.textContent || td.innerText;
+                if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                    tr[i].style.display = "";
+                } else {
+                    tr[i].style.display = "none";
+                }
+            }
+        }
+    }
+</script>
