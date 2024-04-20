@@ -1,0 +1,42 @@
+<link rel="stylesheet" href="/css/formStyles.css">
+
+<h2>Manage Crime-Officer Associations</h2>
+
+<h3>Link Crime to Officer</h3>
+<form method="POST" action="/crime-officer-union/link">
+    <div class="form-item">
+        <label>Crime ID:</label>
+        <input type="number" name="crimeID" required>
+    </div>
+    <div class="form-item">
+        <label>Officer ID:</label>
+        <input type="number" name="officerID" required>
+    </div>
+    <div class="form-item">
+        <button type="submit" class="normal-button">Link</button>
+    </div>
+</form>
+
+<h3>Current Links</h3>
+<table>
+    <thead>
+        <tr>
+            <th>Crime ID</th>
+            <th>Officer ID</th>
+            <th>Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        {{#each links}}
+        <tr>
+            <td>{{this.Crime_ID}}</td>
+            <td>{{this.Officer_ID}}</td>
+            <td>
+                <form action="/crime-officer-union/unlink/{{this.Crime_ID}}/{{this.Officer_ID}}" method="POST">
+                    <button type="POST" class="normal-button">Unlink</button>
+                </form>
+            </td>
+        </tr>
+        {{/each}}
+    </tbody>
+</table>

@@ -347,4 +347,41 @@ export async function getCrimesByOfficerID(officerID) {
     }
 }
 
+export async function insertCrimeOfficer(crimeID, officerID) {
+    try {
+        await db.query('CALL insert_crime_officer(?, ?)', [crimeID, officerID]);
+        return { success: true, message: "Officer successfully linked to the crime." };
+    } catch (err) {
+        console.error("Failed to link officer to crime:", err);
+        return { success: false, message: err.sqlMessage || "An error occurred while linking the officer to the crime." };
+    }
+}
 
+export async function getOfficersByCrimeID(CrimeID) {
+    try {
+        const [crimes] = await db.query('CALL get_officers_by_crime_id(?)', [CrimeID]);
+        return crimes;
+    } catch (err) {
+        console.error("Failed to retrieve crimes for officer:", err);
+        throw err;
+    }
+}
+export async function removeCrimeOfficerLink(crimeID, officerID) {
+    try {
+        await db.query('CALL delete_crime_officer_by_id(?, ?)', [crimeID, officerID]);
+        return { success: true, message: "Link between crime and officer successfully removed." };
+    } catch (err) {
+        console.error("Failed to unlink crime and officer:", err);
+        return { success: false, message: err.sqlMessage || "An error occurred while unlinking the crime and the officer." };
+    }
+}
+
+export async function getAllCrimeOfficerLinks() {
+    try {
+        const [links] = await db.query('SELECT * FROM Crime_officers');
+        return links;
+    } catch (err) {
+        console.error("Failed to fetch all crime and officer links:", err);
+        return { success: false, message: err.sqlMessage || "An error occurred while fetching all crime and officer links." };
+    }
+}

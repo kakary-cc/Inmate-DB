@@ -439,6 +439,7 @@ app.get('/crime/details/:Crime_ID', async (req, res) => {
         const [appeals] = await interactive.getAppealsByCrimeID(Crime_ID);
         const [charges] = await interactive.getCrimeChargesByCrimeID(Crime_ID);
         const [aliases] = await interactive.getAliasesByCriminalID(Criminal_ID);
+        const [officers] = await interactive.getOfficersByCrimeID(Crime_ID);
 
         Crime.Date_charged = formatDate(Crime.Date_charged);
         Crime.Hearing_date = formatDate(Crime.Hearing_date);
@@ -462,7 +463,7 @@ app.get('/crime/details/:Crime_ID', async (req, res) => {
         if (!Crime) {
             res.status(404).send('Crime not found');
         } else {
-            res.render("crime/single", { crime: Crime, formattedAppeals, formattedCharges, aliases});
+            res.render("crime/single", { crime: Crime, formattedAppeals, formattedCharges, aliases, officers});
         }
     } catch (err) {
         console.error(err);
@@ -649,6 +650,74 @@ app.post('/officer/delete/:Officer_ID', async (req, res) => {
         res.status(500).json({ success: false, message: "Error deleting officer." });
     }
 });
+
+app.post('/crime/addOfficer/:Crime_ID', async (req, res) => {
+    const { Crime_ID } = req.params;
+    const { officerID } = req.body;
+
+    try {
+        const result = await interactive.insertCrimeOfficer(Crime_ID, officerID);
+        if (result.success) {
+            res.redirect('/crime/details/' + Crime_ID); 
+        } else {
+            res.status(400).send(result.message);
+        }
+    } catch (error) {
+        console.error('Error linking officer to crime:', error);
+        res.status(500).send("Server error in processing your request.");
+    }
+});
+
+app.get('/crime-officer-union', async (req, res) => {
+    try {
+        const { source, id } = req.query;
+        const links = await interactive.getAllCrimeOfficerLinks(); 
+        const context = { links: links };
+
+        if (source === 'crime') {
+            context.crimeID = id;
+        } else if (source === 'officer') {
+            context.officerID = id;
+        }
+
+        res.render('crimeOfficerUnion', context);
+    } catch (err) {
+        console.error(err);
+        res.status(500).send("Error retrieving crime-officer links.");
+    }
+});
+
+
+app.post('/crime-officer-union/link', async (req, res) => {
+    const { crimeID, officerID } = req.body;
+    try {
+        const result = await interactive.insertCrimeOfficer(crimeID, officerID);
+        if (result.success) {
+            res.redirect('/crime-officer-union');
+        } else {
+            res.status(400).send(result.message);
+        }
+    } catch (error) {
+        console.error('Error linking crime to officer:', error);
+        res.status(500).send("Server error in processing your request.");
+    }
+});
+
+app.post('/crime-officer-union/unlink/:Crime_ID/:Officer_ID', async (req, res) => {
+    const { Crime_ID, Officer_ID } = req.params;
+    try {
+        const result = await interactive.removeCrimeOfficerLink(Crime_ID, Officer_ID);
+        if (result.success) {
+            res.redirect('/crime-officer-union'); 
+        } else {
+            res.status(400).send(result.message);  
+        }
+    } catch (error) {
+        console.error('Error unlinking crime and officer:', error);
+        res.status(500).send("Error processing your request.");
+    }
+});
+
 
 
 

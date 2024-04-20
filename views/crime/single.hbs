@@ -96,3 +96,28 @@
     <a href="/crime/addCharge/{{crime.Crime_ID}}" class="normal-button">Add Charge</a>
 </div>
 
+<h3>Associated Officers</h3>
+<table>
+    <thead>
+        <tr>
+            <th>Officer ID</th>
+            <th>Name</th>
+            <th>Details</th>
+        </tr>
+    </thead>
+    <tbody>
+        {{#each officers}}
+        <tr>
+            <td>{{this.Officer_ID}}</td>
+            <td>{{this.First}} {{this.Last}}</td>
+            <td><a href="/officer/details/{{this.Officer_ID}}">View Details</a></td>
+        </tr>
+        {{/each}}
+    </tbody>
+</table>
+
+<div class="button-container">
+    <a href="/crime-officer-union?source=crime&id={{crime.Crime_ID}}" class="normal-button">Manage Officer Links</a>
+</div>
+
+
