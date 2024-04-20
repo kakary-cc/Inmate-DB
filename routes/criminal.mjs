@@ -187,4 +187,59 @@ app.delete("/criminal/delete/:criminalId", async (req, res) => {
     }
 });
 
+// add a sentence for a criminal: the backend
+app.post("/criminal/addSentence/:Criminal_ID", async (req, res) => {
+    const { Criminal_ID } = req.params;
+    const { type, probID, startDate, endDate, violations } = req.body;
+
+    try {
+        const result = await interactive.insertSentence(
+            Criminal_ID,
+            type,
+            probID,
+            startDate,
+            endDate,
+            violations
+        );
+        if (result.success) {
+            res.redirect(`/criminal/view/${Criminal_ID}`);
+        } else {
+            res.status(500).send(
+                "Inner Error inserting new sentence for criminal"
+            );
+        }
+    } catch (error) {
+        console.error("Error inserting sentence:", error);
+        res.status(500).render("./error", {
+            error: "Outer Error inserting sentence.",
+        });
+    }
+});
+
+// add a crime for a criminal: the backend
+app.post("/criminal/addCrime/:Criminal_ID", async (req, res) => {
+    const { Criminal_ID } = req.params;
+    const { classification, dateCharged, status, hearingDate, appealCutDate } =
+        req.body;
+
+    try {
+        const result = await interactive.insertCrime(
+            Criminal_ID,
+            classification,
+            dateCharged,
+            status,
+            hearingDate,
+            appealCutDate
+        );
+        if (result.success) {
+            res.redirect(`/criminal/view/${Criminal_ID}`);
+        } else {
+            res.status(400).send(result.message);
+        }
+    } catch (error) {
+        console.error("Error in submitting crime:", error);
+        res.status(500).send("Server error in processing your request.");
+    }
+});
+
 export { app as criminalRoutes };

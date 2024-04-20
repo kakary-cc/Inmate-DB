@@ -21,4 +21,4 @@ app.get("/new", async (req, res) => {
     }
 });
 
-export { app as appealRoutes };
+export { app as crimeChargeRoutes };

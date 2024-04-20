@@ -9,9 +9,12 @@ import * as interactive from "./db-interactive.mjs";
 
 import { criminalRoutes } from "./routes/criminal.mjs";
 import { crimeRoutes } from "./routes/crime.mjs";
+import { crimeChargeRoutes } from "./routes/crime_charge.mjs";
+import { appealRoutes } from "./routes/appeal.mjs";
+import { sentenceRoutes } from "./routes/sentence.mjs";
 import { officerRoutes } from "./routes/officer.mjs";
 import { probOfficerRoutes } from "./routes/prob_officer.mjs";
-import { appealRoutes } from "./routes/appeal.mjs";
+import { crimeCodeRoutes } from "./routes/crime_code.mjs";
 
 const __dirname = path.dirname(url.fileURLToPath(import.meta.url));
 
@@ -21,12 +24,6 @@ app.use(express.static(path.join(__dirname, "public")));
 app.set("view engine", "hbs");
 app.use(express.urlencoded({ extended: false }));
 
-// Converts date to YYYY-MM-DD format
-function formatDate(dateValue) {
-    if (!dateValue) return "";
-    return new Date(dateValue).toISOString().split("T")[0];
-}
-
 app.use(
     session({
         secret: "secret",
@@ -35,6 +32,7 @@ app.use(
     })
 );
 
+// TODO: List needs to be edited.
 const authRequiredPaths = [
     // "/criminal/new",
     // "/crime/new",
@@ -124,176 +122,14 @@ app.post("/register", async (req, res) => {
 
 app.use("/criminal", criminalRoutes);
 app.use("/crime", crimeRoutes);
+app.use("/crime_charge", crimeChargeRoutes);
+app.use("/appeal", appealRoutes);
+app.use("/sentence", sentenceRoutes);
+
 app.use("/officer", officerRoutes);
 app.use("/prob_officer", probOfficerRoutes);
-app.use("/appeal", appealRoutes);
 
-// add a sentence for a criminal: the backend
-app.post("/criminal/addSentence/:Criminal_ID", async (req, res) => {
-    const { Criminal_ID } = req.params;
-    const { type, probID, startDate, endDate, violations } = req.body;
-
-    try {
-        const result = await interactive.insertSentence(
-            Criminal_ID,
-            type,
-            probID,
-            startDate,
-            endDate,
-            violations
-        );
-        if (result.success) {
-            res.redirect(`/criminal/view/${Criminal_ID}`);
-        } else {
-            res.status(500).send(
-                "Inner Error inserting new sentence for criminal"
-            );
-        }
-    } catch (error) {
-        console.error("Error inserting sentence:", error);
-        res.status(500).render("./error", {
-            error: "Outer Error inserting sentence.",
-        });
-    }
-});
-
-// add a crime for a criminal: the backend
-app.post("/criminal/addCrime/:Criminal_ID", async (req, res) => {
-    const { Criminal_ID } = req.params;
-    const { classification, dateCharged, status, hearingDate, appealCutDate } =
-        req.body;
-
-    try {
-        const result = await interactive.insertCrime(
-            Criminal_ID,
-            classification,
-            dateCharged,
-            status,
-            hearingDate,
-            appealCutDate
-        );
-        if (result.success) {
-            res.redirect(`/criminal/view/${Criminal_ID}`);
-        } else {
-            res.status(400).send(result.message);
-        }
-    } catch (error) {
-        console.error("Error in submitting crime:", error);
-        res.status(500).send("Server error in processing your request.");
-    }
-});
-
-// add appeal by crime_ID: the backend
-app.post("/crime/addAppeal/:Crime_ID", async (req, res) => {
-    const { Crime_ID } = req.params;
-    const { fillingDate, hearingDate, status } = req.body;
-
-    try {
-        const result = await interactive.addAppealByCrimeID(
-            Crime_ID,
-            fillingDate,
-            hearingDate,
-            status
-        );
-        if (result.success) {
-            res.redirect(`/crime/view/${Crime_ID}`);
-        } else {
-            res.status(400).send(result.message);
-        }
-    } catch (error) {
-        console.error("Error in submitting appeal:", error);
-        res.status(500).send("Server error in processing your request.");
-    }
-});
-
-// add charge by crime_ID: the backend
-app.post("/crime/addCharge/:Crime_ID", async (req, res) => {
-    const { Crime_ID } = req.params;
-    const {
-        crimeCode,
-        chargeStatus,
-        fineAmount,
-        courtFee,
-        amountPaid,
-        payDueDate,
-    } = req.body;
-
-    try {
-        const result = await interactive.insertCrimeChargeByCrimeID(
-            Crime_ID,
-            crimeCode,
-            chargeStatus,
-            fineAmount,
-            courtFee,
-            amountPaid,
-            payDueDate
-        );
-        if (result.success) {
-            res.redirect(`/crime/view/${Crime_ID}`);
-        } else {
-            res.status(400).send(result.message);
-        }
-    } catch (error) {
-        console.error("Error in submitting crime charge:", error);
-        res.status(500).send("Server error in processing your request.");
-    }
-});
-
-// TODO: This route doesn't logically make sense.
-app.get("/prob_officer/addSentence/:ProbOfficer_ID", async (req, res) => {
-    try {
-        const { ProbOfficer_ID } = req.params;
-        console.log(ProbOfficer_ID);
-        res.render("./sentence/new", { ProbOfficer_ID });
-    } catch (err) {
-        console.error(err);
-        res.status(500).send("Error loading the add sentence page.");
-    }
-});
-
-app.post("/prob_officer/addSentence/:ProbOfficer_ID", async (req, res) => {
-    const { ProbOfficer_ID } = req.params;
-    const { criminalID, type, startDate, endDate, violations } = req.body;
-
-    try {
-        const result = await interactive.insertSentence(
-            criminalID,
-            type,
-            ProbOfficer_ID,
-            startDate,
-            endDate,
-            violations
-        );
-        if (result.success) {
-            res.redirect(`/prob_officer/view/${ProbOfficer_ID}`);
-        } else {
-            res.status(400).send(result.message);
-        }
-    } catch (error) {
-        console.error("Error in submitting sentence:", error);
-        res.status(500).send("Server error in processing your request.");
-    }
-});
-
-app.post("/crime/addOfficer/:Crime_ID", async (req, res) => {
-    const { Crime_ID } = req.params;
-    const { officerID } = req.body;
-
-    try {
-        const result = await interactive.insertCrimeOfficer(
-            Crime_ID,
-            officerID
-        );
-        if (result.success) {
-            res.redirect(`/crime/view/${Crime_ID}`);
-        } else {
-            res.status(400).send(result.message);
-        }
-    } catch (error) {
-        console.error("Error linking officer to crime:", error);
-        res.status(500).send("Server error in processing your request.");
-    }
-});
+app.use("/crime_code", crimeCodeRoutes);
 
 // TODO: Why do we need this?
 app.get("/crime-officer-union", async (req, res) => {
@@ -315,7 +151,6 @@ app.get("/crime-officer-union", async (req, res) => {
     }
 });
 
-// TODO: Why do we need this?
 app.post("/crime-officer-union/link", async (req, res) => {
     const { crimeID, officerID } = req.body;
     try {

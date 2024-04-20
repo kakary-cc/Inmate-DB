@@ -1,0 +1,19 @@
+<link rel="stylesheet" href="/css/form.css">
+
+<h2>New Crime Code</h2>
+
+<form method="POST" action="/crime_code/new">
+    <div class="form-item">
+        <label>Code</label>
+        <input type="text" name="code" maxlength="3" pattern="[0-9]{3}" placeholder="Three digits number." required>
+    </div>
+
+    <div class="form-item">
+        <label>Description</label>
+        <input type="text" name="description" required>
+    </div>
+
+    <div class="form-item">
+        <input type="submit" value="Submit">
+    </div>
+</form>
