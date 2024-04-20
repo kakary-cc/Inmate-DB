@@ -3,14 +3,14 @@
 {{#if message}}
 <div class="error">{{ message }}</div>
 {{/if}}
-<form method="POST" action="login">
+<form method="POST" action="/login">
 	<div>
-		<label for="username">E-Mail:</label>
-		<input type="text" name="email" value="">
+		<label for="email">E-Mail:</label>
+		<input type="email" name="email" required>
 	</div>
 	<div>
 		<label for="password">Password:</label>
-		<input type="password" name="passwd" value="">
+		<input type="password" name="password" required>
 	</div>
 	<br>
 	<div>

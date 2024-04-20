@@ -55,11 +55,11 @@ app.use((req, res, next) => {
 });
 
 app.get("/", (req, res) => {
-    res.render("index");
+    res.render("./");
 });
 
 app.get("/login", (req, res) => {
-    res.render("login");
+    res.render("./login");
 });
 
 app.post("/logout", async (req, res) => {
@@ -76,42 +76,42 @@ app.post("/logout", async (req, res) => {
 
 app.post("/login", async (req, res) => {
     try {
-        const user = await auth.login(req.body.email, req.body.passwd);
+        const user = await auth.login(req.body.email, req.body.password);
         await auth.startAuthenticatedSession(req, user);
         res.redirect("/");
     } catch (err) {
         console.log(err);
-        res.render("register", {
+        res.render("./register", {
             message: err.message ?? "Login unsuccessful",
         });
     }
 });
 
 app.get("/register", (req, res) => {
-    res.render("register");
+    res.render("./register");
 });
 
 app.post("/register", async (req, res) => {
     try {
-        const newUser = await auth.register(req.body.email, req.body.passwd);
+        const newUser = await auth.register(req.body.email, req.body.password);
         await auth.startAuthenticatedSession(req, newUser);
         res.redirect("/");
     } catch (err) {
         console.log(err);
-        res.render("register", {
+        res.render("./register", {
             message: err.message ?? "Registration error",
         });
     }
 });
 
 // Add a criminal
-app.get("/criminal/newin", (req, res) => {
-    res.render("criminal/new");
+app.get("/criminal/new", (req, res) => {
+    res.render("./criminal/new");
 });
 
 // View and search within all crimes
 app.get("/crime", (req, res) => {
-    res.render("crime/", {});
+    res.render("./crime", {});
 });
 
 // new criminal
@@ -154,7 +154,7 @@ app.post("/criminal/new", async (req, res) => {
 });
 
 // get all criminals
-app.get("/criminal/all", async (req, res) => {
+app.get("/criminal", async (req, res) => {
     try {
         let criminals = await interactive.getAllCriminals();
         criminals = criminals.map((criminal) => ({
@@ -162,7 +162,7 @@ app.get("/criminal/all", async (req, res) => {
             Violent: criminal.V_status === "Y" ? "Yes" : "No",
             Probation: criminal.P_status === "Y" ? "Yes" : "No",
         }));
-        res.render("criminal/all", { criminals: criminals });
+        res.render("./criminal", { criminals: criminals });
     } catch (err) {
         console.error(err);
         res.status(500).send("Error retrieving criminals.");
@@ -170,7 +170,7 @@ app.get("/criminal/all", async (req, res) => {
 });
 
 // display a single criminal in detail
-app.get("/criminal/details/:Criminal_ID", async (req, res) => {
+app.get("/criminal/view/:Criminal_ID", async (req, res) => {
     try {
         const criminalID = req.params.Criminal_ID;
         const criminalDetails = await interactive.getCriminalDetails(
@@ -210,7 +210,7 @@ app.get("/criminal/details/:Criminal_ID", async (req, res) => {
                 };
             });
 
-            res.render("criminal/single", {
+            res.render("./criminal/view", {
                 criminal: criminalDetails,
                 sentences: formattedSentences,
                 crimes: formattedCrimes,
@@ -241,8 +241,7 @@ app.post("/criminal/update/:field", async (req, res) => {
 });
 
 // delete a single criminal
-// TODO: convert post to delete
-app.post("/criminal/delete/:criminalId", async (req, res) => {
+app.delete("/criminal/delete/:criminalId", async (req, res) => {
     const criminalId = req.params.criminalId;
 
     try {
@@ -268,10 +267,11 @@ app.post("/criminal/delete/:criminalId", async (req, res) => {
 });
 
 // add a sentence for a criminal: the page
-app.get("/criminal/addSentence/:Criminal_ID", async (req, res) => {
+app.get("/sentence/new", async (req, res) => {
+    // TODO: Get Criminal_ID from param.
     try {
         const { Criminal_ID } = req.params;
-        res.render("criminal/addSentencePage", { criminal_ID: Criminal_ID });
+        res.render("./sentence/new", { criminal_ID: Criminal_ID });
     } catch (err) {
         console.error(err);
         res.status(500).send("Error loading the add sentence page.");
@@ -293,7 +293,7 @@ app.post("/criminal/addSentence/:Criminal_ID", async (req, res) => {
             violations
         );
         if (result.success) {
-            res.redirect(`/criminal/details/${Criminal_ID}`);
+            res.redirect(`/criminal/view/${Criminal_ID}`);
         } else {
             res.status(500).send(
                 "Inner Error inserting new sentence for criminal"
@@ -301,17 +301,18 @@ app.post("/criminal/addSentence/:Criminal_ID", async (req, res) => {
         }
     } catch (error) {
         console.error("Error inserting sentence:", error);
-        res.status(500).render("errorPage", {
+        res.status(500).render("./error", {
             error: "Outer Error inserting sentence.",
         });
     }
 });
 
 // add a sentence for a criminal: the page
-app.get("/criminal/addCrime/:Criminal_ID", async (req, res) => {
+app.get("/crime/add", async (req, res) => {
+    // Ger Criminal_ID from param
     try {
         const { Criminal_ID } = req.params;
-        res.render("criminal/addCrimePage", { criminal_ID: Criminal_ID });
+        res.render("./crime/new", { criminal_ID: Criminal_ID });
     } catch (err) {
         console.error(err);
         res.status(500).send("Error loading the add sentence page.");
@@ -334,7 +335,7 @@ app.post("/criminal/addCrime/:Criminal_ID", async (req, res) => {
             appealCutDate
         );
         if (result.success) {
-            res.redirect("/criminal/details/" + Criminal_ID);
+            res.redirect(`/criminal/view/${Criminal_ID}`);
         } else {
             res.status(400).send(result.message);
         }
@@ -345,8 +346,8 @@ app.post("/criminal/addCrime/:Criminal_ID", async (req, res) => {
 });
 
 // add a probation officer: the page
-app.get("/prob_officer/newin", (req, res) => {
-    res.render("prob_officer/new");
+app.get("/prob_officer/new", (req, res) => {
+    res.render("./prob_officer/new");
 });
 
 // add a probation officer: the backend
@@ -376,7 +377,7 @@ app.post("/prob_officer/new", async (req, res) => {
             status
         );
         if (result.success) {
-            res.redirect("/prob_officer/all");
+            res.redirect("/prob_officer");
         } else {
             res.status(500).send("Failed to create probation officer.");
         }
@@ -387,10 +388,10 @@ app.post("/prob_officer/new", async (req, res) => {
 });
 
 // get all probation officers
-app.get("/prob_officer/all", async (req, res) => {
+app.get("/prob_officer", async (req, res) => {
     try {
         let probOfficers = await interactive.getAllProbOfficers();
-        res.render("prob_officer/all", { probOfficers: probOfficers });
+        res.render("./prob_officer", { probOfficers: probOfficers });
     } catch (err) {
         console.error(err);
         res.status(500).send("Error retrieving probation officers.");
@@ -398,7 +399,7 @@ app.get("/prob_officer/all", async (req, res) => {
 });
 
 // get a single probation officer
-app.get("/prob_officer/details/:Prob_ID", async (req, res) => {
+app.get("/prob_officer/view/:Prob_ID", async (req, res) => {
     try {
         const probID = req.params.Prob_ID;
         const probOfficerDetails = await interactive.getProbationOfficerById(
@@ -420,7 +421,7 @@ app.get("/prob_officer/details/:Prob_ID", async (req, res) => {
             probOfficerDetails.StatusActive = probOfficerDetails.Status === "A";
             probOfficerDetails.StatusInactive =
                 probOfficerDetails.Status === "I";
-            res.render("prob_officer/single", {
+            res.render("./prob_officer/view", {
                 probOfficer: probOfficerDetails,
                 sentences: formattedSentences,
             });
@@ -500,7 +501,7 @@ app.post("/prob_officer/update/:field", async (req, res) => {
 });
 
 // get all crimes
-app.get("/crime/all", async (req, res) => {
+app.get("/crime", async (req, res) => {
     try {
         const Crimes = await interactive.getAllCrimes();
 
@@ -513,7 +514,7 @@ app.get("/crime/all", async (req, res) => {
             };
         });
 
-        res.render("crime/all", { Crimes: formattedCrimes });
+        res.render("./crime", { Crimes: formattedCrimes });
     } catch (err) {
         console.error(err);
         res.status(500).send("Error retrieving crimes.");
@@ -521,7 +522,7 @@ app.get("/crime/all", async (req, res) => {
 });
 
 // get crime by id
-app.get("/crime/details/:Crime_ID", async (req, res) => {
+app.get("/crime/view/:Crime_ID", async (req, res) => {
     try {
         const { Criminal_ID, Crime_ID } = req.params;
         const Crime = await interactive.getCrimeById(Crime_ID);
@@ -551,7 +552,7 @@ app.get("/crime/details/:Crime_ID", async (req, res) => {
         if (!Crime) {
             res.status(404).send("Crime not found");
         } else {
-            res.render("crime/single", {
+            res.render("./crime/view", {
                 crime: Crime,
                 formattedAppeals,
                 formattedCharges,
@@ -566,10 +567,11 @@ app.get("/crime/details/:Crime_ID", async (req, res) => {
 });
 
 // add appeal by crime_ID: the frontend
-app.get("/crime/addAppeal/:Crime_ID", async (req, res) => {
+app.get("/appeal/new", async (req, res) => {
+    // TODO: Get Crime_ID from pram
     try {
         const { Crime_ID } = req.params;
-        res.render("crime/addAppealPage", { crime_ID: Crime_ID });
+        res.render("./appeal/new", { crime_ID: Crime_ID });
     } catch (err) {
         console.error(err);
         res.status(500).send("Error loading the add appeal page.");
@@ -589,7 +591,7 @@ app.post("/crime/addAppeal/:Crime_ID", async (req, res) => {
             status
         );
         if (result.success) {
-            res.redirect("/crime/details/" + Crime_ID);
+            res.redirect(`/crime/view/${Crime_ID}`);
         } else {
             res.status(400).send(result.message);
         }
@@ -600,10 +602,11 @@ app.post("/crime/addAppeal/:Crime_ID", async (req, res) => {
 });
 
 // add charge by crime_ID: the frontend
-app.get("/crime/addCharge/:Crime_ID", async (req, res) => {
+app.get("/crime_charge/new", async (req, res) => {
+    // Get Crime_ID from param
     try {
         const { Crime_ID } = req.params;
-        res.render("crime/addChargePage", { crime_ID: Crime_ID });
+        res.render("./charge/new", { crime_ID: Crime_ID });
     } catch (err) {
         console.error(err);
         res.status(500).send("Error loading the add charge page.");
@@ -633,7 +636,7 @@ app.post("/crime/addCharge/:Crime_ID", async (req, res) => {
             payDueDate
         );
         if (result.success) {
-            res.redirect("/crime/details/" + Crime_ID);
+            res.redirect(`/crime/view/${Crime_ID}`);
         } else {
             res.status(400).send(result.message);
         }
@@ -643,11 +646,12 @@ app.post("/crime/addCharge/:Crime_ID", async (req, res) => {
     }
 });
 
+// TODO: This route doesn't logically make sense.
 app.get("/prob_officer/addSentence/:ProbOfficer_ID", async (req, res) => {
     try {
         const { ProbOfficer_ID } = req.params;
         console.log(ProbOfficer_ID);
-        res.render("prob_officer/addSentencePage", { ProbOfficer_ID });
+        res.render("./sentence/new", { ProbOfficer_ID });
     } catch (err) {
         console.error(err);
         res.status(500).send("Error loading the add sentence page.");
@@ -668,7 +672,7 @@ app.post("/prob_officer/addSentence/:ProbOfficer_ID", async (req, res) => {
             violations
         );
         if (result.success) {
-            res.redirect("/prob_officer/details/" + ProbOfficer_ID);
+            res.redirect(`/prob_officer/view/${ProbOfficer_ID}`);
         } else {
             res.status(400).send(result.message);
         }
@@ -678,11 +682,12 @@ app.post("/prob_officer/addSentence/:ProbOfficer_ID", async (req, res) => {
     }
 });
 
-// todo: add Alias
-app.get("/criminal/addAlias/:Criminal_ID", async (req, res) => {
+// TODO: add Alias
+app.get("/criminal/alias/new", async (req, res) => {
+    // TODO: Get Criminal_ID from param
     try {
         const { Criminal_ID } = req.params;
-        res.render("criminal/addAliasPage", { Criminal_ID });
+        res.render("./criminal/alias/new", { Criminal_ID });
     } catch (err) {
         console.error(err);
         res.status(500).send("Error loading the add sentence page.");
@@ -696,7 +701,7 @@ app.post("/criminal/addAlias/:Criminal_ID", async (req, res) => {
     try {
         const result = await interactive.insertAlias(Criminal_ID, alias);
         if (result.success) {
-            res.redirect("/criminal/details/" + Criminal_ID);
+            res.redirect(`/criminal/view/${Criminal_ID}`);
         } else {
             res.status(400).send(result.message);
         }
@@ -707,8 +712,8 @@ app.post("/criminal/addAlias/:Criminal_ID", async (req, res) => {
 });
 
 // create an officer: the frontend
-app.get("/officer/newin", (req, res) => {
-    res.render("officer/new");
+app.get("/officer/new", (req, res) => {
+    res.render("./officer/new");
 });
 
 // create an officer: the backend
@@ -725,7 +730,7 @@ app.post("/officer/new", async (req, res) => {
             status
         );
         if (result.success) {
-            res.redirect("/officer/all");
+            res.redirect("/officer");
         } else {
             res.status(500).send("Failed to create officer.");
         }
@@ -735,18 +740,18 @@ app.post("/officer/new", async (req, res) => {
     }
 });
 
-app.get("/officer/all", async (req, res) => {
+app.get("/officer", async (req, res) => {
     try {
         let officers = await interactive.getAllOfficers();
 
-        res.render("officer/all", { officers: officers });
+        res.render("./officer", { officers: officers });
     } catch (err) {
         console.error(err);
         res.status(500).send("Error retrieving officers.");
     }
 });
 
-app.get("/officer/details/:Officer_ID", async (req, res) => {
+app.get("/officer/view/:Officer_ID", async (req, res) => {
     try {
         const officerID = req.params.Officer_ID;
         const [officerDetails] = await interactive.getOfficerById(officerID);
@@ -755,7 +760,7 @@ app.get("/officer/details/:Officer_ID", async (req, res) => {
         if (!officerDetails) {
             res.status(404).send("Officer not found");
         } else {
-            res.render("officer/single", { officer: officerDetails, crimes });
+            res.render("./officer/view", { officer: officerDetails, crimes });
         }
     } catch (err) {
         console.error(err);
@@ -798,7 +803,7 @@ app.post("/crime/addOfficer/:Crime_ID", async (req, res) => {
             officerID
         );
         if (result.success) {
-            res.redirect("/crime/details/" + Crime_ID);
+            res.redirect(`/crime/view/${Crime_ID}`);
         } else {
             res.status(400).send(result.message);
         }
@@ -808,6 +813,7 @@ app.post("/crime/addOfficer/:Crime_ID", async (req, res) => {
     }
 });
 
+// TODO: Why do we need this?
 app.get("/crime-officer-union", async (req, res) => {
     try {
         const { source, id } = req.query;
@@ -820,13 +826,14 @@ app.get("/crime-officer-union", async (req, res) => {
             context.officerID = id;
         }
 
-        res.render("crimeOfficerUnion", context);
+        res.render("./crimeOfficerUnion", context);
     } catch (err) {
         console.error(err);
         res.status(500).send("Error retrieving crime-officer links.");
     }
 });
 
+// TODO: Why do we need this?
 app.post("/crime-officer-union/link", async (req, res) => {
     const { crimeID, officerID } = req.body;
     try {
