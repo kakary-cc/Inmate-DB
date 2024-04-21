@@ -1,51 +1,12 @@
 <link rel="stylesheet" href="/css/form.css">
 
 <h3>
-    Add Criminal Information
+    Add Criminal Alias
 </h3>
-<form method="POST" action="/criminal/new">
+<form method="POST" action="/criminal/alias/new">
     <div class="form-item">
-        <label>Name*</label>
-        <input name="firstName" placeholder="First">
-        <input name="lastName" placeholder="Last">
-    </div>
-
-    <div class="form-item">
-        <label>Address*</label>
-        <input name="street" size="42" placeholder="Street">
-    </div>
-    <div class="form-item">
-        <label>City</label>
-        <input name="city" placeholder="City">
-    </div>
-    <div class="form-item">
-        <label>State</label>
-        <input name="state" size="15" placeholder="State">
-    </div>
-    <div class="form-item">
-        <label>Zipcode</label>
-        <input name="zipCode" size="10" placeholder="Zipcode">
-    </div>
-
-    <div class="form-item">
-        <label>Phone*</label>
-        <input name="phoneNumber" placeholder="No hyphen">
-    </div>
-
-    <div class="form-item">
-        <label>Violent</label>
-        <select name="violent">
-            <option value="no">No</option>
-            <option value="yes">Yes</option>
-        </select>
-    </div>
-
-    <div class="form-item">
-        <label>Probation</label>
-        <select name="probation">
-            <option value="no">No</option>
-            <option value="yes">Yes</option>
-        </select>
+        <label>Criminal_ID*</label>
+        <input name="id" value="{{Criminal_ID}}">
     </div>
 
     <div class="form-item">

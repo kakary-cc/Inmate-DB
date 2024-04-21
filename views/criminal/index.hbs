@@ -1,5 +1,5 @@
 <script src="js/search.js" type="module" defer></script>
-<h2>Displaying Details of Registered Criminals</h2>
+<h2>Registered Criminals</h2>
 
 <input type="text" id="searchInput" placeholder="Search by name or ID..."
     style="margin-bottom: 20px; width: 300px; padding: 10px;">
@@ -24,8 +24,12 @@
             <td>{{this.Phone}}</td>
             <td>{{this.Violent}}</td>
             <td>{{this.Probation}}</td>
-            <td><a href="/criminal/details/{{this.Criminal_ID}}">View Details</a></td>
+            <td><a href="/criminal/{{this.Criminal_ID}}">View Details</a></td>
         </tr>
         {{/each}}
     </tbody>
 </table>
+
+<a href="/criminal/new">
+    <button class="floating-button">New Entry</button>
+</a>

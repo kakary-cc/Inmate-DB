@@ -3,7 +3,7 @@
 <div class="header-container">
     <h2>Crime Details</h2>
     <div class="button-container">
-        <a href="/crime/all" class="normal-button">Back to All Crimes</a>
+        <a href="/crime" class="normal-button">Back to All Crimes</a>
     </div>
 </div>
 
@@ -63,7 +63,7 @@
 </table>
 
 <div class="button-container">
-    <a href="/crime/addAppeal/{{crime.Crime_ID}}" class="normal-button">Add Appeal</a>
+    <a href="/appeal/new?crime_id={{crime.Crime_ID}}" class="normal-button">Add Appeal</a>
 </div>
 
 <h3>Charges</h3>
@@ -93,7 +93,7 @@
 </table>
 
 <div class="button-container">
-    <a href="/crime/addCharge/{{crime.Crime_ID}}" class="normal-button">Add Charge</a>
+    <a href="/crime_charge/new?crime_id={{crime.Crime_ID}}" class="normal-button">Add Charge</a>
 </div>
 
 <h3>Associated Officers</h3>
@@ -110,7 +110,7 @@
         <tr>
             <td>{{this.Officer_ID}}</td>
             <td>{{this.First}} {{this.Last}}</td>
-            <td><a href="/officer/details/{{this.Officer_ID}}">View Details</a></td>
+            <td><a href="/officer/{{this.Officer_ID}}">View Details</a></td>
         </tr>
         {{/each}}
     </tbody>

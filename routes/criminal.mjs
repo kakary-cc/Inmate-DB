@@ -67,7 +67,7 @@ app.post("/new", async (req, res) => {
     }
 });
 
-app.get("/view/:Criminal_ID", async (req, res) => {
+app.get("/:Criminal_ID", async (req, res) => {
     try {
         const criminalID = req.params.Criminal_ID;
         const criminalDetails = await interactive.getCriminalDetails(
@@ -120,9 +120,9 @@ app.get("/view/:Criminal_ID", async (req, res) => {
 });
 
 app.get("/alias/new", async (req, res) => {
-    // TODO: Get Criminal_ID from param
+    // TODO: Get Criminal_ID from query
     try {
-        const { Criminal_ID } = req.params;
+        const Criminal_ID = req.query["criminal_id"];
         res.render("./criminal/alias/new", { Criminal_ID });
     } catch (err) {
         console.error(err);
@@ -132,9 +132,8 @@ app.get("/alias/new", async (req, res) => {
 
 app.post("/alias/new", async (req, res) => {
     // TODO: Get Criminal_ID from param
-    const { Criminal_ID } = req.params;
+    const Criminal_ID = req.query["criminal_id"];
     const { alias } = req.body;
-
     try {
         const result = await interactive.insertAlias(Criminal_ID, alias);
         if (result.success) {
@@ -149,7 +148,7 @@ app.post("/alias/new", async (req, res) => {
 });
 
 // update a single field for a single criminal
-app.post("/update/:field", async (req, res) => {
+app.post("/:field", async (req, res) => {
     const { id, value } = req.body;
     const field = req.params.field;
     try {
@@ -162,7 +161,7 @@ app.post("/update/:field", async (req, res) => {
 });
 
 // delete a single criminal
-app.delete("/criminal/delete/:criminalId", async (req, res) => {
+app.delete("/:criminalId", async (req, res) => {
     const criminalId = req.params.criminalId;
 
     try {
@@ -187,6 +186,7 @@ app.delete("/criminal/delete/:criminalId", async (req, res) => {
     }
 });
 
+// TODO: Move this elsewhere
 // add a sentence for a criminal: the backend
 app.post("/criminal/addSentence/:Criminal_ID", async (req, res) => {
     const { Criminal_ID } = req.params;

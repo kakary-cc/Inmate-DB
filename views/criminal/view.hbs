@@ -7,7 +7,7 @@
             criminal.Last}}{{criminal.Last}}{{else}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{/if}}</span>
     </h3>
     <div class="button-container">
-        <button onclick="window.location.href='/criminal/all';" class="normal-button">Back to All Criminals</button>
+        <button onclick="window.location.href='/criminal';" class="normal-button">Back to All Criminals</button>
     </div>
     <div class="button-container">
         <button onclick="confirmDelete('{{criminal.Criminal_ID}}')" class="normal-button">Delete</button>
@@ -62,7 +62,7 @@
     <tr>
         <td>{{this.Sentence_ID}}</td>
         <td>{{this.Type}}</td>
-        <td>{{#if this.Prob_ID}}<a href="/prob_officer/details/{{this.Prob_ID}}">#{{this.Prob_ID}}</a>{{else}}N/A{{/if}}
+        <td>{{#if this.Prob_ID}}<a href="/prob_officer/{{this.Prob_ID}}">#{{this.Prob_ID}}</a>{{else}}N/A{{/if}}
         </td>
         <td>{{this.Start_date}}</td>
         <td>{{this.End_date}}</td>
@@ -71,7 +71,7 @@
     {{/each}}
 </table>
 <div class="button-container">
-    <a href="/criminal/addSentence/{{criminal.Criminal_ID}}" class="normal-button">Add Sentence</a>
+    <a href="/sentence/new?criminal_id={{criminal.Criminal_ID}}" class="normal-button">Add Sentence</a>
 </div>
 <br>
 <table>
@@ -85,7 +85,7 @@
     </tr>
     {{#each crimes}}
     <tr>
-        <td><a href="/crime/details/{{this.Crime_ID}}">{{this.Crime_ID}}</a></td>
+        <td><a href="/crime/{{this.Crime_ID}}">{{this.Crime_ID}}</a></td>
         <td>{{this.Classification}}</td>
         <td>{{this.Date_charged}}</td>
         <td>{{this.Status}}</td>
@@ -95,7 +95,7 @@
     {{/each}}
 </table>
 <div class="button-container">
-    <a href="/criminal/addCrime/{{criminal.Criminal_ID}}" class="normal-button">Add Crime</a>
+    <a href="/crime/new?criminal_id={{criminal.Criminal_ID}}" class="normal-button">Add Crime</a>
 </div>
 
 <h3>Aliases</h3>
@@ -114,7 +114,7 @@
     </tbody>
 </table>
 <div class="button-container">
-    <a href="/criminal/addAlias/{{criminal.Criminal_ID}}" class="normal-button">Add Alias</a>
+    <a href="/criminal/alias/new?criminal_id={{criminal.Criminal_ID}}" class="normal-button">Add Alias</a>
 </div>
 
 
@@ -122,8 +122,8 @@
     function confirmDelete() {
         const criminalId = document.querySelector('#criminal-details').getAttribute('data-criminal-id');
         if (confirm("Are you sure you want to delete this criminal?")) {
-            fetch(`/criminal/delete/${criminalId}`, {
-                method: 'POST',
+            fetch(`/criminal/${criminalId}`, {
+                method: 'DELETE',
                 headers: {
                     'Content-Type': 'application/json',
                 },
@@ -133,7 +133,7 @@
                 .then(data => {
                     if (data.success) {
                         alert('Criminal successfully deleted');
-                        window.location.href = '/criminal/all';
+                        window.location.href = '/criminal';
                     } else {
                         alert('Failed to delete. Please try again.');
                     }
@@ -226,7 +226,7 @@
         const value = element.tagName === 'SELECT' ? element.value : element.textContent.trim();
 
         if (value !== element.getAttribute('data-original')) {
-            fetch(`/criminal/update/${field}`, {
+            fetch(`/criminal/${field}`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

@@ -9,7 +9,6 @@ function formatDate(dateValue) {
     return new Date(dateValue).toISOString().split("T")[0];
 }
 
-// get all probation officers
 app.get("/", async (req, res) => {
     try {
         let probOfficers = await interactive.getAllProbOfficers();
@@ -20,8 +19,48 @@ app.get("/", async (req, res) => {
     }
 });
 
+app.get("/new", (req, res) => {
+    res.render("./prob_officer/new");
+});
+
+app.post("/new", async (req, res) => {
+    const {
+        firstName,
+        lastName,
+        street,
+        city,
+        state,
+        zipCode,
+        phoneNumber,
+        email,
+        status,
+    } = req.body;
+
+    try {
+        const result = await interactive.insertProbationOfficer(
+            firstName,
+            lastName,
+            street,
+            city,
+            state,
+            zipCode,
+            phoneNumber,
+            email,
+            status
+        );
+        if (result.success) {
+            res.redirect("/prob_officer");
+        } else {
+            res.status(500).send("Failed to create probation officer.");
+        }
+    } catch (error) {
+        console.error("Error creating new probation officer:", error);
+        res.status(500).send("Error creating probation officer.");
+    }
+});
+
 // get a single probation officer
-app.get("/view/:Prob_ID", async (req, res) => {
+app.get("/:Prob_ID", async (req, res) => {
     try {
         const probID = req.params.Prob_ID;
         const probOfficerDetails = await interactive.getProbationOfficerById(
@@ -54,9 +93,9 @@ app.get("/view/:Prob_ID", async (req, res) => {
     }
 });
 
-app.post("/view/:field", async (req, res) => {
-    const { id, value } = req.body;
-    const field = req.params.field;
+app.post("/:id", async (req, res) => {
+    const { field, value } = req.body;
+    const id = req.params.field;
 
     try {
         const validFields = [
@@ -97,7 +136,7 @@ app.post("/view/:field", async (req, res) => {
 });
 
 // delete a probation officer
-app.delete("/view/:probOfficerId", async (req, res) => {
+app.delete("/:probOfficerId", async (req, res) => {
     const probOfficerId = req.params.probOfficerId;
 
     try {
@@ -119,48 +158,6 @@ app.delete("/view/:probOfficerId", async (req, res) => {
             success: false,
             message: "Error deleting probation officer.",
         });
-    }
-});
-
-// add a probation officer: the page
-app.get("/new", (req, res) => {
-    res.render("./prob_officer/new");
-});
-
-// add a probation officer: the backend
-app.post("/new", async (req, res) => {
-    const {
-        firstName,
-        lastName,
-        street,
-        city,
-        state,
-        zipCode,
-        phoneNumber,
-        email,
-        status,
-    } = req.body;
-
-    try {
-        const result = await interactive.insertProbationOfficer(
-            firstName,
-            lastName,
-            street,
-            city,
-            state,
-            zipCode,
-            phoneNumber,
-            email,
-            status
-        );
-        if (result.success) {
-            res.redirect("/prob_officer");
-        } else {
-            res.status(500).send("Failed to create probation officer.");
-        }
-    } catch (error) {
-        console.error("Error creating new probation officer:", error);
-        res.status(500).send("Error creating probation officer.");
     }
 });
 

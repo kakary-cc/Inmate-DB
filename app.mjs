@@ -112,12 +112,13 @@ app.post("/register", async (req, res) => {
 
 /*
  * All routes follow the standard below:
- * GET     /             | list all entities
- * GET     /new          | show the form to create a new entity
- * POST    /new          | create a new entity
- * GET     /view/:id     | show details of a specific entity
- * POST    /view/:id     | change attributes of a specific entity
- * DELETE  /view/:id     | delete a specific entity
+ * GET     /                    | list all entities
+ * GET     /new                 | show the form to create a new entity
+ * POST    /new                 | create a new entity
+ * GET     /:id                 | show details of a specific entity
+ * POST    /:id                 | change attributes of a specific entity
+ * POST    /:id?method=DELETE   | delete a specific entity
+ * DELETE  /:id                 | delete a specific entity
  */
 
 app.use("/criminal", criminalRoutes);
@@ -131,7 +132,7 @@ app.use("/prob_officer", probOfficerRoutes);
 
 app.use("/crime_code", crimeCodeRoutes);
 
-// TODO: Why do we need this?
+// TODO: ???
 app.get("/crime-officer-union", async (req, res) => {
     try {
         const { source, id } = req.query;

@@ -30,9 +30,8 @@ app.get("/", async (req, res) => {
 });
 
 app.get("/new", async (req, res) => {
-    // Ger Criminal_ID from param
     try {
-        const { Criminal_ID } = req.params;
+        const Criminal_ID = req.query["criminal_id"];
         res.render("./crime/new", { criminal_ID: Criminal_ID });
     } catch (err) {
         console.error(err);
@@ -40,7 +39,32 @@ app.get("/new", async (req, res) => {
     }
 });
 
-app.get("/view/:Crime_ID", async (req, res) => {
+app.post("/new", async (req, res) => {
+    const Criminal_ID = req.query["criminal_id"];
+    const { classification, dateCharged, status, hearingDate, appealCutDate } =
+        req.body;
+
+    try {
+        const result = await interactive.insertCrime(
+            Criminal_ID,
+            classification,
+            dateCharged,
+            status,
+            hearingDate,
+            appealCutDate
+        );
+        if (result.success) {
+            res.redirect(`/criminal/view/${Criminal_ID}`);
+        } else {
+            res.status(400).send(result.message);
+        }
+    } catch (error) {
+        console.error("Error in submitting crime:", error);
+        res.status(500).send("Server error in processing your request.");
+    }
+});
+
+app.get("/:Crime_ID", async (req, res) => {
     try {
         const { Criminal_ID, Crime_ID } = req.params;
         const Crime = await interactive.getCrimeById(Crime_ID);

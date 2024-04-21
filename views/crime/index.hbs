@@ -1,5 +1,5 @@
 <script src="js/search.js" type="module" defer></script>
-<h2>All Crimes</h2>
+<h2>Documented Crimes</h2>
 
 <input type="text" id="searchInput" placeholder="Search by criminal or crime ID..."
     style="margin-bottom: 20px; width: 300px; padding: 10px;">
@@ -26,8 +26,12 @@
             <td>{{this.Status}}</td>
             <td>{{this.Hearing_date}}</td>
             <td>{{this.Appeal_cut_date}}</td>
-            <td><a href="/crime/details/{{this.Crime_ID}}">View Details</a></td>
+            <td><a href="/crime/{{this.Crime_ID}}">View Details</a></td>
         </tr>
         {{/each}}
     </tbody>
 </table>
+
+<a href="/crime/new">
+    <button class="floating-button">New Entry</button>
+</a>
