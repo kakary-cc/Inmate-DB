@@ -18,7 +18,10 @@ app.get("/new", async (req, res) => {
 app.post("/new", async (req, res) => {
     const Criminal_ID = req.query["criminal_id"];
     // const { Criminal_ID } = req.params;
-    const { type, probID, startDate, endDate, violations } = req.body;
+    let { type, probID, startDate, endDate, violations } = req.body;
+
+    probID = probID || null;
+
     try {
         const result = await interactive.insertSentence(
             Criminal_ID,

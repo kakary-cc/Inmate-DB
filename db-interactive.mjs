@@ -534,3 +534,13 @@ export async function getAllCrimeOfficerLinks() {
         };
     }
 }
+
+export async function getCriminalAliases(criminalID) {
+    try {
+        const [aliases, metadata] = await db.query('CALL get_aliases_by_criminal_id(?)', [criminalID]);
+        return aliases[0]; 
+    } catch (err) {
+        console.error("Failed to retrieve aliases for criminal:", err);
+        throw err; 
+    }
+}

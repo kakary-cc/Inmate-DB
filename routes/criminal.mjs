@@ -77,6 +77,7 @@ app.get("/:Criminal_ID", async (req, res) => {
             criminalID
         );
         const criminalCrimes = await interactive.getCriminalCrimes(criminalID);
+        const criminalAliases = await interactive.getCriminalAliases(criminalID);
 
         if (!criminalDetails) {
             res.status(404).send("Criminal not found");
@@ -111,6 +112,7 @@ app.get("/:Criminal_ID", async (req, res) => {
                 criminal: criminalDetails,
                 sentences: formattedSentences,
                 crimes: formattedCrimes,
+                aliases: criminalAliases
             });
         }
     } catch (err) {
