@@ -1,5 +1,7 @@
-<h3>Displaying Details of Registered Officers</h3>
-<input type="text" id="searchInput" onkeyup="searchOfficers()" placeholder="Search by Badge Number..."
+<script src="js/search.js" type="module" defer></script>
+<h2>Displaying Details of Registered Officers</h2>
+
+<input type="text" id="searchInput" placeholder="Search by name or ID..."
     style="margin-bottom: 20px; width: 300px; padding: 10px;">
 <table id="myTable">
     <thead>
@@ -27,25 +29,3 @@
         {{/each}}
     </tbody>
 </table>
-
-<script>
-    function searchOfficers() {
-        var input, filter, table, tr, td, i, txtValue;
-        input = document.getElementById("searchInput");
-        filter = input.value.toUpperCase();
-        table = document.getElementById("myTable");
-        tr = table.getElementsByTagName("tr");
-
-        for (i = 0; i < tr.length; i++) {
-            td = tr[i].getElementsByTagName("td")[0];
-            if (td) {
-                txtValue = td.textContent || td.innerText;
-                if (txtValue.toUpperCase().indexOf(filter) > -1) {
-                    tr[i].style.display = "";
-                } else {
-                    tr[i].style.display = "none";
-                }
-            }
-        }
-    }
-</script>

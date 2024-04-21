@@ -55,7 +55,12 @@ app.post("/:code", async (req, res) => {
         res.redirect("./");
     } catch (error) {
         console.log(error);
-        res.status(500).render("error", { error: "Internal Error." });
+        if (error.errno === 1451) {
+            res.send(`<script>alert("Entry referenced elsewhere!");
+            window.location.href = "/crime_code";</script>`);
+        } else {
+            res.status(500).render("error", { error: "Internal Error." });
+        }
     }
 });
 
