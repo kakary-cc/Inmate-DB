@@ -32,18 +32,20 @@ app.use(
     })
 );
 
-// TODO: List needs to be edited.
-const authRequiredPaths = [
-    // "/criminal/new",
-    // "/crime/new",
-    // "/appeal/new",
-    // "/crime-code/new",
+const publicPaths = [
+    "/",
+    "/login",
+    "/register",
+    "/officer",
+    "/prob_officer",
+    "/crime_code",
 ];
 
 app.use((req, res, next) => {
-    if (authRequiredPaths.includes(req.path)) {
+    if (!publicPaths.includes(req.path)) {
         if (!req.session.user) {
-            res.redirect("/login");
+            res.send(`<script>alert("Access denied. Please login first!");
+            window.location.href = "/login";</script>`);
             return;
         }
     }
@@ -133,6 +135,62 @@ app.use("/prob_officer", probOfficerRoutes);
 app.use("/crime_code", crimeCodeRoutes);
 
 // TODO: ???
+app.post("/addOfficer/:Crime_ID", async (req, res) => {
+    const { Crime_ID } = req.params;
+    const { officerID } = req.body;
+
+    try {
+        const result = await interactive.insertCrimeOfficer(
+            Crime_ID,
+            officerID
+        );
+        if (result.success) {
+            res.redirect(`/crime/view/${Crime_ID}`);
+        } else {
+            res.status(400).send(result.message);
+        }
+    } catch (error) {
+        console.error("Error linking officer to crime:", error);
+        res.status(500).send("Server error in processing your request.");
+    }
+});
+
+// TODO: This route doesn't logically make sense.
+app.get("/addSentence/:ProbOfficer_ID", async (req, res) => {
+    try {
+        const { ProbOfficer_ID } = req.params;
+        console.log(ProbOfficer_ID);
+        res.render("./sentence/new", { ProbOfficer_ID });
+    } catch (err) {
+        console.error(err);
+        res.status(500).send("Error loading the add sentence page.");
+    }
+});
+
+app.post("/addSentence/:ProbOfficer_ID", async (req, res) => {
+    const { ProbOfficer_ID } = req.params;
+    const { criminalID, type, startDate, endDate, violations } = req.body;
+
+    try {
+        const result = await interactive.insertSentence(
+            criminalID,
+            type,
+            ProbOfficer_ID,
+            startDate,
+            endDate,
+            violations
+        );
+        if (result.success) {
+            res.redirect(`/prob_officer/view/${ProbOfficer_ID}`);
+        } else {
+            res.status(400).send(result.message);
+        }
+    } catch (error) {
+        console.error("Error in submitting sentence:", error);
+        res.status(500).send("Server error in processing your request.");
+    }
+});
+
 app.get("/crime-officer-union", async (req, res) => {
     try {
         const { source, id } = req.query;

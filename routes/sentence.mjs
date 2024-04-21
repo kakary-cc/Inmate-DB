@@ -3,7 +3,6 @@ import * as interactive from "../db-interactive.mjs";
 
 const app = express();
 
-// add a sentence for a criminal: the page
 app.get("/new", async (req, res) => {
     // TODO: Get Criminal_ID from param.
     try {
@@ -16,8 +15,6 @@ app.get("/new", async (req, res) => {
     }
 });
 
-// TODO: Move this elsewhere
-// add a sentence for a criminal: the backend
 app.post("/new", async (req, res) => {
     const Criminal_ID = req.query["criminal_id"];
     // const { Criminal_ID } = req.params;

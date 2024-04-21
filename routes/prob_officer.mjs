@@ -11,7 +11,7 @@ function formatDate(dateValue) {
 
 app.get("/", async (req, res) => {
     try {
-        let probOfficers = await interactive.getAllProbOfficers();
+        const probOfficers = await interactive.getAllProbOfficers();
         res.render("./prob_officer", { probOfficers: probOfficers });
     } catch (err) {
         console.error(err);
@@ -59,7 +59,6 @@ app.post("/new", async (req, res) => {
     }
 });
 
-// get a single probation officer
 app.get("/:Prob_ID", async (req, res) => {
     try {
         const probID = req.params.Prob_ID;
@@ -158,42 +157,6 @@ app.delete("/:probOfficerId", async (req, res) => {
             success: false,
             message: "Error deleting probation officer.",
         });
-    }
-});
-
-// TODO: This route doesn't logically make sense.
-app.get("/addSentence/:ProbOfficer_ID", async (req, res) => {
-    try {
-        const { ProbOfficer_ID } = req.params;
-        console.log(ProbOfficer_ID);
-        res.render("./sentence/new", { ProbOfficer_ID });
-    } catch (err) {
-        console.error(err);
-        res.status(500).send("Error loading the add sentence page.");
-    }
-});
-
-app.post("/addSentence/:ProbOfficer_ID", async (req, res) => {
-    const { ProbOfficer_ID } = req.params;
-    const { criminalID, type, startDate, endDate, violations } = req.body;
-
-    try {
-        const result = await interactive.insertSentence(
-            criminalID,
-            type,
-            ProbOfficer_ID,
-            startDate,
-            endDate,
-            violations
-        );
-        if (result.success) {
-            res.redirect(`/prob_officer/view/${ProbOfficer_ID}`);
-        } else {
-            res.status(400).send(result.message);
-        }
-    } catch (error) {
-        console.error("Error in submitting sentence:", error);
-        res.status(500).send("Server error in processing your request.");
     }
 });
 

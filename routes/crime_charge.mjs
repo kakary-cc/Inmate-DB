@@ -3,15 +3,7 @@ import * as interactive from "../db-interactive.mjs";
 
 const app = express();
 
-// Converts date to YYYY-MM-DD format
-function formatDate(dateValue) {
-    if (!dateValue) return "";
-    return new Date(dateValue).toISOString().split("T")[0];
-}
-
-// add charge by crime_ID: the frontend
 app.get("/new", async (req, res) => {
-    // Get Crime_ID from param
     try {
         const Crime_ID = req.query["crime_id"];
         res.render("./crime_charge/new", { Crime_ID: Crime_ID });
@@ -21,10 +13,8 @@ app.get("/new", async (req, res) => {
     }
 });
 
-// add charge by crime_ID: the backend
 app.post("/new", async (req, res) => {
     const Crime_ID = req.query["crime_id"];
-    // const { Crime_ID } = req.params;
     const {
         crimeCode,
         chargeStatus,

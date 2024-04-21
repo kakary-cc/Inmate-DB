@@ -108,24 +108,4 @@ app.get("/:Crime_ID", async (req, res) => {
     }
 });
 
-app.post("/addOfficer/:Crime_ID", async (req, res) => {
-    const { Crime_ID } = req.params;
-    const { officerID } = req.body;
-
-    try {
-        const result = await interactive.insertCrimeOfficer(
-            Crime_ID,
-            officerID
-        );
-        if (result.success) {
-            res.redirect(`/crime/view/${Crime_ID}`);
-        } else {
-            res.status(400).send(result.message);
-        }
-    } catch (error) {
-        console.error("Error linking officer to crime:", error);
-        res.status(500).send("Server error in processing your request.");
-    }
-});
-
 export { app as crimeRoutes };
