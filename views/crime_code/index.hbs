@@ -13,6 +13,11 @@
         <tr>
             <td>{{this.Crime_code}}</td>
             <td>{{this.Code_description}}</td>
+            <td>
+                <form action="/crime_code/{{this.Crime_code}}?method=DELETE" method="post">
+                    <button type="submit">❌</button>
+                </form>
+            </td>
         </tr>
         {{/each}}
     </tbody>
