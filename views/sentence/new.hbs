@@ -3,7 +3,7 @@
 <h3>
     Add Sentence for Criminal #{{criminal_ID}}
 </h3>
-<form method="POST" action="/criminal/addSentence/{{criminal_ID}}">
+<form method="POST" action="/sentence/new?criminal_id={{criminal_ID}}">
     <div class="form-item">
         <label>Sentence Type*</label>
         <select name="type">
@@ -16,7 +16,7 @@
 
     <div class="form-item">
         <label>Probation Officer ID</label>
-        <input name="probID" placeholder="Probation Officer ID (if applicable)">
+        <input name="probID" placeholder="5 Digits. Only if applicable.">
     </div>
 
     <div class="form-item">
@@ -31,7 +31,7 @@
 
     <div class="form-item">
         <label>Number of Violations</label>
-        <input type="number" name="violations" placeholder="0" min="0" step="1">
+        <input type="number" name="violations" placeholder="0" value=0 min=0 step=1 required>
     </div>
 
     <div class="form-item">

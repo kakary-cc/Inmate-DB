@@ -54,7 +54,7 @@ app.post("/new", async (req, res) => {
             appealCutDate
         );
         if (result.success) {
-            res.redirect(`/criminal/view/${Criminal_ID}`);
+            res.redirect(`/criminal/${Criminal_ID}`);
         } else {
             res.status(400).send(result.message);
         }
@@ -105,62 +105,6 @@ app.get("/:Crime_ID", async (req, res) => {
     } catch (err) {
         console.error(err);
         res.status(500).send("Error retrieving crime details.");
-    }
-});
-
-// add charge by crime_ID: the backend
-app.post("/addCharge/:Crime_ID", async (req, res) => {
-    const { Crime_ID } = req.params;
-    const {
-        crimeCode,
-        chargeStatus,
-        fineAmount,
-        courtFee,
-        amountPaid,
-        payDueDate,
-    } = req.body;
-
-    try {
-        const result = await interactive.insertCrimeChargeByCrimeID(
-            Crime_ID,
-            crimeCode,
-            chargeStatus,
-            fineAmount,
-            courtFee,
-            amountPaid,
-            payDueDate
-        );
-        if (result.success) {
-            res.redirect(`/crime/view/${Crime_ID}`);
-        } else {
-            res.status(400).send(result.message);
-        }
-    } catch (error) {
-        console.error("Error in submitting crime charge:", error);
-        res.status(500).send("Server error in processing your request.");
-    }
-});
-
-// add appeal by crime_ID: the backend
-app.post("/crime/addAppeal/:Crime_ID", async (req, res) => {
-    const { Crime_ID } = req.params;
-    const { fillingDate, hearingDate, status } = req.body;
-
-    try {
-        const result = await interactive.addAppealByCrimeID(
-            Crime_ID,
-            fillingDate,
-            hearingDate,
-            status
-        );
-        if (result.success) {
-            res.redirect(`/crime/view/${Crime_ID}`);
-        } else {
-            res.status(400).send(result.message);
-        }
-    } catch (error) {
-        console.error("Error in submitting appeal:", error);
-        res.status(500).send("Server error in processing your request.");
     }
 });
 

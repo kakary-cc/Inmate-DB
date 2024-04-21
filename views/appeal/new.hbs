@@ -1,9 +1,9 @@
 <link rel="stylesheet" href="/css/form.css">
 
 <h3>
-    Add Appeal for Crime #{{crime_ID}}
+    Add Appeal for Crime #{{Crime_ID}}
 </h3>
-<form method="POST" action="/crime/addAppeal/{{crime_ID}}">
+<form method="POST" action="/appeal/new?crime_id={{Crime_ID}}">
     <div class="form-item">
         <label>Filing Date*</label>
         <input type="date" name="fillingDate" required>
