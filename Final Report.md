@@ -1,19 +1,60 @@
 1) Database design
-a) Include a final version of your E-R diagram
-b) Include a final version of your tables written in schema statements
+
+a) Final version of E-R diagram
+
+![image](https://github.com/kakary-cc/Crime-Tracking-Database-System/assets/165611994/f31fcd9b-4f78-4775-81bf-d46d6e7a7e1e)
+
+b) Final version of in schema statements
+
+Criminal(<ins>ID</ins>, Last, First, Street, City, State, Zip, Phone, V_status, P_status)
+
+Alias(<ins>Alias_ID</ins>, @Criminal_ID, Alias)
+
+Crimes(<ins>Crime_ID</ins>, @Criminal_ID, Classification, Date_charged, Status, Hearing_date, Appeal_cut_date)
+
+Prob_Officer(<ins>Prob_ID</ins>, Last, First, Street, City, State, Zip, Phone, Email, Status)
+
+Sentences(<ins>Sentence_ID</ins>, @Criminal_ID, @Prob_ID, Type, Start_date, End_date, Violations)
+
+Officers(<ins>Officer_ID</ins>, Last, First, Precinct, Badge, Phone, Status)
+
+Crime_Codes(<ins>Crime_code</ins>, Code_description)
+
+Crime_Charges(<ins>Charge_ID</ins>, @Crime_ID, @Crime_code, Charge_status, Fine_amount, Court_fee, Amount_paid, Pay_due_date)
+
+Crime_Officers(<ins>@Crime_ID</ins>, <ins>@Officer_ID</ins>)
+
+Appeals(<ins>Appeal_ID</ins>, @Crime_ID, Filing_date, Hearing_date, Status)
+
+---
+
 2) Database programming
+
 a) Specify where you host your database
-b) Specify where you host your app — the deployment environment needed to
-deploy and run your project
-c) Describe and include all instructions / steps needed to deploy and run your
-project
-i) Note: we may randomly set up, deploy, and run your project on a similar
-environment. It is important that you provide the description and a
-complete set of the instructions.
-d) Refer to advanced SQL commands your wrote in the previous milestone, clearly
-discuss how the advanced SQL commands are incorporated in your app, what
-features of your app use them, and how they reflect the database
+
+The database is host on a web-based MySQL server.
+
+b) Specify where you host your app — the deployment environment needed to deploy and run your project
+
+This is a web-based application.
+
+c) Instructions / steps needed to deploy and run project
+
+Open the weblink [http://cs3083.kakari.cc/](http://cs3083.kakari.cc/)
+
+d) Advanced SQL commands are incorporated in your app
+
 3) Describe the database security at the database level
 a) Specify whether the security is set for developers or end users
 b) Discuss how you set up security at the database level (access control)
-c) Submit the SQL commands you use to limited / set privileges such as:
+c) Relavent SQL commands to limited / set privileges
+
+
+4) Describe the database security at the application level
+
+a) Discuss how database security at the application level is incorporated in your
+project.
+
+b) Submit code snippet(s) to illustrate how the security aspect is implemented and
+to support your discussion.
+
