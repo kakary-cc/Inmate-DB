@@ -45,8 +45,11 @@ Open the weblink [http://cs3083.kakari.cc/](http://cs3083.kakari.cc/)
 d) Advanced SQL commands are incorporated in your app
 
 3) Describe the database security at the database level
+
 a) Specify whether the security is set for developers or end users
+
 b) Discuss how you set up security at the database level (access control)
+
 c) Relavent SQL commands to limited / set privileges
 
 4) Describe the database security at the application level
@@ -54,6 +57,5 @@ c) Relavent SQL commands to limited / set privileges
 a) Discuss how database security at the application level is incorporated in your
 project.
 
-b) Submit code snippet(s) to illustrate how the security aspect is implemented and
-to support your discussion.
+b) Submit code snippet(s) to illustrate how the security aspect is implemented and to support your discussion.
 
