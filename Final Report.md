@@ -1,4 +1,4 @@
-1) Database design
+<h3>1) Database design</h2>
 
 a) Final version of E-R diagram
 
@@ -28,7 +28,7 @@ Appeals(<ins>Appeal_ID</ins>, @Crime_ID, Filing_date, Hearing_date, Status)
 
 ---
 
-2) Database programming
+<h3>2) Database programming</h3>
 
 a) We hosted a MySQL database on a Raspberry Pi with public IP access.
 
