@@ -30,15 +30,15 @@ Appeals(<ins>Appeal_ID</ins>, @Crime_ID, Filing_date, Hearing_date, Status)
 
 2) Database programming
 
-a) Specify where you host your database
+a) We hosted a MySQL database on a Raspberry Pi with public IP access.
 
-The database is host on a web-based MySQL server.
+b) This app is hosted on cloud, VPS instance (Linode)
 
-b) Specify where you host your app — the deployment environment needed to deploy and run your project
+c) fill out .env_template, rename to .env
 
-This is a web-based application.
+run npm install
 
-c) Instructions / steps needed to deploy and run project
+run node app.mjs
 
 Open the weblink [http://cs3083.kakari.cc/](http://cs3083.kakari.cc/)
 
@@ -48,7 +48,6 @@ d) Advanced SQL commands are incorporated in your app
 a) Specify whether the security is set for developers or end users
 b) Discuss how you set up security at the database level (access control)
 c) Relavent SQL commands to limited / set privileges
-
 
 4) Describe the database security at the application level
 
