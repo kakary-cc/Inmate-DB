@@ -1,10 +1,20 @@
-<h3>1) Database design</h2>
+Source Code:
 
-a) Final version of E-R diagram
+Deployed Project: [http://cs3083.kakari.cc/](http://cs3083.kakari.cc/)
+
+---
+
+Micheal Zhang (`mz3164`), William Zhou (`wwz2003`), Tony Zhang (`jz4263`)
+
+---
+
+#### 1. Database Design
+
+##### a) E-R Diagram
 
 ![image](https://github.com/kakary-cc/Crime-Tracking-Database-System/assets/165611994/f31fcd9b-4f78-4775-81bf-d46d6e7a7e1e)
 
-b) Final version of in schema statements
+##### b) Schema Statements
 
 Criminal(<ins>ID</ins>, Last, First, Street, City, State, Zip, Phone, V_status, P_status)
 
@@ -26,39 +36,57 @@ Crime_Officers(<ins>@Crime_ID</ins>, <ins>@Officer_ID</ins>)
 
 Appeals(<ins>Appeal_ID</ins>, @Crime_ID, Filing_date, Hearing_date, Status)
 
+Users(<u>User_ID</u>, Email, Passwd, Role, Status)
+
 ---
 
-<h3>2) Database programming</h3>
+#### 2. Database Programming
 
-a) We hosted a MySQL database on a Raspberry Pi with public IP access.
+##### a)
 
-b) This app is hosted on cloud, VPS instance (Linode)
+The MySQL database is hosted on a Raspberry Pi with public IP access.
 
-c) fill out .env_template, rename to .env
+##### b)
 
-run npm install
+This application is hosted on a cloud VPS.
 
-run node app.mjs
+##### c)
 
-Open the weblink [http://cs3083.kakari.cc/](http://cs3083.kakari.cc/)
+Fill out `.env_template`, rename to `.env`
 
-d) Advanced SQL commands are incorporated in your app
+Run `npm install`
 
-<h3>3) Describe the database security at the database level</h3>
+Run `node app.mjs`
 
-a) The security is set for developers.
+##### d)
 
-b) Users must first register/login to modify data in the database.
+A multitude of stored procedures are used to make insertions, deletions, and retrievals safe from SQL injections and other primitive attacks.
 
-c) Relavent SQL commands to limited / set privileges
+The `CHECK` constraints add an additional layer of protection for data sanity
+
+Triggers such as update_Crime_after_Appeal and update_Criminal_Probation_status are implemented to ensure data integrity. 
+
+---
+
+#### 3. Database Security (Database Level)
+
+##### a)
+
+The security is set for developers.
+
+Database users must be authenticated to have data modification privileges.
+
+`root` account will not be used except during the initial setup phase.
+
+##### c)
 
 ```
 CREATE ROLE read_only;
 CREATE ROLE data_entry;
 CREATE ROLE db_admin;
-GRANT SELECT ON database_name.* TO read_only;
-GRANT INSERT, UPDATE ON database_name.* TO data_entry;
-GRANT ALL PRIVILEGES ON database_name.* TO db_admin;
+GRANT SELECT ON jail.* TO read_only;
+GRANT INSERT, UPDATE ON jail.* TO data_entry;
+GRANT ALL PRIVILEGES ON jail.* TO db_admin;
 CREATE USER 'end_user'@'localhost' IDENTIFIED BY 'enduserpassword';
 CREATE USER 'staff_user'@'localhost' IDENTIFIED BY 'staffuserpassword';
 CREATE USER 'dev_user'@'localhost' IDENTIFIED BY 'devuserpassword';
@@ -68,52 +96,30 @@ GRANT db_admin TO 'dev_user'@'localhost';
 FLUSH PRIVILEGES;
 ```
 
-<h3>4) Describe the database security at the application level</h3>
+---
 
-a) The appliccation will mandate users to register by email with a 8-digits minimum password.
+#### 4. Database Security (Application Level)
 
-b) Submit code snippet(s) to illustrate how the security aspect is implemented and to support your discussion.
+##### a)
+
+The application will mandate users to register by email with an 8-digit minimum password.
+
+The user's password is salted and hashed using the state-of-the-art cryptographic algorithm Argon2, before being stored in the database.
+
+The application will block access to sensitive data for non-logged-in users.
+
+The database URI and credentials are stored locally in environmental variables, hidden from front-end users and version controls.
+
+On input forms, the front-end application enforces certain integrity checks.
+
+##### b)
 
 ```
-import * as argon2 from "argon2";
-import db from "./db.mjs";
-
-function User(email, role) {
-    this.email = email;
-    this.password = "";
-    this.role = role;
-    this.search = () => `SELECT * FROM Users WHERE Email LIKE "${this.email}";`;
-    this.insert = () =>
-        `INSERT INTO Users (Email, Passwd, role) VALUES ("${this.email}", "${this.password}", "${this.role}");`;
-}
-
-const startAuthenticatedSession = (req, user) => {
-    return new Promise((fulfill, reject) => {
-        req.session.regenerate((err) => {
-            if (!err) {
-                req.session.user = user;
-                fulfill(user);
-            } else {
-                reject(err);
-            }
-        });
-    });
-};
-
-const endAuthenticatedSession = (req) => {
-    return new Promise((fulfill, reject) => {
-        req.session.destroy((err) => (err ? reject(err) : fulfill(null)));
-    });
-};
-
 const register = async (email, password, userRole) => {
     if (password.length < 8) throw { message: "PASSWORD TOO SHORT" };
-    // TODO: Check for invalid email, potential SQL injection
     const validRoles = ['read_only', 'data_entry', 'db_admin'];
     if (!validRoles.includes(userRole)) throw { message: "INVALID USER ROLE" };
-
     const newUser = new User(email, userRole);
-    
     if ((await db.query(newUser.search()))[0].length !== 0)
         throw { message: "EMAIL ALREADY EXISTS" };
     newUser.password = await argon2.hash(password);
@@ -122,7 +128,6 @@ const register = async (email, password, userRole) => {
 };
 
 const login = async (email, password) => {
-    // TODO: Check for invalid email, potential SQL injection
     const newUser = new User(email);
     const result = await db.query(newUser.search());
     if (result[0].length === 0) throw { message: "USER NOT FOUND" };
@@ -131,6 +136,4 @@ const login = async (email, password) => {
         throw { message: "PASSWORDS DO NOT MATCH" };
     return newUser;
 };
-
-export { startAuthenticatedSession, endAuthenticatedSession, register, login };
 ```

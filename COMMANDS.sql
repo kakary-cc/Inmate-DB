@@ -9,9 +9,9 @@ CREATE ROLE read_only;
 CREATE ROLE data_entry;
 CREATE ROLE db_admin;
 
-GRANT SELECT ON database_name.* TO read_only;
-GRANT INSERT, UPDATE ON database_name.* TO data_entry;
-GRANT ALL PRIVILEGES ON database_name.* TO db_admin;
+GRANT SELECT ON jail.* TO read_only;
+GRANT INSERT, UPDATE ON jail.* TO data_entry;
+GRANT ALL PRIVILEGES ON jail.* TO db_admin;
 
 CREATE USER 'end_user'@'localhost' IDENTIFIED BY 'enduserpassword';
 CREATE USER 'staff_user'@'localhost' IDENTIFIED BY 'staffuserpassword';
@@ -149,7 +149,7 @@ CREATE TABLE Users (
     User_ID INT AUTO_INCREMENT,
     Email VARCHAR(30) NOT NULL UNIQUE,
     Passwd VARCHAR(100) NOT NULL,
-    role VARCHAR(30),
+    Role VARCHAR(30),
     Status CHAR(1) DEFAULT 'V',
     PRIMARY KEY(User_ID)
 );
