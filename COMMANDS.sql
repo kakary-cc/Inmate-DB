@@ -4,6 +4,27 @@ USE jail;
 
 SELECT "Creating tables..." AS message;
 
+-- Security at the Database level 
+CREATE ROLE read_only;
+CREATE ROLE data_entry;
+CREATE ROLE db_admin;
+
+GRANT SELECT ON database_name.* TO read_only;
+GRANT INSERT, UPDATE ON database_name.* TO data_entry;
+GRANT ALL PRIVILEGES ON database_name.* TO db_admin;
+
+CREATE USER 'end_user'@'localhost' IDENTIFIED BY 'enduserpassword';
+CREATE USER 'staff_user'@'localhost' IDENTIFIED BY 'staffuserpassword';
+CREATE USER 'dev_user'@'localhost' IDENTIFIED BY 'devuserpassword';
+
+GRANT read_only TO 'end_user'@'localhost';
+GRANT data_entry TO 'staff_user'@'localhost';
+GRANT db_admin TO 'dev_user'@'localhost';
+
+FLUSH PRIVILEGES;
+
+
+-- CREATE TABLES
 CREATE TABLE Criminals (
     Criminal_ID INT AUTO_INCREMENT,
     Last VARCHAR(15),
