@@ -44,15 +44,41 @@ Open the weblink [http://cs3083.kakari.cc/](http://cs3083.kakari.cc/)
 
 d) Advanced SQL commands are incorporated in your app
 
-3) Describe the database security at the database level
+<h3>3) Describe the database security at the database level</h3>
 
-a) Specify whether the security is set for developers or end users
+a) The security is set for developers.
 
-b) Discuss how you set up security at the database level (access control)
+b) Users must first register/login to modify data in the database.
 
 c) Relavent SQL commands to limited / set privileges
 
-4) Describe the database security at the application level
+CREATE ROLE read_only;
+
+CREATE ROLE data_entry;
+
+CREATE ROLE db_admin;
+
+GRANT SELECT ON database_name.* TO read_only;
+
+GRANT INSERT, UPDATE ON database_name.* TO data_entry;
+
+GRANT ALL PRIVILEGES ON database_name.* TO db_admin;
+
+CREATE USER 'end_user'@'localhost' IDENTIFIED BY 'enduserpassword';
+
+CREATE USER 'staff_user'@'localhost' IDENTIFIED BY 'staffuserpassword';
+
+CREATE USER 'dev_user'@'localhost' IDENTIFIED BY 'devuserpassword';
+
+GRANT read_only TO 'end_user'@'localhost';
+
+GRANT data_entry TO 'staff_user'@'localhost';
+
+GRANT db_admin TO 'dev_user'@'localhost';
+
+FLUSH PRIVILEGES;
+
+<h3>4) Describe the database security at the application level</h3>
 
 a) Discuss how database security at the application level is incorporated in your
 project.
