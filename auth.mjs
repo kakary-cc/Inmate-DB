@@ -1,12 +1,13 @@
 import * as argon2 from "argon2";
 import db from "./db.mjs";
 
-function User(email) {
+function User(email, role) {
     this.email = email;
     this.password = "";
+    this.role = role;
     this.search = () => `SELECT * FROM Users WHERE Email LIKE "${this.email}";`;
     this.insert = () =>
-        `INSERT INTO Users (Email, Passwd) VALUES ("${this.email}", "${this.password}");`;
+        `INSERT INTO Users (Email, Passwd, role) VALUES ("${this.email}", "${this.password}", "${this.role}");`;
 }
 
 const startAuthenticatedSession = (req, user) => {
@@ -28,10 +29,14 @@ const endAuthenticatedSession = (req) => {
     });
 };
 
-const register = async (email, password) => {
+const register = async (email, password, userRole) => {
     if (password.length < 8) throw { message: "PASSWORD TOO SHORT" };
     // TODO: Check for invalid email, potential SQL injection
-    const newUser = new User(email);
+    const validRoles = ['read_only', 'data_entry', 'db_admin'];
+    if (!validRoles.includes(userRole)) throw { message: "INVALID USER ROLE" };
+
+    const newUser = new User(email, userRole);
+    
     if ((await db.query(newUser.search()))[0].length !== 0)
         throw { message: "EMAIL ALREADY EXISTS" };
     newUser.password = await argon2.hash(password);

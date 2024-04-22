@@ -101,7 +101,8 @@ app.get("/register", (req, res) => {
 
 app.post("/register", async (req, res) => {
     try {
-        const newUser = await auth.register(req.body.email, req.body.password);
+        const userRole = 'read_only';
+        const newUser = await auth.register(req.body.email, req.body.password, userRole);
         await auth.startAuthenticatedSession(req, newUser);
         res.redirect("/");
     } catch (err) {

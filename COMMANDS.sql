@@ -149,10 +149,13 @@ CREATE TABLE Users (
     User_ID INT AUTO_INCREMENT,
     Email VARCHAR(30) NOT NULL UNIQUE,
     Passwd VARCHAR(100) NOT NULL,
+    role VARCHAR(30),
     Status CHAR(1) DEFAULT 'V',
     PRIMARY KEY(User_ID)
 );
 ALTER TABLE Users AUTO_INCREMENT = 100000;
+
+ALTER TABLE Users ADD COLUMN role VARCHAR(255);
 
 SELECT "Inserting data with INSERT..." AS message;
 
