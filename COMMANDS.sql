@@ -1297,16 +1297,16 @@ SELECT "Creating triggers..." AS message;
 
 -- Update Crime charges
 DELIMITER @@
-CREATE OR REPLACE TRIGGER update_Crime_after_Appeal
+DROP TRIGGER IF EXISTS update_Crime_after_Appeal;
+CREATE TRIGGER update_Crime_after_Appeal
 AFTER UPDATE ON Appeals
 FOR EACH ROW
 BEGIN
     IF NEW.Status = 'A' THEN
         -- Update Crime_charges related to the crime of the successful appeal
         UPDATE Crime_charges
-        JOIN Crimes ON Crime_charges.Crime_ID = Crimes.Crime_ID
-        SET Crime_charges.Amount_paid = 0, Crime_charges.Charge_status = 'NG'
-        WHERE Crimes.Crime_ID = NEW.Crime_ID;
+        SET Amount_paid = 0, Charge_status = 'NG'
+        WHERE Crime_ID = NEW.Crime_ID;
 
         -- Update the status of the related crime to 'CL' (Closed)
         UPDATE Crimes
@@ -1314,27 +1314,25 @@ BEGIN
         WHERE Crime_ID = NEW.Crime_ID;
     END IF;
 END @@
-
 DELIMITER ;
+
 
 -- Update Criminal srobation status
 DELIMITER @@
-CREATE OR REPLACE TRIGGER update_Criminal_Probation_status
+DROP TRIGGER IF EXISTS update_Criminal_Probation_status;
+CREATE TRIGGER update_Criminal_Probation_status
 AFTER UPDATE ON Sentences
 FOR EACH ROW
 BEGIN
-    IF NEW.Type = 'P' THEN
-        -- Update Crime_charges related to the crime of the successful appeal
+    IF NEW.Type = 'P' AND NEW.Start_date > CURDATE() AND NEW.End_date < CURDATE() THEN
+        -- Update probation status to 'Y' for the criminal
         UPDATE Criminals
-        SET Criminals.P_status = 'Y'
-        WHERE Criminals.Criminal_ID = NEW.Criminal_ID;
-        AND NEW.Start_date > GETDATE()
-        AND NEW.End_date < GETDATE();
-
+        SET P_status = 'Y'
+        WHERE Criminal_ID = NEW.Criminal_ID;
     END IF;
 END @@
-
 DELIMITER ;
+
 
 ALTER TABLE Sentences
 MODIFY Prob_ID INT NULL;
