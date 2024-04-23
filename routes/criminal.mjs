@@ -122,7 +122,6 @@ app.get("/:Criminal_ID", async (req, res) => {
 });
 
 app.get("/alias/new", async (req, res) => {
-    // TODO: Get Criminal_ID from query
     try {
         const Criminal_ID = req.query["criminal_id"];
         res.render("./criminal/alias/new", { Criminal_ID });
@@ -133,22 +132,31 @@ app.get("/alias/new", async (req, res) => {
 });
 
 app.post("/alias/new", async (req, res) => {
-    // TODO: Get Criminal_ID from param
-    // const Criminal_ID = req.query["criminal_id"];
+    console.log("Pure Fiction I");
     const { id, alias } = req.body;
+    console.log(id, alias);  
+    console.log("Pure Fiction II");
     try {
         const Criminal_ID = parseInt(id);
-        const result = await interactive.insertAlias(Criminal_ID, alias);
-        if (result.success) {
-            res.redirect(`/criminal/${Criminal_ID}`);
-        } else {
-            res.status(400).send(result.message);
+        const aliases = alias.split(/\r?\n/);
+        const results = [];
+
+        for (let singleAlias of aliases) {
+            const result = await interactive.insertAlias(Criminal_ID, singleAlias.trim());
+            if (!result.success) {
+                res.status(400).send(result.message);
+                return;
+            }
+            results.push(result);
         }
+
+        res.redirect(`/criminal/${Criminal_ID}`);
     } catch (error) {
         console.error("Error in submitting alias:", error);
         res.status(500).send("Server error in processing your request.");
     }
 });
+
 
 // update a single field for a single criminal
 app.post("/:field", async (req, res) => {

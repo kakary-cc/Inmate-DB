@@ -379,7 +379,7 @@ export async function getAliasesByCriminalID(criminalID) {
     }
 }
 
-export async function insertAlias(aliasID, criminalID, alias) {
+export async function insertAlias(criminalID, alias) {
     try {
         await db.query("CALL insert_alias(?, ?)", [criminalID, alias]);
         return { success: true, message: "Alias successfully added." };
