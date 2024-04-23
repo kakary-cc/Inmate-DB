@@ -44,10 +44,12 @@ CREATE TABLE Aliases (
     Alias_ID INT AUTO_INCREMENT,
     Criminal_ID INT,
     Alias VARCHAR(20),
-    PRIMARY KEY(Alias_ID),
-    FOREIGN KEY(Criminal_ID) REFERENCES Criminals(Criminal_ID)
+    PRIMARY KEY (Alias_ID),
+    FOREIGN KEY (Criminal_ID) REFERENCES Criminals(Criminal_ID),
+    UNIQUE KEY `unique_alias_per_criminal` (Criminal_ID, Alias)
 );
 ALTER TABLE Aliases AUTO_INCREMENT = 100000;
+
 
 CREATE TABLE Crimes (
     Crime_ID INT AUTO_INCREMENT,

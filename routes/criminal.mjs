@@ -132,30 +132,37 @@ app.get("/alias/new", async (req, res) => {
 });
 
 app.post("/alias/new", async (req, res) => {
-    console.log("Pure Fiction I");
     const { id, alias } = req.body;
-    console.log(id, alias);  
-    console.log("Pure Fiction II");
     try {
         const Criminal_ID = parseInt(id);
         const aliases = alias.split(/\r?\n/);
         const results = [];
+        let allSuccess = true;
 
         for (let singleAlias of aliases) {
-            const result = await interactive.insertAlias(Criminal_ID, singleAlias.trim());
-            if (!result.success) {
-                res.status(400).send(result.message);
-                return;
+            const trimmedAlias = singleAlias.trim();
+            if (trimmedAlias) { 
+                const result = await interactive.insertAlias(Criminal_ID, trimmedAlias);
+                results.push({ alias: trimmedAlias, ...result });
+                if (!result.success) {
+                    allSuccess = false; 
+                }
             }
-            results.push(result);
         }
 
-        res.redirect(`/criminal/${Criminal_ID}`);
+        if (allSuccess) {
+            res.redirect(`/criminal/${Criminal_ID}`);
+        } else {
+            // rudimentary reset
+            res.render("./criminal/alias/new", { Criminal_ID });
+
+        }
     } catch (error) {
         console.error("Error in submitting alias:", error);
         res.status(500).send("Server error in processing your request.");
     }
 });
+
 
 
 // update a single field for a single criminal
