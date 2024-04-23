@@ -1,0 +1,34 @@
+body {
+    font-family: Arial, sans-serif;
+    line-height: 1.6;
+    margin: 0;
+    padding: 0;
+}
+
+.container {
+    width: 80%;
+    margin: 20px auto;
+    padding: 20px;
+}
+
+.image-container {
+    text-align: center; /* Center-align the image */
+    margin-top: 20px;
+}
+
+.image-container img {
+    width: 100%; /* Responsive image width */
+    max-width: 600px; /* Maximum size */
+    height: auto; /* Maintain aspect ratio */
+}
+
+h3 {
+    text-align: center;
+    margin-bottom: 30px;
+    font-size: 30px;
+}
+
+p {
+    color: #555;
+    text-align: center;
+}
