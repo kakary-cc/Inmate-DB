@@ -1338,3 +1338,90 @@ DELIMITER ;
 
 ALTER TABLE Sentences
 MODIFY Prob_ID INT NULL;
+
+-- Audits and Triggers for Criminals and Crimes
+CREATE TABLE Criminals_Audit (
+    Audit_ID INT AUTO_INCREMENT,
+    Criminal_ID INT,
+    Action VARCHAR(10),
+    Last VARCHAR(15),
+    First VARCHAR(10),
+    Street VARCHAR(30),
+    City VARCHAR(20),
+    State CHAR(2),
+    Zip CHAR(5),
+    Phone CHAR(10),
+    V_status CHAR(1),
+    P_status CHAR(1),
+    Changed_By VARCHAR(30),
+    Change_Date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY(Audit_ID)
+);
+
+CREATE TABLE Crimes_Audit (
+    Audit_ID INT AUTO_INCREMENT,
+    Crime_ID INT,
+    Action VARCHAR(10),
+    Criminal_ID INT,
+    Classification CHAR(1),
+    Date_charged DATE,
+    Status CHAR(2),
+    Hearing_date DATE,
+    Appeal_cut_date DATE,
+    Changed_By VARCHAR(30),
+    Change_Date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY(Audit_ID)
+);
+
+DELIMITER $$
+CREATE TRIGGER After_Insert_Criminals
+AFTER INSERT ON Criminals
+FOR EACH ROW
+BEGIN
+    INSERT INTO Criminals_Audit (
+        Criminal_ID, Action, Last, First, Street, City, State, Zip, Phone, V_status, P_status, Changed_By
+    ) VALUES (
+        NEW.Criminal_ID, 'INSERT', NEW.Last, NEW.First, NEW.Street, NEW.City, NEW.State, NEW.Zip, NEW.Phone, NEW.V_status, NEW.P_status, USER()
+    );
+END$$
+DELIMITER ;
+
+DELIMITER $$
+CREATE TRIGGER After_Delete_Criminals
+AFTER DELETE ON Criminals
+FOR EACH ROW
+BEGIN
+    INSERT INTO Criminals_Audit (
+        Criminal_ID, Action, Last, First, Street, City, State, Zip, Phone, V_status, P_status, Changed_By
+    ) VALUES (
+        OLD.Criminal_ID, 'DELETE', OLD.Last, OLD.First, OLD.Street, OLD.City, OLD.State, OLD.Zip, OLD.Phone, OLD.V_status, OLD.P_status, USER()
+    );
+END$$
+DELIMITER ;
+
+DELIMITER $$
+CREATE TRIGGER After_Update_Criminals
+AFTER UPDATE ON Criminals
+FOR EACH ROW
+BEGIN
+    INSERT INTO Criminals_Audit (
+        Criminal_ID, Action, Last, First, Street, City, State, Zip, Phone, V_status, P_status, Changed_By, Change_Date
+    ) VALUES (
+        NEW.Criminal_ID, 'UPDATE', NEW.Last, NEW.First, NEW.Street, NEW.City, NEW.State, NEW.Zip, NEW.Phone, NEW.V_status, NEW.P_status, USER(), CURRENT_TIMESTAMP
+    );
+END$$
+DELIMITER ;
+
+DELIMITER $$
+CREATE TRIGGER After_Insert_Crimes
+AFTER INSERT ON Crimes
+FOR EACH ROW
+BEGIN
+    INSERT INTO Crimes_Audit (
+        Crime_ID, Action, Criminal_ID, Classification, Date_charged, Status, Hearing_date, Appeal_cut_date, Changed_By
+    ) VALUES (
+        NEW.Crime_ID, 'INSERT', NEW.Criminal_ID, NEW.Classification, NEW.Date_charged, NEW.Status, NEW.Hearing_date, NEW.Appeal_cut_date, USER()
+    );
+END$$
+DELIMITER ;
+
